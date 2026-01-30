@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "243782562752",
+    "project_id": "mind-solver-f3fa0",
+    "storage_bucket": "mind-solver-f3fa0.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:243782562752:android:ab03108640cbffe5de8e25",
+        "android_client_info": {
+          "package_name": "com.lovercompany.mindsolver"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "243782562752-mb3ivrr259ont3h1msrsod5kfe6kuqam.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJEanwpAYXNWAc2WIL06fUlziQOq1v3Ac"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "243782562752-mb3ivrr259ont3h1msrsod5kfe6kuqam.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

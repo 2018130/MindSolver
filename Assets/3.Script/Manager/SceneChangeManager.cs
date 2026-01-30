@@ -1,0 +1,55 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using Unity.VisualScripting;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+public enum SceneType
+{
+    TitleScene,
+    GameScene,
+    LoadingScene,
+}
+
+public class SceneChangeManager : SingletonBehaviour<SceneChangeManager>
+{
+    public void ChangeScene(SceneType sceneType, float minLoadingTime = 3f)
+    {
+        StartCoroutine(ChangeScene_co(sceneType, minLoadingTime));
+    }
+
+    private IEnumerator ChangeScene_co(SceneType sceneType, float minLoadingTime)
+    {
+        float timer = 0f;
+        float progressValue = 0f;
+        SceneManager.LoadScene((int)SceneType.LoadingScene);
+
+        yield return null;
+
+        LoadingSceneUIManager loadingSceneUIManager = FindAnyObjectByType<LoadingSceneUIManager>();
+
+        AsyncOperation ao = SceneManager.LoadSceneAsync((int)sceneType);
+
+        ao.allowSceneActivation = false;
+        GameManager.Singleton.IsInitialized = false;
+
+        while (!ao.isDone)
+        {
+            yield return null;
+
+            progressValue = ao.progress > timer / minLoadingTime ?
+                timer / minLoadingTime : ao.progress;
+            loadingSceneUIManager.SetLoadingProgress(progressValue);
+
+            if (timer >= minLoadingTime && ao.progress >= 0.9f)
+            {
+                ao.allowSceneActivation = true;
+            }
+
+            timer += Time.deltaTime;
+        }
+
+        GameManager.Singleton.Initialize();
+    }
+}
