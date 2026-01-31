@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2277875960851992152}
   - component: {fileID: 508912048939048604}
-  - component: {fileID: 1165143174698842392}
   m_Layer: 0
   m_Name: Collider (3)
   m_TagString: Untagged
@@ -79,23 +78,6 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.4, y: 0.4}
   m_EdgeRadius: 0
---- !u!114 &1165143174698842392
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1019271250360746667}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1df482c853362354a8abd4ab4561bfc0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PipeColliderChecker
-  targetLayer:
-    serializedVersion: 2
-    m_Bits: 16
-  rightDir: 
-  delayTime: 0.001
 --- !u!1 &1554200124922853396
 GameObject:
   m_ObjectHideFlags: 0
@@ -388,7 +370,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2012766045370535912}
   - component: {fileID: 3806616041226323200}
-  - component: {fileID: 8884092896161875618}
   m_Layer: 0
   m_Name: Collider
   m_TagString: Untagged
@@ -457,23 +438,6 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.4, y: 0.6}
   m_EdgeRadius: 0
---- !u!114 &8884092896161875618
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6636166325595060192}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1df482c853362354a8abd4ab4561bfc0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PipeColliderChecker
-  targetLayer:
-    serializedVersion: 2
-    m_Bits: 16
-  rightDir: 01000000
-  delayTime: 0.001
 --- !u!1 &7024940074853883961
 GameObject:
   m_ObjectHideFlags: 0
@@ -484,7 +448,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5013535753638480674}
   - component: {fileID: 966454566850343794}
-  - component: {fileID: 2863611521153839820}
   m_Layer: 0
   m_Name: Collider (2)
   m_TagString: Untagged
@@ -553,23 +516,6 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.6, y: 0.4}
   m_EdgeRadius: 0
---- !u!114 &2863611521153839820
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7024940074853883961}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1df482c853362354a8abd4ab4561bfc0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PipeColliderChecker
-  targetLayer:
-    serializedVersion: 2
-    m_Bits: 16
-  rightDir: 02000000
-  delayTime: 0.001
 --- !u!1 &8592513956936845013
 GameObject:
   m_ObjectHideFlags: 0
@@ -580,7 +526,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6589199801360035642}
   - component: {fileID: 7525662793715834245}
-  - component: {fileID: 2456316344128343557}
   m_Layer: 0
   m_Name: Collider (1)
   m_TagString: Untagged
@@ -649,20 +594,3 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.4, y: 0.4}
   m_EdgeRadius: 0
---- !u!114 &2456316344128343557
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8592513956936845013}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1df482c853362354a8abd4ab4561bfc0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PipeColliderChecker
-  targetLayer:
-    serializedVersion: 2
-    m_Bits: 16
-  rightDir: 0000000003000000
-  delayTime: 0.001

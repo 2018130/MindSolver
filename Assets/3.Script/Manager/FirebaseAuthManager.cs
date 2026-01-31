@@ -33,6 +33,10 @@ public class FirebaseAuthManager : SingletonBehaviour<FirebaseAuthManager>
             }
         });
 
+
+        PlayGamesPlatform.Activate();
+
+        SignInWithGoogle();
     }
 
     public void SignUp(string id, string pwd)
@@ -80,22 +84,52 @@ public class FirebaseAuthManager : SingletonBehaviour<FirebaseAuthManager>
 
     public void SignInWithGoogle()
     {
+        Debug.Log("[GPGS] 로그인 시도 시작...");
+
         PlayGamesPlatform.Instance.Authenticate((status) =>
         {
+            // 1. 로그인 결과 상태 출력
+            Debug.Log($"[GPGS] Authenticate 결과 상태: {status}");
+
             if (status == SignInStatus.Success)
             {
-                Debug.Log("GPGS 로그인 성공! Firebase 연동 시작...");
+                Debug.Log("[GPGS] 로그인 성공! Firebase 연동을 위한 Server Auth Code 요청 중...");
 
-                // 3. 서버 인증 코드 요청 (Firebase 연동 핵심)
+                // 2. 서버 인증 코드 요청
+                // 첫 번째 인자인 forceRefresh를 true로 설정하면 새로운 코드를 강제로 가져옵니다.
                 PlayGamesPlatform.Instance.RequestServerSideAccess(true, (authCode) =>
                 {
-                    Debug.Log($"서버 인증 코드 획득: {authCode}");
-                    SignInFromGoogle(authCode);
+                    if (string.IsNullOrEmpty(authCode))
+                    {
+                        Debug.LogError("[GPGS] 서버 인증 코드 획득 실패: authCode가 null이거나 비어있습니다. (설정/인증서 문제 가능성)");
+                    }
+                    else
+                    {
+                        Debug.Log($"[GPGS] 서버 인증 코드 획득 완료: {authCode}");
+                        SignInFromGoogle(authCode);
+                    }
                 });
             }
             else
             {
-                Debug.LogError($"GPGS 로그인 실패: {status}");
+                // 3. 실패 시 상세 케이스 분류
+                string reason = "알 수 없는 이유";
+                switch (status)
+                {
+                    case SignInStatus.Canceled:
+                        reason = "사용자가 로그인을 취소했거나, 인증서(SHA-1) 불일치로 시스템이 취소함.";
+                        break;
+                    case SignInStatus.InternalError:
+                        reason = "구글 서비스 내부 오류. 네트워크 상태나 Google Play 서비스 앱 업데이트 확인 필요.";
+                        break;
+                    default:
+                        reason = $"기타 에러 코드: {status}";
+                        break;
+                }
+
+                Debug.LogError($"[GPGS] 로그인 최종 실패 원인: {reason}");
+
+                // 팁: 여기서 구글 플레이 서비스 앱이 최신인지 확인하는 로직을 추가할 수도 있습니다.
             }
         });
     }
@@ -123,6 +157,7 @@ public class FirebaseAuthManager : SingletonBehaviour<FirebaseAuthManager>
             Debug.LogFormat("Firebase 연동 성공: {0} ({1})", _user.DisplayName, _user.UserId);
         });
     }
+
     public void SignOut()
     {
         if (_user != null)

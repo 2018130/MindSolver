@@ -31,12 +31,9 @@ public class Pipe : MonoBehaviour
 
     private bool isChecked = false;
 
-    private PipeColliderChecker[] pipeColliderCheckers;
-
     private void Awake()
     {
         _pipeCollider = GetComponent<Collider2D>();
-        pipeColliderCheckers = transform.GetComponentsInChildren<PipeColliderChecker>();
     }
 
     private void Start()
@@ -62,11 +59,6 @@ public class Pipe : MonoBehaviour
         if (rotateDir > MAX_ROTATE_INDEX)
             rotateDir = 0;
 
-        foreach (var pipeChecker in pipeColliderCheckers)
-        {
-            pipeChecker.Rotate(rotateDir);
-        }
-
         Rotate(rotateDir);
 
         foreach(var pipe in FindObjectsByType<Pipe>(FindObjectsSortMode.None))
@@ -81,11 +73,6 @@ public class Pipe : MonoBehaviour
             if(CheckNearlyPipeAndSetFlowEnabled((int)holeDirections[i]))
             {
                 isAnyPipeFlowed = true;
-                Debug.Log($"enabled");
-            }
-            else
-            {
-                Debug.Log($"disabled");
             }
         }
 
