@@ -10,6 +10,8 @@ public enum SceneType
     TitleScene,
     GameScene,
     LoadingScene,
+    LobbyScene,
+    TutorialScene
 }
 
 public class SceneChangeManager : SingletonBehaviour<SceneChangeManager>
