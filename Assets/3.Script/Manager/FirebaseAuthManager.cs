@@ -33,7 +33,6 @@ public class FirebaseAuthManager : SingletonBehaviour<FirebaseAuthManager>
             }
         });
 
-
         PlayGamesPlatform.Activate();
 
         SignInWithGoogle();
