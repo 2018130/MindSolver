@@ -149,6 +149,27 @@ public class NetworkRelayManager : MonoBehaviour
             yield return wait;
         }
     }
+    public async void StartGameAndCloseLobby()
+    {
+        // 1. 더 이상 로비 검색에 뜨지 않게 로비 삭제
+        if (_currentLobby != null && isHost)
+        {
+            try
+            {
+                await LobbyService.Instance.DeleteLobbyAsync(_currentLobby.Id);
+                _currentLobby = null; // 로비 변수 비우기 (Heartbeat 코루틴 종료용)
+                Debug.Log("Lobby removed from search. Game allows no more joiners.");
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning($"Failed to close lobby: {e}");
+            }
+        }
+
+        // 2. 인게임 씬 로드 (Netcode의 씬 관리 기능 사용 권장)
+        // NetworkManager.Singleton.SceneManager.LoadScene("GameScene", UnityEngine.SceneManagement.LoadSceneMode.Single);
+    }
+
 
     // 게임 종료 시 로비 정리
     private async void OnDestroy()

@@ -2,8 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.Netcode;
 
-public enum Direction
+[Serializable]
+public enum Direction : byte
 {
     Up,
     Right,
@@ -11,17 +13,18 @@ public enum Direction
     Left,
 }
 
-public class Pipe : MonoBehaviour
+public class Pipe : NetworkBehaviour
 {
     private const int MAX_ROTATE_INDEX = 3;
-    private int rotateDir = 0;
-    public int RotateDir => rotateDir;
+    NetworkVariable<int> rotateDir = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    //private int rotateDir = 0;
+    public int RotateDir => rotateDir.Value;
 
     [SerializeField]
     private LayerMask pipeLayer;
 
     [SerializeField]
-    private List<Direction> holeDirections;
+    private NetworkList<byte> holeDirections = new NetworkList<byte>();
 
     [SerializeField]
     private bool isStartTile = false;
@@ -53,13 +56,14 @@ public class Pipe : MonoBehaviour
     /// <summary>
     /// 파이프를 시계방향으로 90도 회전시킴
     /// </summary>
+    [ServerRpc]
     public void RotateCW()
     {
-        rotateDir++;
-        if (rotateDir > MAX_ROTATE_INDEX)
-            rotateDir = 0;
+        rotateDir.Value++;
+        if (rotateDir.Value > MAX_ROTATE_INDEX)
+            rotateDir.Value = 0;
 
-        Rotate(rotateDir);
+        Rotate(rotateDir.Value);
 
         foreach(var pipe in FindObjectsByType<Pipe>(FindObjectsSortMode.None))
         {
@@ -91,13 +95,16 @@ public class Pipe : MonoBehaviour
         if (dir > MAX_ROTATE_INDEX)
             return;
 
-        for(int i = 0; i < holeDirections.Count; i++)
-        {
-            int holeDir = (int)holeDirections[i] + 1;
-            if (holeDir > 3)
-                holeDir = 0;
+        if (!IsServer) return;
 
-            holeDirections[i] = (Direction)holeDir;
+        for (int i = 0; i < holeDirections.Count; i++)
+        {
+            int nextDir = holeDirections[i] + 1;
+
+            if (nextDir > 3)
+                nextDir = 0;
+
+            holeDirections[i] = (byte)nextDir;
         }
 
 
@@ -190,7 +197,7 @@ public class Pipe : MonoBehaviour
     {
         for (int i = 0; i < holeDirections.Count; i++)
         {
-            if (direction == holeDirections[i])
+            if (direction == (Direction)holeDirections[i])
                 return true;
         }
 
