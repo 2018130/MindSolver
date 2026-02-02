@@ -56,9 +56,10 @@ public class FirebaseAuthManager : SingletonBehaviour<FirebaseAuthManager>
 
             Debug.Log($"Sign up successful!!!");
         });
+
     }
     
-    public void SignIn(string id, string pwd)
+    public void SignIn(string id, string pwd, string nickname)
     {
         Debug.Log($"[Auth] Attempting Sign-in with: {id}");
 
@@ -77,6 +78,8 @@ public class FirebaseAuthManager : SingletonBehaviour<FirebaseAuthManager>
             }
 
             _user = task.Result.User;
+            DatabaseManager.Singleton.CheckNicknameAndSave(_user.UserId, nickname, 0);
+
             Debug.Log($"Sign in successful!!! name : {_user.ProviderId}");
         });
     }
@@ -131,6 +134,8 @@ public class FirebaseAuthManager : SingletonBehaviour<FirebaseAuthManager>
                 // 팁: 여기서 구글 플레이 서비스 앱이 최신인지 확인하는 로직을 추가할 수도 있습니다.
             }
         });
+
+        // TODO : Save nickname in database
     }
     private void SignInFromGoogle(string authCode)
     {

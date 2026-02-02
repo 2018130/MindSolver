@@ -29,6 +29,8 @@ public class TitleSceneUIManager : MonoBehaviour
     private TMP_InputField id_InputField;
     [SerializeField]
     private TMP_InputField pwd_InputField;
+    [SerializeField]
+    private TMP_InputField nickname_InputField;
 
     private void Awake()
     {
@@ -48,7 +50,7 @@ public class TitleSceneUIManager : MonoBehaviour
     {
         start_btn.onClick.AddListener(TitleSceneManager.Singleton.StartGame);
         signUp_btn.onClick.AddListener(() => FirebaseAuthManager.Singleton.SignUp(id_InputField.text, pwd_InputField.text));
-        signIn_btn.onClick.AddListener(() => FirebaseAuthManager.Singleton.SignIn(id_InputField.text, pwd_InputField.text));
+        signIn_btn.onClick.AddListener(() => FirebaseAuthManager.Singleton.SignIn(id_InputField.text, pwd_InputField.text, nickname_InputField.text));
         signInWithGoogle_btn.onClick.AddListener(FirebaseAuthManager.Singleton.SignInWithGoogle);
         signOut_btn.onClick.AddListener(FirebaseAuthManager.Singleton.SignOut);
     }

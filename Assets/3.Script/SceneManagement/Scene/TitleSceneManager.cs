@@ -21,6 +21,6 @@ public class TitleSceneManager : MonoBehaviour
 
     public void StartGame()
     {
-        SceneChangeManager.Singleton.ChangeScene(SceneType.GameScene);
+        SceneChangeManager.Singleton.ChangeScene(SceneType.LobbyScene);
     }
 }
