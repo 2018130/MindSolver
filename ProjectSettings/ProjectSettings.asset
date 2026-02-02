@@ -269,7 +269,7 @@ PlayerSettings:
   AndroidTargetArchitectures: 2
   AndroidSplashScreenScale: 0
   androidSplashScreen: {fileID: 0}
-  AndroidKeystoreName: "C:/Users/wns1d/OneDrive/\uBC14\uD0D5 \uD654\uBA74/user.keystore"
+  AndroidKeystoreName: '{inproject}: mindsolver.keystore'
   AndroidKeyaliasName: mindsolver
   AndroidEnableArmv9SecurityFeatures: 0
   AndroidEnableArm64MTE: 0
