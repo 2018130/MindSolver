@@ -24,7 +24,7 @@ public class Pipe : NetworkBehaviour
     private LayerMask pipeLayer;
 
     [SerializeField]
-    private NetworkList<byte> holeDirections = new NetworkList<byte>();
+    private List<Direction> holeDirections = new List<Direction>();
 
     [SerializeField]
     private bool isStartTile = false;
@@ -34,14 +34,22 @@ public class Pipe : NetworkBehaviour
 
     private bool isChecked = false;
 
+    private Pipe[] allPipes;
+    [SerializeField]
+    private float rotDuration = 1f;
+    private static bool s_isRotating = false;
+
     private void Awake()
     {
         _pipeCollider = GetComponent<Collider2D>();
     }
-
-    private void Start()
+    public override void OnNetworkSpawn()
     {
-        if(isStartTile)
+        base.OnNetworkSpawn();
+
+        allPipes = FindObjectsByType<Pipe>(FindObjectsSortMode.None);
+
+        if (isStartTile)
         {
             SetFlowEnabled(true);
 
@@ -51,36 +59,83 @@ public class Pipe : NetworkBehaviour
                 CheckNearlyPipeAndSetFlowEnabled((int)holeDirections[i]);
             }
         }
+
+        rotateDir.OnValueChanged += OnRotateDirChanged;
     }
 
     /// <summary>
     /// 파이프를 시계방향으로 90도 회전시킴
     /// </summary>
-    [ServerRpc]
-    public void RotateCW()
+    [ServerRpc(RequireOwnership = false)]
+    public void RotateCW_ServerRpc()
     {
+        if (s_isRotating)
+            return;
+
         rotateDir.Value++;
         if (rotateDir.Value > MAX_ROTATE_INDEX)
             rotateDir.Value = 0;
+    }
 
-        Rotate(rotateDir.Value);
+    private IEnumerator Rotate(int dir)
+    {
+        if (dir > MAX_ROTATE_INDEX)
+            yield break;
 
-        foreach(var pipe in FindObjectsByType<Pipe>(FindObjectsSortMode.None))
+        s_isRotating = true;
+        SetAllPipesCheckState(false);
+
+        for (int i = 0; i < holeDirections.Count; i++)
         {
-            pipe.isChecked = false;
+            int nextDir = (byte)holeDirections[i] + 1;
+
+            if (nextDir > 3)
+                nextDir = 0;
+
+            holeDirections[i] = (Direction)nextDir;
         }
+
+        float startRotZ = -90 * (dir - 1 == -1 ? 3 : dir - 1);
+        float destinationRotZ = -90 * dir;
+        destinationRotZ = destinationRotZ == 0 ? -360 : destinationRotZ;
+        float timer = 0f;
+        while(timer < rotDuration)
+        {
+            timer += Time.deltaTime;
+            yield return null;
+
+            float rotZ = Mathf.Lerp(startRotZ, destinationRotZ, timer / rotDuration);
+            transform.localEulerAngles = new Vector3(0, 0, rotZ);
+        }
+        transform.localEulerAngles = new Vector3(0, 0, destinationRotZ);
+        s_isRotating = false;
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if(LayerMask.LayerToName(collision.gameObject.layer) == "Water" && 
+            s_isRotating)
+        {
+            WaterSpawner.ReturnToPool(collision.gameObject);
+        }
+    }
+
+    public void OnRotateDirChanged(int oldValue, int value)
+    {
+        Debug.Log($"Changed {gameObject}'s dir value {oldValue} to {value}");
+        StartCoroutine(Rotate(value));
 
         // 인접한 타일의 타일 흐름 정보 갱신
         bool isAnyPipeFlowed = false;
         for (int i = 0; i < holeDirections.Count; i++)
         {
-            if(CheckNearlyPipeAndSetFlowEnabled((int)holeDirections[i]))
+            if (CheckNearlyPipeAndSetFlowEnabled((int)holeDirections[i]))
             {
                 isAnyPipeFlowed = true;
             }
         }
 
-        if(isAnyPipeFlowed)
+        if (isAnyPipeFlowed)
         {
             SetFlowEnabled(true);
         }
@@ -88,27 +143,6 @@ public class Pipe : NetworkBehaviour
         {
             SetFlowEnabled(false);
         }
-    }
-
-    private void Rotate(int dir)
-    {
-        if (dir > MAX_ROTATE_INDEX)
-            return;
-
-        if (!IsServer) return;
-
-        for (int i = 0; i < holeDirections.Count; i++)
-        {
-            int nextDir = holeDirections[i] + 1;
-
-            if (nextDir > 3)
-                nextDir = 0;
-
-            holeDirections[i] = (byte)nextDir;
-        }
-
-
-        transform.localEulerAngles = new Vector3(0, 0, -90 * dir);
     }
 
     private bool CheckNearlyPipeAndSetFlowEnabled(int dir)
@@ -202,5 +236,13 @@ public class Pipe : NetworkBehaviour
         }
 
         return false;
+    }
+
+    private void SetAllPipesCheckState(bool state)
+    {
+        foreach(var pipe in allPipes)
+        {
+            pipe.isChecked = state;
+        }
     }
 }
