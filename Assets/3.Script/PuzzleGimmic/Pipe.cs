@@ -57,7 +57,7 @@ public class Pipe : NetworkBehaviour
     /// 파이프를 시계방향으로 90도 회전시킴
     /// </summary>
     [ServerRpc]
-    public void RotateCW()
+    public void RotateCW_ServerRpc()
     {
         rotateDir.Value++;
         if (rotateDir.Value > MAX_ROTATE_INDEX)
