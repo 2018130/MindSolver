@@ -13,7 +13,8 @@ using UnityEngine;
 
 public class NetworkRelayManager : MonoBehaviour
 {
-    private const int MaxConnections = 2;
+    public const int MaxConnections = 2;
+
     private const string JoinCodeKey = "j"; // 로비 데이터 키
     [SerializeField]private bool isHost = false;
     private Lobby _currentLobby;

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -53,6 +54,43 @@ public class SceneChangeManager : SingletonBehaviour<SceneChangeManager>
             timer += Time.deltaTime;
         }
 
+        GameManager.Singleton.Initialize();
+    }
+    public void ChangeSceneByNetwork(string sceneName, float minLoadingTime = 3f)
+    {
+        StartCoroutine(ChangeSceneByNetwork_co(sceneName, minLoadingTime));
+    }
+
+    private IEnumerator ChangeSceneByNetwork_co(string sceneName, float minLoadingTime)
+    {
+        float timer = 0f;
+        float progressValue = 0f;
+        NetworkManager.Singleton.SceneManager.LoadScene(sceneName, LoadSceneMode.Single);
+
+        yield return null;
+
+        LoadingSceneUIManager loadingSceneUIManager = FindAnyObjectByType<LoadingSceneUIManager>();
+
+        NetworkManager.Singleton.SceneManager.LoadScene(sceneName, LoadSceneMode.Single);
+        /*
+        GameManager.Singleton.IsInitialized = false;
+
+        while (!ao.isDone)
+        {
+            yield return null;
+
+            progressValue = ao.progress > timer / minLoadingTime ?
+                timer / minLoadingTime : ao.progress;
+            loadingSceneUIManager.SetLoadingProgress(progressValue);
+
+            if (timer >= minLoadingTime && ao.progress >= 0.9f)
+            {
+                ao.allowSceneActivation = true;
+            }
+
+            timer += Time.deltaTime;
+        }
+        */
         GameManager.Singleton.Initialize();
     }
 }

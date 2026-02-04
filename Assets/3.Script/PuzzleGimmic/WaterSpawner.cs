@@ -1,9 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-public class WaterSpawner : MonoBehaviour
+public class WaterSpawner : NetworkBehaviour
 {
     [SerializeField]
     private GameObject waterPrefab;
@@ -12,7 +13,7 @@ public class WaterSpawner : MonoBehaviour
     private Vector2 waterForceDir;
 
     [SerializeField]
-    private bool canSpawn = false;
+    private NetworkVariable<bool> canSpawn = new NetworkVariable<bool>(false);
     [SerializeField]
     private float spawnDelay = 0.1f;
 
@@ -22,19 +23,60 @@ public class WaterSpawner : MonoBehaviour
     private int maxWaterSize = 100;
     private static GameObject[] waterPool;
 
+    [Space(10f)]
+    private int waterSpawnableCount = 0;
+    private int maxWaterSpawnableCount = 10;
+
+
     private void Start()
     {
         CreatePool();
         StartCoroutine(SpawnWater_co());
+        OpenFauset_ServerRpc();
     }
 
-    public void OpenFauset()
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        canSpawn = true;
+        if(IsServer)
+        {
+            if (LayerMask.LayerToName(collision.gameObject.layer) == "Water")
+            {
+                waterSpawnableCount++;
+
+                if (waterSpawnableCount > maxWaterSpawnableCount)
+                {
+                    CloseFauset_ServerRpc();
+                }
+            }
+        }
     }
-    private void CloseFauset()
+
+    private void OnTriggerExit2D(Collider2D collision)
     {
-        canSpawn = false;
+        if (IsServer)
+        {
+            if (LayerMask.LayerToName(collision.gameObject.layer) == "Water")
+            {
+                waterSpawnableCount--;
+
+                if (waterSpawnableCount < maxWaterSpawnableCount)
+                {
+                    OpenFauset_ServerRpc();
+                }
+            }
+        }
+    }
+
+    [ServerRpc]
+    public void OpenFauset_ServerRpc()
+    {
+        canSpawn.Value = true;
+    }
+
+    [ServerRpc]
+    private void CloseFauset_ServerRpc()
+    {
+        canSpawn.Value = false;
     }
 
     private IEnumerator SpawnWater_co()
@@ -43,7 +85,7 @@ public class WaterSpawner : MonoBehaviour
         {
             yield return null;
 
-            if(canSpawn)
+            if(canSpawn.Value)
             {
                 SpawnWaterFromPool();
                 yield return new WaitForSeconds(spawnDelay);

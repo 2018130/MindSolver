@@ -23,7 +23,7 @@ public class PipeManager : MonoBehaviour
         Collider2D target = Physics2D.OverlapCircle(worldPosition, 0.01f, pipeLayer);
         if(target != null)
         {
-            target.GetComponent<Pipe>().RotateCW();
+            target.GetComponent<Pipe>().RotateCW_ServerRpc();
         }
     }
 }
