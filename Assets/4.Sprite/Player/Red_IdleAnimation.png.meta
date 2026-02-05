@@ -1,0 +1,520 @@
+fileFormatVersion: 2
+guid: 4085515c3436bd7449230e6202f78db4
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 5839909397254375471
+    second: Red_IdleAnimation_0
+  - first:
+      213: -7649225556760948546
+    second: Red_IdleAnimation_1
+  - first:
+      213: 388836335429365329
+    second: Red_IdleAnimation_2
+  - first:
+      213: 8702281688049095776
+    second: Red_IdleAnimation_3
+  - first:
+      213: -4779040043026086963
+    second: Red_IdleAnimation_4
+  - first:
+      213: 4826384481137001362
+    second: Red_IdleAnimation_5
+  - first:
+      213: 4816891138754016047
+    second: Red_IdleAnimation_6
+  - first:
+      213: 2740969427534477693
+    second: Red_IdleAnimation_7
+  - first:
+      213: 4979632839766943703
+    second: Red_IdleAnimation_8
+  - first:
+      213: -5180175545729285779
+    second: Red_IdleAnimation_9
+  - first:
+      213: -1392107357732545383
+    second: Red_IdleAnimation_10
+  - first:
+      213: 5910700497331143324
+    second: Red_IdleAnimation_11
+  - first:
+      213: 571844803672768046
+    second: Red_IdleAnimation_12
+  - first:
+      213: -51145138179138170
+    second: Red_IdleAnimation_13
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: iOS
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Red_IdleAnimation_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 939
+        width: 213
+        height: 341
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f2800d7d7a68b0150800000000000000
+      internalID: 5839909397254375471
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red_IdleAnimation_1
+      rect:
+        serializedVersion: 2
+        x: 366
+        y: 939
+        width: 123
+        height: 245
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eb09c6a22ed78d590800000000000000
+      internalID: -7649225556760948546
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red_IdleAnimation_2
+      rect:
+        serializedVersion: 2
+        x: 639
+        y: 939
+        width: 125
+        height: 244
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 15e2801469c656500800000000000000
+      internalID: 388836335429365329
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red_IdleAnimation_3
+      rect:
+        serializedVersion: 2
+        x: 914
+        y: 939
+        width: 217
+        height: 341
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0649d8fa617b4c870800000000000000
+      internalID: 8702281688049095776
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red_IdleAnimation_4
+      rect:
+        serializedVersion: 2
+        x: 88
+        y: 651
+        width: 124
+        height: 243
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dc3001cb6607dadb0800000000000000
+      internalID: -4779040043026086963
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red_IdleAnimation_5
+      rect:
+        serializedVersion: 2
+        x: 365
+        y: 651
+        width: 123
+        height: 243
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 29301a34d13caf240800000000000000
+      internalID: 4826384481137001362
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red_IdleAnimation_6
+      rect:
+        serializedVersion: 2
+        x: 641
+        y: 651
+        width: 122
+        height: 243
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f23f82f38f809d240800000000000000
+      internalID: 4816891138754016047
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red_IdleAnimation_7
+      rect:
+        serializedVersion: 2
+        x: 917
+        y: 651
+        width: 122
+        height: 243
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d79f56c0c21e90620800000000000000
+      internalID: 2740969427534477693
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red_IdleAnimation_8
+      rect:
+        serializedVersion: 2
+        x: 92
+        y: 364
+        width: 123
+        height: 241
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7d7ad2e3fa53b1540800000000000000
+      internalID: 4979632839766943703
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red_IdleAnimation_9
+      rect:
+        serializedVersion: 2
+        x: 368
+        y: 364
+        width: 124
+        height: 242
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d6104a279c15c18b0800000000000000
+      internalID: -5180175545729285779
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red_IdleAnimation_10
+      rect:
+        serializedVersion: 2
+        x: 643
+        y: 364
+        width: 124
+        height: 242
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 99cd42ddbbd3eace0800000000000000
+      internalID: -1392107357732545383
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red_IdleAnimation_11
+      rect:
+        serializedVersion: 2
+        x: 919
+        y: 365
+        width: 123
+        height: 241
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c92c52d39c6070250800000000000000
+      internalID: 5910700497331143324
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red_IdleAnimation_12
+      rect:
+        serializedVersion: 2
+        x: 367
+        y: 76
+        width: 120
+        height: 242
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e2e7195b1d99fe700800000000000000
+      internalID: 571844803672768046
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red_IdleAnimation_13
+      rect:
+        serializedVersion: 2
+        x: 643
+        y: 76
+        width: 120
+        height: 242
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 68d18de84cb4a4ff0800000000000000
+      internalID: -51145138179138170
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Red_IdleAnimation_0: 5839909397254375471
+      Red_IdleAnimation_1: -7649225556760948546
+      Red_IdleAnimation_10: -1392107357732545383
+      Red_IdleAnimation_11: 5910700497331143324
+      Red_IdleAnimation_12: 571844803672768046
+      Red_IdleAnimation_13: -51145138179138170
+      Red_IdleAnimation_2: 388836335429365329
+      Red_IdleAnimation_3: 8702281688049095776
+      Red_IdleAnimation_4: -4779040043026086963
+      Red_IdleAnimation_5: 4826384481137001362
+      Red_IdleAnimation_6: 4816891138754016047
+      Red_IdleAnimation_7: 2740969427534477693
+      Red_IdleAnimation_8: 4979632839766943703
+      Red_IdleAnimation_9: -5180175545729285779
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
