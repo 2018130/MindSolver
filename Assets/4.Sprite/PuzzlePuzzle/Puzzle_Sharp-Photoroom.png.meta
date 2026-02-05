@@ -1,14 +1,16 @@
 fileFormatVersion: 2
-guid: d1a4ad64e9c5c444c9f48a55625c90f2
-AssetOrigin:
-  serializedVersion: 1
-  productId: 233783
-  packageName: Fantasy Tileset
-  packageVersion: 1.0
-  assetPath: Assets/Mocapot/Fantasy Tileset/Sprites/isometric-tile_ground_04.png
-  uploadId: 528958
+guid: 9a5241974939615498c8fdbf2f1035d5
 TextureImporter:
-  internalIDToNameTable: []
+  internalIDToNameTable:
+  - first:
+      213: 2800067530665635809
+    second: Puzzle_Sharp-Photoroom_0
+  - first:
+      213: -7210549207390299944
+    second: Puzzle_Sharp-Photoroom_1
+  - first:
+      213: -5745636455859055650
+    second: Puzzle_Sharp-Photoroom_2
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -50,17 +52,17 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
-  alignment: 9
-  spritePivot: {x: 0.5, y: 0.25}
-  spritePixelsToUnits: 128
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
   alphaIsTransparency: 1
-  spriteTessellationDetail: 0
+  spriteTessellationDetail: -1
   textureType: 8
   textureShape: 1
   singleChannelComponent: 0
@@ -89,19 +91,6 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 4
     buildTarget: Standalone
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 4
-    buildTarget: Server
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -154,24 +143,79 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: Puzzle_Sharp-Photoroom_0
+      rect:
+        serializedVersion: 2
+        x: 73
+        y: 96
+        width: 333
+        height: 343
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1ef2e607596dbd620800000000000000
+      internalID: 2800067530665635809
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Puzzle_Sharp-Photoroom_1
+      rect:
+        serializedVersion: 2
+        x: 438
+        y: 96
+        width: 404
+        height: 341
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8d8d602f2bbfeeb90800000000000000
+      internalID: -7210549207390299944
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Puzzle_Sharp-Photoroom_2
+      rect:
+        serializedVersion: 2
+        x: 853
+        y: 96
+        width: 326
+        height: 343
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ed39cf7c5166340b0800000000000000
+      internalID: -5745636455859055650
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
-    physicsShape:
-    - - {x: 42, y: 21}
-      - {x: 64, y: 31}
-      - {x: 49, y: 39}
-      - {x: 19, y: 54}
-      - {x: 0, y: 64}
-      - {x: -13, y: 57}
-      - {x: -38, y: 44}
-      - {x: -64, y: 31}
-      - {x: -49, y: 24}
-      - {x: -29, y: 14}
-      - {x: 0, y: -1}
+    physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
-    internalID: 1537655665
+    spriteID: 
+    internalID: 0
     vertices: []
     indices: 
     edges: []
@@ -179,7 +223,10 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Puzzle_Sharp-Photoroom_0: 2800067530665635809
+      Puzzle_Sharp-Photoroom_1: -7210549207390299944
+      Puzzle_Sharp-Photoroom_2: -5745636455859055650
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
