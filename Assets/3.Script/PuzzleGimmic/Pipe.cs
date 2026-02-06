@@ -16,9 +16,13 @@ public enum Direction : byte
 public class Pipe : NetworkBehaviour
 {
     private const int MAX_ROTATE_INDEX = 3;
+#if UNITY_EDITOR
+    private int rotateDir = 0;
+    public int RotateDir => rotateDir;
+#else
     NetworkVariable<int> rotateDir = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-    //private int rotateDir = 0;
     public int RotateDir => rotateDir.Value;
+#endif
 
     [SerializeField]
     private LayerMask pipeLayer;
@@ -43,6 +47,23 @@ public class Pipe : NetworkBehaviour
     {
         _pipeCollider = GetComponent<Collider2D>();
     }
+#if UNITY_EDITOR
+    private void Start()
+    {
+        allPipes = FindObjectsByType<Pipe>(FindObjectsSortMode.None);
+
+        if (isStartTile)
+        {
+            SetFlowEnabled(true);
+
+            // 인접한 타일의 타일 흐름 정보 갱신
+            for (int i = 0; i < holeDirections.Count; i++)
+            {
+                CheckNearlyPipeAndSetFlowEnabled((int)holeDirections[i]);
+            }
+        }
+    }
+#else
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
@@ -62,8 +83,42 @@ public class Pipe : NetworkBehaviour
 
         rotateDir.OnValueChanged += OnRotateDirChanged;
     }
+#endif
 
-    /// <summary>
+
+#if UNITY_EDITOR
+    public void RotateCW()
+    {
+        if (s_isRotating)
+            return;
+
+        rotateDir++;
+        if (rotateDir > MAX_ROTATE_INDEX)
+            rotateDir = 0;
+
+    StartCoroutine(Rotate(rotateDir));
+
+        // 인접한 타일의 타일 흐름 정보 갱신
+        bool isAnyPipeFlowed = false;
+        for (int i = 0; i < holeDirections.Count; i++)
+        {
+            if (CheckNearlyPipeAndSetFlowEnabled((int)holeDirections[i]))
+            {
+                isAnyPipeFlowed = true;
+            }
+        }
+
+        if (isAnyPipeFlowed)
+        {
+            SetFlowEnabled(true);
+        }
+        else
+        {
+            SetFlowEnabled(false);
+        }
+    }
+#else
+/// <summary>
     /// 파이프를 시계방향으로 90도 회전시킴
     /// </summary>
     [ServerRpc(RequireOwnership = false)]
@@ -76,6 +131,7 @@ public class Pipe : NetworkBehaviour
         if (rotateDir.Value > MAX_ROTATE_INDEX)
             rotateDir.Value = 0;
     }
+#endif
 
     private IEnumerator Rotate(int dir)
     {

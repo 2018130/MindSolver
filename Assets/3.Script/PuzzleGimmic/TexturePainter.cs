@@ -15,6 +15,8 @@ public class TexturePainter : MonoBehaviour
     [Header("Progress Settings")]
 
     [SerializeField]
+    private bool checkPercent = true;
+    [SerializeField]
     private float targetPercentage = 0.9f;
     [SerializeField]
     private float checkInterval = 0.5f;
@@ -23,20 +25,28 @@ public class TexturePainter : MonoBehaviour
     private Texture2D checkTexture;
     private RenderTexture smallRT;
 
+    [SerializeField]
+    private Material paintMaterial;
+    [SerializeField]
+    private bool isErasing = false;
+
     private void Start()
     {
         ClearMask();
 
-        smallRT = new RenderTexture(64, 64, 0, RenderTextureFormat.R8);
-        checkTexture = new Texture2D(64, 64, TextureFormat.R8, false);
+        if (checkPercent)
+        {
+            smallRT = new RenderTexture(64, 64, 0, RenderTextureFormat.R8);
+            checkTexture = new Texture2D(64, 64, TextureFormat.R8, false);
 
-        // 주기적으로 검사하는 코루틴 시작
-        StartCoroutine(CheckProgressRoutine());
+            // 주기적으로 검사하는 코루틴 시작
+            StartCoroutine(CheckProgressRoutine());
+        }
     }
 
     private void Update()
     {
-        if(InputManager.Singleton.LeftButtonClicked)
+        if (InputManager.Singleton.LeftButtonClicked)
         {
             Ray ray = Camera.main.ScreenPointToRay(InputManager.Singleton.MousePosition);
             RaycastHit hit;
@@ -66,10 +76,23 @@ public class TexturePainter : MonoBehaviour
         float x = uv.x * maskRT.width;
         float y = uv.y * maskRT.height;
         float size = brushSize * maskRT.height;
+        
+        Color targetColor = isErasing ? Color.black : Color.white;
+
+        // 쉐이더가 _BaseColor 프로퍼티를 가지고 있는지 확인하고 값 설정
+        if (paintMaterial.HasProperty("_BaseColor"))
+        {
+            paintMaterial.SetColor("_BaseColor", targetColor);
+        }
+        else if (paintMaterial.HasProperty("_Color")) // 혹시 2D Sprite 쉐이더일 경우 대비
+        {
+            paintMaterial.SetColor("_Color", targetColor);
+        }
 
         Graphics.DrawTexture(
             new Rect(x - size / 2, y - size / 2, size, size),
-            brushTexture);
+            brushTexture,
+            paintMaterial);
 
         GL.PopMatrix();
         RenderTexture.active = null;
