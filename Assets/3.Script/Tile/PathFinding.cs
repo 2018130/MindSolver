@@ -20,7 +20,7 @@ public class PathFinding : MonoBehaviour
     private TileController tileController;
 
     [SerializeField]
-    private GameObject player;
+    private PlayerController player;
 
     private void Start()
     {
@@ -41,9 +41,10 @@ public class PathFinding : MonoBehaviour
                 Vector2 tilePos = tileController.GetTilePos(i, j);
                 Collider2D col = Physics2D.OverlapCircle(tilePos, 0.01f, moveLayer);
                 bool canMove = false;
-                
-                if(col != null)
+
+                if(col != null && !col.CompareTag("Obstacle"))
                 {
+                    Debug.Log($"{i} {j} col count : {col.name}");
                     canMove = true;
                 }
 
@@ -161,18 +162,9 @@ public class PathFinding : MonoBehaviour
         //
         for(int i = 0; i < road.Count; i++)
         {
-            float timer = 0f;
-            Vector3 origin = player.transform.position;
             Vector3 dest = tileController.GetTilePos(road[i].index.y, road[i].index.x);
 
-            while(timer < duration)
-            {
-                timer += Time.deltaTime;
-                yield return null;
-
-                player.transform.position = Vector3.Lerp(origin, dest, timer / duration);
-            }
-            player.transform.position = dest;
+            yield return player.MoveTo(dest);
         }
     }
 }

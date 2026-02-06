@@ -9,6 +9,8 @@ public class InputManager : SingletonBehaviour<InputManager>
     public Vector2 MousePosition { get; set; }
     public Action OnClickedLeftBtn { get; set; }
 
+    public bool LeftButtonClicked = false;
+
     private PlayerInput playerInput;
 
     protected override void Awake()
@@ -31,6 +33,11 @@ public class InputManager : SingletonBehaviour<InputManager>
         if(callback.phase == InputActionPhase.Started)
         {
             OnClickedLeftBtn?.Invoke();
+            LeftButtonClicked = true;
+        }
+        else if(callback.phase == InputActionPhase.Canceled)
+        {
+            LeftButtonClicked = false;
         }
     }
 
