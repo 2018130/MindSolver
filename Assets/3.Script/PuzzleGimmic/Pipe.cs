@@ -96,7 +96,7 @@ public class Pipe : NetworkBehaviour
         if (rotateDir > MAX_ROTATE_INDEX)
             rotateDir = 0;
 
-    StartCoroutine(Rotate(rotateDir));
+        StartCoroutine(Rotate(rotateDir));
 
         // 인접한 타일의 타일 흐름 정보 갱신
         bool isAnyPipeFlowed = false;
