@@ -3,8 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ObjectRigidbody : MonoBehaviour
+public class ObjectRigidbody : MonoBehaviour, IInteractable
 {
+    [SerializeField]
+    private float maxAccelerationAmount = 100f;
     [SerializeField]
     private float accelerationAmount = 3f;
 
@@ -29,24 +31,29 @@ public class ObjectRigidbody : MonoBehaviour
         }
     }
 
-    public void AddForce(Vector2 hitPoint)
-    {
-        Debug.Log($"{gameObject.name} add force");
-        float forceX = accelerationAmount / (col.bounds.center.x - hitPoint.x);
-        float forceY = accelerationAmount / (col.bounds.center.y - hitPoint.y);
-
-        acceleration.x = forceX;
-        acceleration.y = forceY;
-    }
-
     private void ApplyDamping()
     {
-        Debug.Log($"{gameObject.name} damping");
         int signX = acceleration.x > 0 ? 1 : -1;
         int signY = acceleration.y > 0 ? 1 : -1;
         acceleration.x -= signX * damping * Time.deltaTime;
         acceleration.y -= signY * damping * Time.deltaTime;
 
         transform.position += acceleration * Time.deltaTime * Time.deltaTime;
+    }
+
+    public void Interact(Vector2 worldPositionFromMousePosition)
+    {
+        float forceX = accelerationAmount / (col.bounds.center.x - worldPositionFromMousePosition.x);
+        forceX = Mathf.Clamp(forceX, -maxAccelerationAmount, maxAccelerationAmount);
+        float forceY = accelerationAmount / (col.bounds.center.y - worldPositionFromMousePosition.y);
+        forceY = Mathf.Clamp(forceY, -maxAccelerationAmount, maxAccelerationAmount);
+
+        acceleration.x = forceX;
+        acceleration.y = forceY;
+    }
+
+    public void EndInteract()
+    {
+
     }
 }
