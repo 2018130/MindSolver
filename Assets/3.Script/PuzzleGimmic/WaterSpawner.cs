@@ -26,7 +26,7 @@ public class WaterSpawner : NetworkBehaviour
 
     [SerializeField]
     private int maxWaterSize = 100;
-    private static GameObject[] waterPool;
+    private GameObject[] waterPool;
 
     [Space(10f)]
     private int waterSpawnableCount = 0;
@@ -54,8 +54,10 @@ public class WaterSpawner : NetworkBehaviour
         {
             waterSpawnableCount++;
 
+            Debug.Log($"{gameObject} spawnWater : {waterSpawnableCount} {maxWaterSpawnableCount}");
             if (waterSpawnableCount > maxWaterSpawnableCount)
             {
+                Debug.Log("1111");
                 CloseFauset();
             }
         }
@@ -137,15 +139,21 @@ public class WaterSpawner : NetworkBehaviour
         {
             yield return null;
 
-//#if UNITY_EDITOR
-            if (canSpawn)/*
+#if UNITY_EDITOR
+            Debug.Log(canSpawn);
+            if (canSpawn)
+            {
+                Debug.Log("2222");
+                SpawnWaterFromPool();
+                yield return new WaitForSeconds(spawnDelay);
+            }
 #else
                 if(canSpawn.Value)
-#endif*/
             {
                 SpawnWaterFromPool();
                 yield return new WaitForSeconds(spawnDelay);
             }
+#endif
         }
     }
 
