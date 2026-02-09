@@ -49,6 +49,17 @@ public class WaterSpawner : NetworkBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+#if UNITY_EDITOR
+        if (LayerMask.LayerToName(collision.gameObject.layer) == "Water")
+        {
+            waterSpawnableCount++;
+
+            if (waterSpawnableCount > maxWaterSpawnableCount)
+            {
+                CloseFauset();
+            }
+        }
+#else
         if(IsServer)
         {
             if (LayerMask.LayerToName(collision.gameObject.layer) == "Water")
@@ -57,18 +68,26 @@ public class WaterSpawner : NetworkBehaviour
 
                 if (waterSpawnableCount > maxWaterSpawnableCount)
                 {
-#if UNITY_EDITOR
-                    CloseFauset();
-#else
                     CloseFauset_ServerRpc();
-#endif
                 }
             }
         }
+#endif
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
+#if UNITY_EDITOR
+        if (LayerMask.LayerToName(collision.gameObject.layer) == "Water")
+        {
+            waterSpawnableCount--;
+
+            if (waterSpawnableCount < maxWaterSpawnableCount)
+            {
+                OpenFauset();
+            }
+        }
+#else
         if (IsServer)
         {
             if (LayerMask.LayerToName(collision.gameObject.layer) == "Water")
@@ -77,14 +96,11 @@ public class WaterSpawner : NetworkBehaviour
 
                 if (waterSpawnableCount < maxWaterSpawnableCount)
                 {
-#if UNITY_EDITOR
-                    OpenFauset();
-#else
                     OpenFauset_ServerRpc();
-#endif
                 }
             }
         }
+#endif
     }
 
 #if UNITY_EDITOR
@@ -117,15 +133,15 @@ public class WaterSpawner : NetworkBehaviour
 
     private IEnumerator SpawnWater_co()
     {
-        while(true)
+        while (true)
         {
             yield return null;
 
-#if UNITY_EDITOR
-            if(canSpawn)
+//#if UNITY_EDITOR
+            if (canSpawn)/*
 #else
                 if(canSpawn.Value)
-#endif
+#endif*/
             {
                 SpawnWaterFromPool();
                 yield return new WaitForSeconds(spawnDelay);
@@ -153,7 +169,7 @@ public class WaterSpawner : NetworkBehaviour
     {
         waterPool = new GameObject[maxWaterSize];
 
-        for(int i = 0; i < maxWaterSize; i++)
+        for (int i = 0; i < maxWaterSize; i++)
         {
             waterPool[i] = Instantiate(waterPrefab);
             waterPool[i].transform.SetParent(transform);
