@@ -7,12 +7,16 @@ public class PathLengthTester : MonoBehaviour
     [Header("공통 환경 설정")]
     [Tooltip("좌표 계산의 기준이 되는 바닥 타일맵입니다.")]
     public Tilemap groundTilemap;
-    [Tooltip("이동 가능한 타일만 감지하기 위한 레이어 설정입니다.")]
+
+    [Header("장애물 설정")]
+    [Tooltip("여기에 'Obstacle' 타일맵을 넣어주세요!")]
+    public Tilemap obstacleTilemap;
+
+    [Tooltip("체크(V)하면 장애물을 벽으로 인식해서 못 지나가고,\n해제하면 장애물을 무시하고 지나갑니다.")]
+    public bool treatObstacleAsWall = true; 
+
+    [Tooltip("이동 가능한 타일만 감지하기 위한 레이어 설정입니다. (Ground용)")]
     public LayerMask moveLayer;
-    [Tooltip("체크 시 장애물(Obstacle) 태그가 있는 타일도 이동 가능한 경로로 포함하여 계산합니다.")]
-    public bool includeObstacles = true;
-    [Tooltip("장애물로 인식할 태그의 이름입니다.")]
-    public string obstacleTag = "Obstacle";
     [Tooltip("체크 시 씬 뷰(Scene View)에 탐색된 경로를 선으로 그려줍니다.")]
     public bool showDebugLine = true;
 
@@ -31,20 +35,18 @@ public class PathLengthTester : MonoBehaviour
     // A* 알고리즘을 위한 노드 클래스
     private class Node
     {
-        public Vector3Int gridPos; // 타일의 그리드 좌표
-        public Node parent;        // 경로 역추적을 위한 부모 노드
-        public int g;              // 시작점으로부터 현재 노드까지의 이동 비용
-        public int h;              // 현재 노드부터 목적지까지의 예상 비용 (휴리스틱)
-        public int f => g + h;     // 총 비용 (F = G + H)
+        public Vector3Int gridPos;
+        public Node parent;
+        public int g;
+        public int h;
+        public int f => g + h;
 
         public Node(Vector3Int pos) { gridPos = pos; }
     }
 
-    // 컴포넌트 우클릭 메뉴를 통해 함수를 실행합니다.
     [ContextMenu("두 경로 동시에 계산하기")]
     public void CalculatePath()
     {
-        // 필수 참조 요소가 연결되어 있는지 검사합니다.
         if (groundTilemap == null)
         {
             Debug.LogError("오류: 타일맵(Ground Tilemap)이 연결되지 않았습니다.");
@@ -58,7 +60,6 @@ public class PathLengthTester : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("루트 1: 시작점 또는 도착점이 설정되지 않아 계산을 건너뜁니다.");
             pathCount1 = 0;
         }
 
@@ -69,23 +70,20 @@ public class PathLengthTester : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("루트 2: 시작점 또는 도착점이 설정되지 않아 계산을 건너뜁니다.");
             pathCount2 = 0;
         }
 
         Debug.Log("---------- 계산 종료 ----------");
     }
 
-    // 각 루트의 유효성을 검사하고 길찾기를 실행하는 내부 함수
     private int ProcessPath(Transform start, Transform end, Color debugColor, string routeName)
     {
         Vector3Int startCell = groundTilemap.WorldToCell(start.position);
         Vector3Int endCell = groundTilemap.WorldToCell(end.position);
 
-        // 시작점 유효성 검사
         if (!IsWalkable(startCell))
         {
-            Debug.LogError($"오류 [{routeName}]: 시작 지점({startCell})에서 이동 가능한 타일을 찾을 수 없습니다.");
+            Debug.LogError($"오류 [{routeName}]: 시작 지점({startCell})이 이동 불가능한 곳입니다.");
             return 0;
         }
 
@@ -99,7 +97,6 @@ public class PathLengthTester : MonoBehaviour
         return count;
     }
 
-    // A* 알고리즘을 사용하여 최단 경로를 탐색하는 함수
     private int FindPath(Vector3Int startPos, Vector3Int targetPos, Color debugColor)
     {
         Node startNode = new Node(startPos);
@@ -129,7 +126,6 @@ public class PathLengthTester : MonoBehaviour
             openList.Remove(currentNode);
             closedList.Add(currentNode.gridPos);
 
-            // 목적지 도착 확인
             if (currentNode.gridPos == targetNode.gridPos)
             {
                 return CalculateStepCount(currentNode, debugColor);
@@ -163,23 +159,29 @@ public class PathLengthTester : MonoBehaviour
         return 0;
     }
 
-    // 물리 엔진을 이용한 타일 이동 가능 여부 체크
     private bool IsWalkable(Vector3Int cellPos)
     {
+        // 장애물을 벽으로 취급 (True)
+        if (treatObstacleAsWall)
+        {
+            // 장애물 타일맵에 타일이 있으면 못 감(False)
+            if (obstacleTilemap != null && obstacleTilemap.HasTile(cellPos))
+            {
+                return false;
+            }
+        }
+        // 만약 treatObstacleAsWall가 False(해제)라면, 위의 코드를 무시하고 아래로 내려감!
+        // 즉, 장애물이 있어도 바닥만 있으면 통과 가능!
+
+        // [바닥 체크] 물리 엔진(Collider)을 이용해 바닥이 있는지 확인
         Vector3 worldPos = groundTilemap.GetCellCenterWorld(cellPos);
         Collider2D col = Physics2D.OverlapPoint(worldPos, moveLayer);
 
-        if (col == null) return false;
+        if (col == null) return false; // 바닥 없으면 낙사
 
-        if (col.CompareTag(obstacleTag))
-        {
-            return includeObstacles;
-        }
-
-        return true;
+        return true; // 바닥 있으면 OK
     }
 
-    // 경로 역추적 및 결과 반환 (디버그 라인 그리기 포함)
     private int CalculateStepCount(Node endNode, Color lineColor)
     {
         int count = 0;
@@ -193,7 +195,6 @@ public class PathLengthTester : MonoBehaviour
             current = current.parent;
         }
 
-        // 씬 뷰에 경로 그리기 (루트별로 다른 색상 적용)
         if (showDebugLine)
         {
             for (int i = 0; i < debugPathPoints.Count - 1; i++)
@@ -203,7 +204,6 @@ public class PathLengthTester : MonoBehaviour
         return count;
     }
 
-    // 맨해튼 거리 휴리스틱
     private int GetManhattanDistance(Vector3Int a, Vector3Int b)
     {
         return (Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y)) * 10;
