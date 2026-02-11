@@ -166,9 +166,6 @@ public class NetworkRelayManager : MonoBehaviour
                 Debug.LogWarning($"Failed to close lobby: {e}");
             }
         }
-
-        // 2. 인게임 씬 로드 (Netcode의 씬 관리 기능 사용 권장)
-        // NetworkManager.Singleton.SceneManager.LoadScene("GameScene", UnityEngine.SceneManagement.LoadSceneMode.Single);
     }
 
 
