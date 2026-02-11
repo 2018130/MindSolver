@@ -19,7 +19,7 @@ public class ThreadHandle : NetworkBehaviour
 
     private void Update()
     {
-        if(InputManager.Singleton.LeftButtonClicked)
+        if(InputManager.Singleton.LeftButtonClicked && IsOwner)
         {
             Vector2 worldPos = Camera.main.ScreenToWorldPoint(InputManager.Singleton.MousePosition);
             Interact(worldPos);
