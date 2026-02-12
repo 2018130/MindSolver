@@ -25,16 +25,13 @@ public class CatmullRomPath : NetworkBehaviour
     // 소유권 정하기 용
     private static bool hasServerPath = false;
     private static int scriptCount = 0;
+
     private NetworkVariable<bool> isServerPath = new NetworkVariable<bool>();
     public NetworkVariable<bool> IsServerPath => isServerPath;
 
     private void Awake()
     {
         lineRenderer = GetComponent<LineRenderer>();
-        if(IsServer)
-        {
-            CreateWaypoint(waypointCount);
-        }
     }
 
     public override void OnNetworkSpawn()
@@ -43,19 +40,22 @@ public class CatmullRomPath : NetworkBehaviour
 
         if(IsServer)
         {
-            if (!hasServerPath && scriptCount == 1)
+            if (scriptCount == 1)
             {
-                isServerPath.Value = true;
+                isServerPath.Value = !hasServerPath;
             }
             else
             {
-                bool isServerPath = UnityEngine.Random.Range(0, 1) == 0 ? false : true;
+                bool isServerPath = UnityEngine.Random.Range(0, 2) == 0 ? false : true;
                 this.isServerPath.Value = isServerPath;
 
                 hasServerPath = isServerPath;
             }
             Debug.Log($"{gameObject}'s owner is server {hasServerPath}");
             scriptCount++;
+
+
+            CreateWaypoint(waypointCount);
         }
 
         if (waypoints == null || waypoints.Count < 2)

@@ -13,32 +13,23 @@ public class LineChecker : NetworkBehaviour
 
     private CatmullRomPath _carmullRomPath;
 
-    public override void OnNetworkSpawn()
+    private void Awake()
     {
-        base.OnNetworkSpawn();
-
-        if (!IsServer)
-            return;
-
         _carmullRomPath = GetComponent<CatmullRomPath>();
-        
-        foreach (var meshDrawer in FindObjectsByType<DrawLineWithMesh>(FindObjectsSortMode.None))
-        {
-            if (_carmullRomPath.IsServerPath.Value && meshDrawer.IsServer)
-            {
-                _drawLineWithMesh = meshDrawer;
-            }
-            else
-            {
-                _drawLineWithMesh = meshDrawer;
-            }
-        }
-
-        _drawLineWithMesh.Vertices.OnListChanged += CheckDistance;
     }
 
-    private void CheckDistance(NetworkListEvent<Vector3> networkListEvent)
+    public void Initialize(DrawLineWithMesh drawLineWithMesh)
     {
+        _drawLineWithMesh = drawLineWithMesh;
+    }
+
+    public void CheckDistance(NetworkListEvent<Vector3> networkListEvent)
+    {
+        if(_drawLineWithMesh == null)
+        {
+            return;
+        }
+
         if (_drawLineWithMesh.Vertices.Count % 2 == 0)
         {
             // y°ª ºñ±³

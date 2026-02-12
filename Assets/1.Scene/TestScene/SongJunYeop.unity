@@ -386,6 +386,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 694904134}
+  - component: {fileID: 694904138}
   - component: {fileID: 694904136}
   - component: {fileID: 694904135}
   - component: {fileID: 694904137}
@@ -458,7 +459,7 @@ LineRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -1
   m_Positions:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 1}
@@ -563,6 +564,20 @@ MonoBehaviour:
   AutoObjectParentSync: 1
   SyncOwnerTransformWhenParented: 1
   AllowOwnerToParent: 0
+--- !u!114 &694904138
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 694904133}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5f11a7001ecc2349b6a24d0e4efefe1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LineChecker
+  ShowTopMostFoldoutHeaderGroup: 1
+  outLineLength: 1
 --- !u!1 &718040763
 GameObject:
   m_ObjectHideFlags: 0
@@ -1232,6 +1247,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1250892895}
+  - component: {fileID: 1250892899}
   - component: {fileID: 1250892897}
   - component: {fileID: 1250892896}
   - component: {fileID: 1250892898}
@@ -1304,7 +1320,7 @@ LineRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -1
   m_Positions:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 1}
@@ -1409,6 +1425,20 @@ MonoBehaviour:
   AutoObjectParentSync: 1
   SyncOwnerTransformWhenParented: 1
   AllowOwnerToParent: 0
+--- !u!114 &1250892899
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1250892894}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5f11a7001ecc2349b6a24d0e4efefe1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LineChecker
+  ShowTopMostFoldoutHeaderGroup: 1
+  outLineLength: 1
 --- !u!1 &1259657944
 GameObject:
   m_ObjectHideFlags: 0
@@ -2517,7 +2547,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Spanwer
   ShowTopMostFoldoutHeaderGroup: 1
-  networkObjectPrefab: {fileID: 5646091430044243232, guid: 45112c3763cabae458a8111946f5720d, type: 3}
+  networkObjectPrefab: {fileID: 982282789866553901, guid: 50c1a66a5d226844fb1e36a49ee2e65b, type: 3}
   spawnServerOnStart: 1
   spawnClientOnStart: 1
 --- !u!1 &2113330888

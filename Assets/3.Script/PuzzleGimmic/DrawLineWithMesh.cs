@@ -37,44 +37,70 @@ public class DrawLineWithMesh : NetworkBehaviour
         uvs.OnListChanged += OnUVChanged;
     }
 
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+
+        if(IsServer)
+        {
+            foreach(var path in FindObjectsByType<CatmullRomPath>(FindObjectsSortMode.None))
+            {
+                if (path.IsServerPath.Value)
+                {
+                    if(IsOwner)
+                    {
+                        path.GetComponent<LineChecker>().Initialize(this);
+                        vertices.OnListChanged += path.GetComponent<LineChecker>().CheckDistance;
+                    }
+                }
+                else
+                {
+                    if(!IsOwner)
+                    {
+                        path.GetComponent<LineChecker>().Initialize(this);
+                        vertices.OnListChanged += path.GetComponent<LineChecker>().CheckDistance;
+                    }
+                }
+            }
+        }
+    }
+
     private void OnVerticesChanged(NetworkListEvent<Vector3> networkListEvent)
     {
-        if (triangles.Count % 2 != 0)
-            return;
-
         List<Vector3> vectorVertices = new List<Vector3>();
         foreach (var vertex in vertices)
         {
             vectorVertices.Add(vertex);
         }
-        mesh.SetVertices(vectorVertices);
+
+        if (vectorVertices.Count % 2 == 0)
+        {
+            mesh.SetVertices(vectorVertices);
+        }
     }
 
     private void OnTrianglesChanged(NetworkListEvent<int> netowrkListEvent)
     {
-        if (triangles.Count % 6 != 0)
-            return;
-
         List<int> vectorTriangles = new List<int>();
         foreach (var triangles in triangles)
         {
             vectorTriangles.Add(triangles);
         }
-        mesh.SetTriangles(vectorTriangles, 0);
+
+        if(vectorTriangles.Count % 6 == 0)
+            mesh.SetTriangles(vectorTriangles, 0);
     }
 
     private void OnUVChanged(NetworkListEvent<Vector2> networkListEvent)
     {
-        if (triangles.Count % 2 != 0)
-            return;
-
         List<Vector2> vectorUV = new List<Vector2>();
         foreach (var uv in uvs)
         {
             vectorUV.Add(uv);
         }
-        mesh.SetUVs(0, vectorUV);
-        mesh.RecalculateBounds();
+
+        if(vectorUV.Count % 2 == 0 && vertices.Count == uvs.Count)
+            mesh.SetUVs(0, vectorUV);
     }
 
     private void Update()
