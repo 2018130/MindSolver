@@ -1,0 +1,478 @@
+fileFormatVersion: 2
+guid: 82f056afd77d54949ab9558b50ac1e3b
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -2606295568965229564
+    second: SandwichPiece (2)_0
+  - first:
+      213: 8837834101888434303
+    second: SandwichPiece (2)_1
+  - first:
+      213: -346946442433213977
+    second: SandwichPiece (2)_2
+  - first:
+      213: 984174436526356350
+    second: SandwichPiece (2)_3
+  - first:
+      213: -1463779212449576377
+    second: SandwichPiece (2)_4
+  - first:
+      213: -3667153759120757750
+    second: SandwichPiece (2)_5
+  - first:
+      213: -8009672949125237320
+    second: SandwichPiece (2)_6
+  - first:
+      213: 7058210320543785818
+    second: SandwichPiece (2)_7
+  - first:
+      213: -9128355858902135861
+    second: SandwichPiece (2)_8
+  - first:
+      213: -9176754774122321528
+    second: SandwichPiece (2)_9
+  - first:
+      213: 803904213759399806
+    second: SandwichPiece (2)_10
+  - first:
+      213: 6212404814434066703
+    second: SandwichPiece (2)_11
+  - first:
+      213: 122780420797575207
+    second: SandwichPiece (2)_12
+  - first:
+      213: 2947520606576289703
+    second: SandwichPiece (2)_13
+  - first:
+      213: -197681822900713653
+    second: SandwichPiece (2)_14
+  - first:
+      213: -267173781568815651
+    second: SandwichPiece (2)_15
+  - first:
+      213: -5588629975398061021
+    second: SandwichPiece (2)_16
+  - first:
+      213: 1570741429341864608
+    second: SandwichPiece (2)_17
+  - first:
+      213: 1161955693448664118
+    second: SandwichPiece (2)_18
+  - first:
+      213: 5757116682997254943
+    second: SandwichPiece (2)_19
+  - first:
+      213: 1609485735136552622
+    second: SandwichPiece (2)_20
+  - first:
+      213: 8899912202312151116
+    second: SandwichPiece (2)_21
+  - first:
+      213: -6046639979868651676
+    second: SandwichPiece (2)_22
+  - first:
+      213: -1468481534814037541
+    second: SandwichPiece (2)_23
+  - first:
+      213: -3306172854136002887
+    second: SandwichPiece (2)_24
+  - first:
+      213: -6577117604644422753
+    second: SandwichPiece (2)_25
+  - first:
+      213: 3883205611901120023
+    second: SandwichPiece (2)_26
+  - first:
+      213: 5456676360205685841
+    second: SandwichPiece (2)_27
+  - first:
+      213: 7156178292991949832
+    second: SandwichPiece (2)_28
+  - first:
+      213: 7154048805016484813
+    second: SandwichPiece (2)_29
+  - first:
+      213: 3638745966806217004
+    second: SandwichPiece (2)_30
+  - first:
+      213: -370649748726638569
+    second: SandwichPiece (2)_31
+  - first:
+      213: -8189361242201690095
+    second: SandwichPiece (2)_32
+  - first:
+      213: -6571696825728229252
+    second: SandwichPiece (2)_33
+  - first:
+      213: -4727429305275151383
+    second: SandwichPiece (2)_34
+  - first:
+      213: -4322409723215897285
+    second: SandwichPiece (2)_35
+  - first:
+      213: -4883577623900083834
+    second: SandwichPiece (2)_36
+  - first:
+      213: -2433620657410255161
+    second: SandwichPiece (2)_37
+  - first:
+      213: -8584319043396404911
+    second: SandwichPiece (2)_38
+  - first:
+      213: 176469010945980510
+    second: SandwichPiece (2)_39
+  - first:
+      213: 6871351394161039380
+    second: SandwichPiece (2)_40
+  - first:
+      213: -2328276172334082222
+    second: SandwichPiece (2)_41
+  - first:
+      213: 8079750155967376907
+    second: SandwichPiece (2)_42
+  - first:
+      213: 3744658820480392679
+    second: SandwichPiece (2)_43
+  - first:
+      213: -5907103560262104593
+    second: SandwichPiece (2)_44
+  - first:
+      213: 5211586653785452493
+    second: SandwichPiece (2)_45
+  - first:
+      213: -8757783074938175423
+    second: SandwichPiece (2)_46
+  - first:
+      213: -4697948778241199263
+    second: SandwichPiece (2)_47
+  - first:
+      213: -7715741052968993467
+    second: SandwichPiece (2)_48
+  - first:
+      213: 2801099203380072382
+    second: SandwichPiece (2)_49
+  - first:
+      213: -4786341471909254691
+    second: SandwichPiece (2)_50
+  - first:
+      213: -4118366791487180246
+    second: SandwichPiece (2)_51
+  - first:
+      213: -272342818817439519
+    second: SandwichPiece (2)_52
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: iOS
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: SandwichPiece (2)_0
+      rect:
+        serializedVersion: 2
+        x: 856
+        y: 343
+        width: 242
+        height: 210
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 40427202df394dbd0800000000000000
+      internalID: -2606295568965229564
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SandwichPiece (2)_1
+      rect:
+        serializedVersion: 2
+        x: 240
+        y: 238
+        width: 132
+        height: 112
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7e6546e9e87c26245bdc3a815e1ff16c
+      internalID: 8837834101888434303
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SandwichPiece (2)_2
+      rect:
+        serializedVersion: 2
+        x: 711
+        y: 103
+        width: 165
+        height: 81
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6da86b58597ec2d41a628e9103ddfca1
+      internalID: -346946442433213977
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SandwichPiece (2)_3
+      rect:
+        serializedVersion: 2
+        x: 679
+        y: 398
+        width: 138
+        height: 159
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3bf10efaf6114294c9af0c722b3e7527
+      internalID: 984174436526356350
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SandwichPiece (2)_4
+      rect:
+        serializedVersion: 2
+        x: 457
+        y: 353
+        width: 136
+        height: 124
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 50139f2baa6f81f4e81e2a3c361fbf08
+      internalID: -1463779212449576377
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SandwichPiece (2)_5
+      rect:
+        serializedVersion: 2
+        x: 479
+        y: 226
+        width: 157
+        height: 105
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 84b2a2184229a2d42aec9f986590c1c4
+      internalID: -3667153759120757750
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SandwichPiece (2)_6
+      rect:
+        serializedVersion: 2
+        x: 655
+        y: 215
+        width: 169
+        height: 141
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8cf074ca21a744443bfa0bf03b3deebf
+      internalID: -8009672949125237320
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 50320f05ae57ffc48bdafee370062988
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":1280.0,"y":683.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
+    nameFileIdTable:
+      SandwichPiece (2)_0: -2606295568965229564
+      SandwichPiece (2)_1: 8837834101888434303
+      SandwichPiece (2)_2: -346946442433213977
+      SandwichPiece (2)_3: 984174436526356350
+      SandwichPiece (2)_4: -1463779212449576377
+      SandwichPiece (2)_5: -3667153759120757750
+      SandwichPiece (2)_6: -8009672949125237320
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

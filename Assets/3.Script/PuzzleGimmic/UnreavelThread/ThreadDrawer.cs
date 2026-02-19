@@ -41,6 +41,11 @@ public class ThreadDrawer : NetworkBehaviour
     [SerializeField]
     private float cycleCheckDelay = 0.3f;
 
+    [Header("_ETC"), Space(10f)]
+
+    [SerializeField]
+    private GameObject background;
+
     private void Awake()
     {
         _netRopeNodes_ownedRed = new NetworkList<NetworkObjectReference>();
@@ -53,33 +58,8 @@ public class ThreadDrawer : NetworkBehaviour
 
     }
 
-    public override void OnNetworkSpawn()
-    {
-        base.OnNetworkSpawn();
 
-        InitThread();
-
-        if (IsServer)
-        {
-            foreach (var hinge in _netRopeNodes_ownedBlue)
-            {
-                hinge.TryGet(out NetworkObject netObj);
-                netObj.GetComponent<Rigidbody>().isKinematic = true;
-            }
-
-            StartCoroutine(CheckCycle());
-        }
-        else
-        {
-            foreach (var hinge in _netRopeNodes_ownedRed)
-            {
-                hinge.TryGet(out NetworkObject netObj);
-                netObj.GetComponent<Rigidbody>().isKinematic = true;
-            }
-        }
-    }
-
-    private void InitThread()
+    public void InitThread()
     {
         float startAngle = 270f;
         float angleStep = 360f / angleCount;
@@ -230,6 +210,26 @@ public class ThreadDrawer : NetworkBehaviour
                 }
             }
         }
+
+
+        if (IsServer)
+        {
+            foreach (var hinge in _netRopeNodes_ownedBlue)
+            {
+                hinge.TryGet(out NetworkObject netObj);
+                netObj.GetComponent<Rigidbody>().isKinematic = true;
+            }
+
+            StartCoroutine(CheckCycle());
+        }
+        else
+        {
+            foreach (var hinge in _netRopeNodes_ownedRed)
+            {
+                hinge.TryGet(out NetworkObject netObj);
+                netObj.GetComponent<Rigidbody>().isKinematic = true;
+            }
+        }
     }
 
     private void Update()
@@ -245,10 +245,21 @@ public class ThreadDrawer : NetworkBehaviour
             _netRopeNodes_ownedRed.Count == 0)
             return;
 
+        if(!background.activeSelf)
+        {
+            background.SetActive(true);
+        }
+
         lineRenderer.positionCount = _netRopeNodes_ownedRed.Count + _netRopeNodes_ownedBlue.Count;
 
         for (int i = 0; i < _netRopeNodes_ownedRed.Count; i++)
         {
+            if (_netRopeNodes_ownedRed == null ||
+                _netRopeNodes_ownedBlue == null ||
+                _netRopeNodes_ownedRed.Count == 0 ||
+                _netRopeNodes_ownedRed.Count == 0)
+                return;
+
             _netRopeNodes_ownedRed[i].TryGet(out NetworkObject networkObject);
             Vector3 position = networkObject.transform.position;
             lineRenderer.SetPosition(i, position);
@@ -256,6 +267,12 @@ public class ThreadDrawer : NetworkBehaviour
 
         for (int i = 0; i < _netRopeNodes_ownedBlue.Count; i++)
         {
+            if (_netRopeNodes_ownedRed == null ||
+                _netRopeNodes_ownedBlue == null ||
+                _netRopeNodes_ownedRed.Count == 0 ||
+                _netRopeNodes_ownedRed.Count == 0)
+                return;
+
             _netRopeNodes_ownedBlue[i].TryGet(out NetworkObject networkObject);
             Vector3 position = networkObject.transform.position;
             lineRenderer.SetPosition(_netRopeNodes_ownedRed.Count + i, position);
@@ -270,6 +287,14 @@ public class ThreadDrawer : NetworkBehaviour
         }
 
         Debug.Log($"End game");
+        PuzzleMissonListener puzzleMissonListener = GetComponentInParent<PuzzleMissonListener>();
+        if(puzzleMissonListener != null)
+        {
+            _netRopeNodes_ownedRed = null;
+            _netRopeNodes_ownedBlue = null;
+
+            puzzleMissonListener.EndPuzzle(true);
+        }
     }
 
     public bool HasCycle(NetworkList<NetworkObjectReference> networkList)

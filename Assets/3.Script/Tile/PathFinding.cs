@@ -44,7 +44,7 @@ public class PathFinding : MonoBehaviour
 
                 if(col != null && !col.CompareTag("Obstacle"))
                 {
-                    Debug.Log($"{i} {j} col count : {col.name}");
+                    //Debug.Log($"{i} {j} col count : {col.name}");
                     canMove = true;
                 }
 

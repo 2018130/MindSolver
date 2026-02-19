@@ -16,7 +16,6 @@ public class WaterSpawner : NetworkBehaviour
     [SerializeField]
     private bool canSpawn = false;
 #else
-    [SerializeField]
     private NetworkVariable<bool> canSpawn = new NetworkVariable<bool>(false);
 #endif
     [SerializeField]
@@ -140,10 +139,8 @@ public class WaterSpawner : NetworkBehaviour
             yield return null;
 
 #if UNITY_EDITOR
-            Debug.Log(canSpawn);
             if (canSpawn)
             {
-                Debug.Log("2222");
                 SpawnWaterFromPool();
                 yield return new WaitForSeconds(spawnDelay);
             }

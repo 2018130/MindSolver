@@ -29,10 +29,17 @@ public class TexturePainter : MonoBehaviour
     private Material paintMaterial;
     [SerializeField]
     private bool isErasing = false;
+    [SerializeField]
+    private int initSplatCount = 5;
 
-    private void Start()
+    private void OnEnable()
     {
         ClearMask();
+
+        if (isErasing)
+        {
+            DrawRandomSplats();
+        }
 
         if (checkPercent)
         {
@@ -76,7 +83,7 @@ public class TexturePainter : MonoBehaviour
         float x = uv.x * maskRT.width;
         float y = uv.y * maskRT.height;
         float size = brushSize * maskRT.height;
-        
+
         Color targetColor = isErasing ? Color.black : Color.white;
 
         // 쉐이더가 _BaseColor 프로퍼티를 가지고 있는지 확인하고 값 설정
@@ -93,6 +100,49 @@ public class TexturePainter : MonoBehaviour
             new Rect(x - size / 2, y - size / 2, size, size),
             brushTexture,
             paintMaterial);
+
+        GL.PopMatrix();
+        RenderTexture.active = null;
+    }
+    private void DrawRandomSplats()
+    {
+        if (maskRT == null || brushTexture == null) return;
+
+        RenderTexture.active = maskRT;
+
+        GL.PushMatrix();
+        GL.LoadPixelMatrix(0, maskRT.width, maskRT.height, 0);
+
+        Color targetColor = isErasing ? Color.white : Color.black;
+
+        if (paintMaterial.HasProperty("_BaseColor"))
+        {
+            paintMaterial.SetColor("_BaseColor", targetColor);
+        }
+        else if (paintMaterial.HasProperty("_Color"))
+        {
+            paintMaterial.SetColor("_Color", targetColor);
+        }
+
+        // 지정된 개수만큼 무작위 위치에 브러시를 찍습니다.
+        for (int i = 0; i < initSplatCount; i++)
+        {
+            // 0 ~ 1 사이의 무작위 UV 좌표 생성
+            float randomU = UnityEngine.Random.value;
+            float randomV = UnityEngine.Random.value;
+
+            float x = randomU * maskRT.width;
+            float y = randomV * maskRT.height;
+
+            // 브러시 크기도 조금씩 다르게 하여 자연스러운 효과 부여
+            float randomScale = UnityEngine.Random.Range(1f, 2f);
+            float size = brushSize * maskRT.height * randomScale;
+
+            Graphics.DrawTexture(
+                new Rect(x - size / 2, y - size / 2, size, size),
+                brushTexture,
+                paintMaterial);
+        }
 
         GL.PopMatrix();
         RenderTexture.active = null;
@@ -114,14 +164,27 @@ public class TexturePainter : MonoBehaviour
             float progress = CalculateProgress();
             Debug.Log($"현재 진행도: {progress * 100:F1}%");
 
-            if (progress >= targetPercentage)
+            if (!isErasing)
             {
-                Debug.Log("🎉 퍼즐 완성! 다음 스테이지로 이동!");
+                if (progress >= targetPercentage)
+                {
+                    Debug.Log("🎉 퍼즐 완성! 다음 스테이지로 이동!");
+                    PuzzleMissonListener puzzleMissonListener = GetComponentInParent<PuzzleMissonListener>();
+                    puzzleMissonListener.EndPuzzle(true);
 
-                // TODO : 여기에 다음 스테이지 이동 로직 추가
-                // SceneManager.LoadScene("NextStage");
+                    yield break;
+                }
+            }
+            else
+            {
+                if (progress <= targetPercentage)
+                {
+                    Debug.Log("🎉 퍼즐 지우기 완료! 다음 스테이지로 이동!");
+                    PuzzleMissonListener puzzleMissonListener = GetComponentInParent<PuzzleMissonListener>();
+                    puzzleMissonListener.EndPuzzle(true);
 
-                yield break;
+                    yield break;
+                }
             }
         }
     }
