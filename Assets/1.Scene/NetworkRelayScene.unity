@@ -384,6 +384,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7067300177640128769, guid: 1676c87e05b01b54cb0f4006504cdc7d, type: 3}
+      propertyPath: m_MaxPacketQueueSize
+      value: 512
+      objectReference: {fileID: 0}
     - target: {fileID: 8966378910560084309, guid: 1676c87e05b01b54cb0f4006504cdc7d, type: 3}
       propertyPath: m_Name
       value: NetworkRelayManager

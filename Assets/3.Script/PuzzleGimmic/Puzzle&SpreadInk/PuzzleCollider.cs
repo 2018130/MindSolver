@@ -7,8 +7,6 @@ public class PuzzleCollider : MonoBehaviour
 {
     private GameObject piece;
 
-    private Collider2D col;
-
     [SerializeField]
     private Vector3 offset;
 
@@ -17,10 +15,17 @@ public class PuzzleCollider : MonoBehaviour
 
     private bool isPuzzleLinked;
 
+    private static int linkedPuzzleCount = 0;
+
     private void Awake()
     {
         piece = transform.parent.gameObject;
-        col = GetComponent<Collider2D>();
+    }
+
+    private void OnEnable()
+    {
+        isPuzzleLinked = false;
+        linkedPuzzleCount = 0;
     }
 
     private void OnTriggerStay2D(Collider2D collision)
@@ -36,6 +41,16 @@ public class PuzzleCollider : MonoBehaviour
                     puzzleController.piece.transform.SetParent(piece.transform);
 
                     isPuzzleLinked = true;
+                    linkedPuzzleCount++;
+                    Debug.Log($"linkedPuzzleCount : {linkedPuzzleCount}");
+                    if(linkedPuzzleCount >= PuzzleController.s_puzzleCount - 1)
+                    {
+                        PuzzleMissonListener puzzleMissonListener = GetComponentInParent<PuzzleMissonListener>();
+                        if (puzzleMissonListener != null)
+                        {
+                            puzzleMissonListener.EndPuzzle(true);
+                        }
+                    }
                 }
             }
         }
