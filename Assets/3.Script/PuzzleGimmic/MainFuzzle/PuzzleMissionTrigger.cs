@@ -29,6 +29,7 @@ public class PuzzleMissionTrigger : MonoBehaviour, IInteractable
 
     public void ClearPuzzle()
     {
+        isInteracted = false;
         Debug.Log($"Clear puzzle listened {listenedGame.gameObject}");
         //Destroy(gameObject);
     }

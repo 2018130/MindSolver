@@ -3935,10 +3935,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1455345729745289176, guid: 4f43d64835f58904d912e100057a81e5, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2704559204082861909, guid: 4f43d64835f58904d912e100057a81e5, type: 3}
       propertyPath: player
       value: 
       objectReference: {fileID: 638162372}
+    - target: {fileID: 2976601978570947065, guid: 4f43d64835f58904d912e100057a81e5, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3458305735993927841, guid: 4f43d64835f58904d912e100057a81e5, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5435901319784081893, guid: 4f43d64835f58904d912e100057a81e5, type: 3}
       propertyPath: m_Name
       value: PathFinding
@@ -3987,6 +3999,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7336317527507083731, guid: 4f43d64835f58904d912e100057a81e5, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8381228441429188174, guid: 4f43d64835f58904d912e100057a81e5, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -4009,6 +4029,14 @@ PrefabInstance:
     - target: {fileID: 498756093047660008, guid: 44152b0755a0c2043b70821441cd56bc, type: 3}
       propertyPath: m_Name
       value: Sandwich
+      objectReference: {fileID: 0}
+    - target: {fileID: 498756093047660008, guid: 44152b0755a0c2043b70821441cd56bc, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 906806090953109580, guid: 44152b0755a0c2043b70821441cd56bc, type: 3}
+      propertyPath: m_SortingOrder
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2769399632696993978, guid: 44152b0755a0c2043b70821441cd56bc, type: 3}
       propertyPath: m_LocalPosition.x
@@ -4048,6 +4076,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2769399632696993978, guid: 44152b0755a0c2043b70821441cd56bc, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5357499577316229626, guid: 44152b0755a0c2043b70821441cd56bc, type: 3}
+      propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6751674281174368319, guid: 44152b0755a0c2043b70821441cd56bc, type: 3}
@@ -4224,6 +4256,14 @@ PrefabInstance:
       propertyPath: m_Positions.Array.size
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1362230840340037074, guid: 9a7f8ebead80c9148b24e00149da79de, type: 3}
+      propertyPath: m_Parameters.widthCurve.m_Curve.Array.data[0].time
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1362230840340037074, guid: 9a7f8ebead80c9148b24e00149da79de, type: 3}
+      propertyPath: m_Parameters.widthCurve.m_Curve.Array.data[0].value
+      value: 0.20032924
+      objectReference: {fileID: 0}
     - target: {fileID: 3444142504396618517, guid: 9a7f8ebead80c9148b24e00149da79de, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 1757015060
@@ -4243,6 +4283,18 @@ PrefabInstance:
     - target: {fileID: 5136686405512122464, guid: 9a7f8ebead80c9148b24e00149da79de, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6399109845687851807, guid: 9a7f8ebead80c9148b24e00149da79de, type: 3}
+      propertyPath: maxRadius
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 6399109845687851807, guid: 9a7f8ebead80c9148b24e00149da79de, type: 3}
+      propertyPath: minRadius
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 6399109845687851807, guid: 9a7f8ebead80c9148b24e00149da79de, type: 3}
+      propertyPath: angleCount
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 6399109845687851807, guid: 9a7f8ebead80c9148b24e00149da79de, type: 3}
       propertyPath: background

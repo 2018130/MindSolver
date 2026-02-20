@@ -20,7 +20,6 @@ public class PuzzleMissonListener : MonoBehaviour
 
     public void StartPuzzle(PuzzleMissionTrigger sender)
     {
-        gameObject.SetActive(true);
         this.sender = sender;
 
         if(missionType == MissionType.Multi)
@@ -28,18 +27,27 @@ public class PuzzleMissonListener : MonoBehaviour
             ThreadDrawer drawer = GetComponentInChildren<ThreadDrawer>();
             if(drawer != null)
             {
-                drawer.InitThread();
+                drawer.StartGame();
             }
+        }
+        else
+        {
+            gameObject.SetActive(true);
         }
     }
 
     public void EndPuzzle(bool isClear)
     {
-        gameObject.SetActive(false);
-
-        if(isClear && sender != null)
+        if (missionType == MissionType.Multi)
         {
-            sender.ClearPuzzle();
+            if (isClear && sender != null)
+            {
+                sender.ClearPuzzle();
+            }
+        }
+        else
+        {
+            gameObject.SetActive(false);
         }
     }
 }
