@@ -1425,6 +1425,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PuzzleMissonListener
   missionType: 0
+  multiMissionType: 0
 --- !u!1 &1166639469
 GameObject:
   m_ObjectHideFlags: 0
@@ -1609,7 +1610,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PuzzleMissionTrigger
   isInteracted: 0
-  listenedGame: {fileID: 1462218070}
+  listenedGame: {fileID: 3873564306402767173}
 --- !u!114 &1254626466
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2253,17 +2254,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &1462218070 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5263166085984332840, guid: 9a7f8ebead80c9148b24e00149da79de, type: 3}
-  m_PrefabInstance: {fileID: 4414809981389637996}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d161fb2cacb96db40b506e6d3cef6bad, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PuzzleMissonListener
 --- !u!1 &1493396930
 GameObject:
   m_ObjectHideFlags: 0
@@ -2319,6 +2309,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PuzzleMissonListener
   missionType: 0
+  multiMissionType: 0
 --- !u!1 &1546721389 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7148842346311390988, guid: 1c2cd6c32634b3947b9ff06728c0f169, type: 3}
@@ -2337,6 +2328,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PuzzleMissonListener
   missionType: 0
+  multiMissionType: 0
 --- !u!1 &1655778585
 GameObject:
   m_ObjectHideFlags: 0
@@ -3573,6 +3565,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PuzzleMissonListener
   missionType: 0
+  multiMissionType: 0
 --- !u!1 &2099729764
 GameObject:
   m_ObjectHideFlags: 0
@@ -3712,6 +3705,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PuzzleMissonListener
   missionType: 0
+  multiMissionType: 0
 --- !u!1 &2113330888
 GameObject:
   m_ObjectHideFlags: 0
@@ -4098,6 +4092,10 @@ PrefabInstance:
       propertyPath: InScenePlacedSourceGlobalObjectIdHash
       value: 869752965
       objectReference: {fileID: 0}
+    - target: {fileID: 8153717507583451641, guid: 44152b0755a0c2043b70821441cd56bc, type: 3}
+      propertyPath: multiMissionType
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4159,9 +4157,17 @@ PrefabInstance:
       propertyPath: InScenePlacedSourceGlobalObjectIdHash
       value: 3118762998
       objectReference: {fileID: 0}
+    - target: {fileID: 2312025526154855193, guid: 107294cc2cc86bb48be3b15aae70f5aa, type: 3}
+      propertyPath: multiMissionType
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3152423588345780474, guid: 107294cc2cc86bb48be3b15aae70f5aa, type: 3}
       propertyPath: m_Name
       value: DrawLine
+      objectReference: {fileID: 0}
+    - target: {fileID: 3152423588345780474, guid: 107294cc2cc86bb48be3b15aae70f5aa, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3593484860017746212, guid: 107294cc2cc86bb48be3b15aae70f5aa, type: 3}
       propertyPath: GlobalObjectIdHash
@@ -4179,6 +4185,10 @@ PrefabInstance:
       propertyPath: InScenePlacedSourceGlobalObjectIdHash
       value: 3118762998
       objectReference: {fileID: 0}
+    - target: {fileID: 5452584579958193037, guid: 107294cc2cc86bb48be3b15aae70f5aa, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6680140379283705196, guid: 107294cc2cc86bb48be3b15aae70f5aa, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 3853803865
@@ -4192,6 +4202,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 107294cc2cc86bb48be3b15aae70f5aa, type: 3}
+--- !u!114 &3873564306402767173 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2312025526154855193, guid: 107294cc2cc86bb48be3b15aae70f5aa, type: 3}
+  m_PrefabInstance: {fileID: 3873564306402767172}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d161fb2cacb96db40b506e6d3cef6bad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PuzzleMissonListener
 --- !u!1001 &4414809981389637996
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4286,11 +4307,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6399109845687851807, guid: 9a7f8ebead80c9148b24e00149da79de, type: 3}
       propertyPath: maxRadius
-      value: 20
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 6399109845687851807, guid: 9a7f8ebead80c9148b24e00149da79de, type: 3}
       propertyPath: minRadius
-      value: 10
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 6399109845687851807, guid: 9a7f8ebead80c9148b24e00149da79de, type: 3}
       propertyPath: angleCount
@@ -4300,6 +4321,10 @@ PrefabInstance:
       propertyPath: background
       value: 
       objectReference: {fileID: 4414809981389637997}
+    - target: {fileID: 6399109845687851807, guid: 9a7f8ebead80c9148b24e00149da79de, type: 3}
+      propertyPath: distancePerHinge
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

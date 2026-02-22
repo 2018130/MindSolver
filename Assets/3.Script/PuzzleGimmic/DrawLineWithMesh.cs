@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class DrawLineWithMesh : NetworkBehaviour
@@ -29,40 +30,46 @@ public class DrawLineWithMesh : NetworkBehaviour
 
     private void Start()
     {
-        if (IsOwner)
-            return;
-
-        vertices.OnListChanged += OnVerticesChanged;
-        triangles.OnListChanged += OnTrianglesChanged;
-        uvs.OnListChanged += OnUVChanged;
-    }
-
-    public override void OnNetworkSpawn()
-    {
-        base.OnNetworkSpawn();
+        if (!IsOwner)
+        {
+            vertices.OnListChanged += OnVerticesChanged;
+            triangles.OnListChanged += OnTrianglesChanged;
+            uvs.OnListChanged += OnUVChanged;
+        }
 
         if(IsServer)
         {
-            foreach(var path in FindObjectsByType<CatmullRomPath>(FindObjectsSortMode.None))
-            {
-                if (path.IsServerPath.Value)
+                foreach (var path in FindObjectsByType<CatmullRomPath>(FindObjectsSortMode.None))
                 {
-                    if(IsOwner)
+                    if (path.IsServerPath.Value)
                     {
-                        path.GetComponent<LineChecker>().Initialize(this);
-                        vertices.OnListChanged += path.GetComponent<LineChecker>().CheckDistance;
+                        if (IsOwner)
+                        {
+                            path.GetComponent<LineChecker>().Initialize(this);
+                            vertices.OnListChanged += path.GetComponent<LineChecker>().CheckDistance;
+                        }
+                    }
+                    else
+                    {
+                        if (!IsOwner)
+                        {
+                            path.GetComponent<LineChecker>().Initialize(this);
+                            vertices.OnListChanged += path.GetComponent<LineChecker>().CheckDistance;
+                        }
                     }
                 }
-                else
-                {
-                    if(!IsOwner)
-                    {
-                        path.GetComponent<LineChecker>().Initialize(this);
-                        vertices.OnListChanged += path.GetComponent<LineChecker>().CheckDistance;
-                    }
-                }
-            }
+            
         }
+    }
+
+    private void OnApplicationQuit()
+    {
+        if (IsOwner)
+            return;
+
+        vertices.OnListChanged -= OnVerticesChanged;
+        triangles.OnListChanged -= OnTrianglesChanged;
+        uvs.OnListChanged -= OnUVChanged;
     }
 
     private void OnVerticesChanged(NetworkListEvent<Vector3> networkListEvent)

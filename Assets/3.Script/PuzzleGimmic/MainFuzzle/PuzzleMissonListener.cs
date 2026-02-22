@@ -1,13 +1,19 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.Netcode;
+using System.Net.NetworkInformation;
 using UnityEngine;
+using UnityEngine.Events;
 
 public enum MissionType
 {
     Single,
     Multi,
+}
+
+public enum MultiMissionType
+{
+    ThreadDrawer,
+    DrawLine,
+    Sandwich,
 }
 
 public class PuzzleMissonListener : MonoBehaviour
@@ -16,7 +22,13 @@ public class PuzzleMissonListener : MonoBehaviour
     private MissionType missionType = MissionType.Single;
     public MissionType MissionType => missionType;
 
+    [SerializeField]
+    private MultiMissionType multiMissionType = MultiMissionType.ThreadDrawer;
+
     private PuzzleMissionTrigger sender;
+
+    public event Action<MultiMissionType> OnStartPuzzle;
+    public event Action<MultiMissionType> OnEndPuzzle;
 
     public void StartPuzzle(PuzzleMissionTrigger sender)
     {
@@ -24,11 +36,7 @@ public class PuzzleMissonListener : MonoBehaviour
 
         if(missionType == MissionType.Multi)
         {
-            ThreadDrawer drawer = GetComponentInChildren<ThreadDrawer>();
-            if(drawer != null)
-            {
-                drawer.StartGame();
-            }
+            OnStartPuzzle?.Invoke(multiMissionType);
         }
         else
         {
@@ -42,7 +50,7 @@ public class PuzzleMissonListener : MonoBehaviour
         {
             if (isClear && sender != null)
             {
-                sender.ClearPuzzle();
+                OnEndPuzzle?.Invoke(multiMissionType);
             }
         }
         else

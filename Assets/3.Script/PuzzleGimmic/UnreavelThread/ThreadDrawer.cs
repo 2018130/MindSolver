@@ -22,9 +22,6 @@ public class ThreadDrawer : NetworkBehaviour
     private int hingeCount = 30;
 
     [SerializeField]
-    private float distancePerHinge = 0.8f;
-
-    [SerializeField]
     private int angleCount = 10;
     [SerializeField]
     private float minRadius = 0.5f;
@@ -39,13 +36,17 @@ public class ThreadDrawer : NetworkBehaviour
     [SerializeField]
     private float cycleCheckDelay = 0.3f;
 
-    // 게임 적용 값
-    private NetworkVariable<bool> gamePlaying = new NetworkVariable<bool>(false);
-
     [Header("_ETC"), Space(10f)]
 
     [SerializeField]
     private GameObject background;
+
+    [SerializeField]
+    private Vector3 redHandleSpawnPoint = new Vector3(-3, 0, 0);
+    [SerializeField]
+    private Vector3 blueHandleSpawnPoint = new Vector3(3, 0, 0);
+
+    private bool isGameStarting = false;
 
     private void Awake()
     {
@@ -59,15 +60,24 @@ public class ThreadDrawer : NetworkBehaviour
         {
             SpawnHinge();
             ConnectJoint(_netRopeNodes_ownedRed);
+            GetComponentInParent<PuzzleMissonListener>().OnStartPuzzle += StartGame;
+        }
+        else
+        {
             ConnectJoint(_netRopeNodes_ownedBlue, true);
         }
     }
 
-    public void StartGame()
+    public void StartGame(MultiMissionType multiMissionType)
     {
-        gamePlaying.Value = true;
-        StartCoroutine(CheckCycle());
-        SetHingePosition();
+        Debug.Log("1111");
+        if(multiMissionType == MultiMissionType.ThreadDrawer)
+        {
+            Debug.Log("2222");
+            StartGame_ClientRpc();
+            SetHingePosition();
+            StartCoroutine(CheckCycle());
+        }
     }
 
     /// <summary>
@@ -99,66 +109,78 @@ public class ThreadDrawer : NetworkBehaviour
 
     private void SetHingePosition()
     {
-        Vector3[] posVector = CalculateNodePositions(UnityEngine.Random.Range(minRadius, maxRadius), Vector3.zero);
-        for(int i = 0; i < _netRopeNodes_ownedBlue.Count; i++)
+        int blueCount = _netRopeNodes_ownedBlue.Count;
+        if (blueCount > 0)
         {
-            if(_netRopeNodes_ownedBlue[i].TryGet(out NetworkObject obj))
+            float blueRadius = UnityEngine.Random.Range(minRadius, maxRadius);
+            Vector3[] bluePositions = CalculateNodePositions(blueRadius, Vector3.zero, blueCount);
+
+            for (int i = 0; i < blueCount; i++)
             {
-                obj.transform.position = posVector[i];
+                if (_netRopeNodes_ownedBlue[i].TryGet(out NetworkObject obj))
+                {
+                    obj.transform.position = bluePositions[i];
+                }
             }
         }
 
-        posVector = CalculateNodePositions(UnityEngine.Random.Range(minRadius, maxRadius), Vector3.zero);
-        for (int i = 0; i < _netRopeNodes_ownedRed.Count; i++)
+        int redCount = _netRopeNodes_ownedRed.Count;
+        if (redCount > 0)
         {
-            if (_netRopeNodes_ownedRed[i].TryGet(out NetworkObject obj))
+            float redRadius = UnityEngine.Random.Range(minRadius, maxRadius);
+            Vector3[] redPositions = CalculateNodePositions(redRadius, Vector3.zero, redCount);
+
+            for (int i = 0; i < redCount; i++)
             {
-                Debug.Log(obj.transform.position + " -> " + posVector[i]);
-                obj.transform.position = posVector[i];
+                if (_netRopeNodes_ownedRed[i].TryGet(out NetworkObject obj))
+                {
+                    obj.transform.position = redPositions[i];
+                }
             }
         }
     }
 
-    private Vector3[] CalculateNodePositions(float radius, Vector3 spawnOffset)
+    private Vector3[] CalculateNodePositions(float radius, Vector3 spawnOffset, int nodeCount)
     {
-        int nodeCount = hingeCount / 2;
         Vector3[] positions = new Vector3[nodeCount];
+
+        if (nodeCount == 0) return positions;
+
         float startAngle = 270f;
-        float angleStep = 360f / angleCount;
+        float angleStep = 360f / nodeCount;
 
         for (int i = 0; i < nodeCount; i++)
         {
-            float angle = (angleStep * (i % angleCount) + startAngle) * Mathf.Deg2Rad;
+            float angle = (angleStep * i + startAngle) * Mathf.Deg2Rad;
+
             Vector3 pos = spawnOffset;
             pos.x += Mathf.Cos(angle) * radius;
             pos.y += Mathf.Sin(angle) * radius;
+
             positions[i] = pos;
         }
+
         return positions;
     }
 
-    private void SpawnHandle()
+    private void InitHandle(ulong clientId)
     {
-        owned_handle = Instantiate(handlePrefab).GetComponent<Rigidbody>();
-
         if (IsServer)
         {
+            owned_handle = Instantiate(handlePrefab, redHandleSpawnPoint, Quaternion.identity).GetComponent<Rigidbody>();
             owned_handle.GetComponent<NetworkObject>().Spawn();
 
-            Rigidbody clientHandle = Instantiate(handlePrefab).GetComponent<Rigidbody>();
-            clientHandle.GetComponent<NetworkObject>().SpawnWithOwnership(NetworkPlayer.ClientPlayerId);
+            NetworkObject clientHandle = Instantiate(handlePrefab, blueHandleSpawnPoint, Quaternion.identity).GetComponent<NetworkObject>();
+            clientHandle.SpawnWithOwnership(clientId);
         }
         else
         {
-            if(owned_handle == null)
+            foreach(var handle in FindObjectsByType<ThreadHandle>(FindObjectsSortMode.None))
             {
-                foreach(var handle in FindObjectsByType<ThreadHandle>(FindObjectsSortMode.None))
+                if(handle.GetComponent<NetworkObject>() &&
+                    handle.IsOwner)
                 {
-                    if(handle.TryGetComponent(out NetworkObject networkObject) &&
-                        networkObject.IsOwner)
-                    {
-                        owned_handle = networkObject.GetComponent<Rigidbody>();
-                    }
+                    owned_handle = handle.GetComponent<Rigidbody>();
                 }
             }
         }
@@ -168,13 +190,13 @@ public class ThreadDrawer : NetworkBehaviour
     {
         if(owned_handle == null)
         {
-            SpawnHandle();
+            InitHandle(NetworkPlayer.ClientPlayerId);
         }
 
         for(int i = 0; i < networkObjects.Count; i++)
         {
             int idx = !isReverse ? i : networkObjects.Count - i - 1;
-            int jointIdx = isReverse ? i + 1 : i - 1;
+            int jointIdx = isReverse ? idx + 1 : idx - 1;
 
             if (jointIdx >= networkObjects.Count ||
                 jointIdx < 0)
@@ -203,31 +225,84 @@ public class ThreadDrawer : NetworkBehaviour
 
     private void DrawHinge()
     {
-        if (!gamePlaying.Value)
+        if (!isGameStarting)
             return;
-
-        if(!background.activeSelf)
-        {
-            background.SetActive(true);
-        }
 
         lineRenderer.positionCount = _netRopeNodes_ownedBlue.Count + _netRopeNodes_ownedRed.Count;
 
-        for(int i = 0; i < _netRopeNodes_ownedRed.Count; i++)
+        Vector3 previousPos = Vector3.zero;
+        bool hasPrevious = false;
+
+        // --- Red 그룹 ---
+        for (int i = 0; i < _netRopeNodes_ownedRed.Count; i++)
         {
-            if(_netRopeNodes_ownedRed[i].TryGet(out NetworkObject networkObject))
+            if (_netRopeNodes_ownedRed[i].TryGet(out NetworkObject networkObject))
             {
-                lineRenderer.SetPosition(i, networkObject.transform.position);
+                Vector3 currentPos = networkObject.transform.position;
+                lineRenderer.SetPosition(i, currentPos);
+
+                // [디버그] 노드 위치에 빨간색 짧은 기둥 표시
+                Debug.DrawRay(currentPos, Vector3.up * 0.5f, Color.red);
+
+                // [디버그] 이전 노드와 선 연결
+                if (hasPrevious)
+                {
+                    Debug.DrawLine(previousPos, currentPos, Color.red);
+                }
+
+                previousPos = currentPos;
+                hasPrevious = true;
             }
         }
 
+        // --- Blue 그룹 ---
         for (int i = 0; i < _netRopeNodes_ownedBlue.Count; i++)
         {
             if (_netRopeNodes_ownedBlue[i].TryGet(out NetworkObject networkObject))
             {
-                lineRenderer.SetPosition(_netRopeNodes_ownedRed.Count + i, networkObject.transform.position);
+                Vector3 currentPos = networkObject.transform.position;
+                lineRenderer.SetPosition(_netRopeNodes_ownedRed.Count + i, currentPos);
+
+                // [디버그] 노드 위치에 파란색 짧은 기둥 표시
+                Debug.DrawRay(currentPos, Vector3.up * 0.5f, Color.blue);
+
+                // [디버그] 이전 노드와 선 연결
+                if (hasPrevious)
+                {
+                    // Red의 마지막 노드와 Blue의 첫 노드가 만나는 구간은 노란색으로 표시
+                    Color lineColor = (i == 0) ? Color.yellow : Color.cyan;
+                    Debug.DrawLine(previousPos, currentPos, lineColor);
+                }
+
+                previousPos = currentPos;
+                hasPrevious = true;
             }
         }
+    }
+
+    [ClientRpc]
+    private void StartGame_ClientRpc()
+    {
+        isGameStarting = true;
+        background.SetActive(true);
+
+        if(IsServer)
+        {
+            owned_handle.transform.position = redHandleSpawnPoint;
+        }
+        else
+        {
+            owned_handle.transform.position = blueHandleSpawnPoint;
+        }
+    }
+
+    [ClientRpc]
+    private void EndGame_ClientRpc()
+    {
+        Debug.Log($"End game");
+        background.SetActive(false);
+        lineRenderer.positionCount = 0;
+        isGameStarting = false;
     }
 
     #region Check
@@ -238,7 +313,9 @@ public class ThreadDrawer : NetworkBehaviour
             yield return new WaitForSeconds(cycleCheckDelay);
         }
 
-        gamePlaying.Value = false;
+        yield return new WaitForSeconds(3f);
+
+        EndGame_ClientRpc();
     }
 
     private List<Vector3> GetNodePositions(NetworkList<NetworkObjectReference> networkList)
@@ -276,7 +353,7 @@ public class ThreadDrawer : NetworkBehaviour
             totalAngle += angle;
         }
 
-        if (Mathf.Abs(totalAngle) > 270f)
+        if (Mathf.Abs(totalAngle) > 210f)
         {
             Debug.Log($"사이클 감지됨! 총 회전각: {totalAngle}");
             return true;

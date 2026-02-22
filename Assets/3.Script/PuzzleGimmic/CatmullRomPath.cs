@@ -34,11 +34,17 @@ public class CatmullRomPath : NetworkBehaviour
         lineRenderer = GetComponent<LineRenderer>();
     }
 
-    public override void OnNetworkSpawn()
+    private void Start()
     {
-        base.OnNetworkSpawn();
+        if (IsServer)
+        {
+            GetComponentInParent<PuzzleMissonListener>().OnStartPuzzle += StartGame;
+        }
+    }
 
-        if(IsServer)
+    private void StartGame(MultiMissionType multiMissionType)
+    {
+        if(multiMissionType == MultiMissionType.DrawLine)
         {
             if (scriptCount == 1)
             {
@@ -56,12 +62,12 @@ public class CatmullRomPath : NetworkBehaviour
 
 
             CreateWaypoint(waypointCount);
+
+            if (waypoints == null || waypoints.Count < 2)
+                return;
+
+            DrawCatmullRom();
         }
-
-        if (waypoints == null || waypoints.Count < 2)
-            return;
-
-        DrawCatmullRom();
     }
 
     public override void OnNetworkDespawn()
@@ -76,14 +82,14 @@ public class CatmullRomPath : NetworkBehaviour
         if (waypoints == null || waypoints.Count < 2)
             return;
 
-        //DrawCatmullRom();
+        DrawCatmullRom();
     }
 
     private void DrawCatmullRom()
     {
         List<Vector3> points = new List<Vector3>();
 
-        for(int i = 0; i < waypoints.Count; i++)
+        for (int i = 0; i < waypoints.Count; i++)
         {
             Vector2 p0 = waypoints[ClampIndex(i - 1)];
             Vector2 p1 = waypoints[ClampIndex(i)];
