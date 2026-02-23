@@ -4109,6 +4109,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 255820438336817265, guid: 107294cc2cc86bb48be3b15aae70f5aa, type: 3}
+      propertyPath: m_SortingOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 255820438336817265, guid: 107294cc2cc86bb48be3b15aae70f5aa, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
     - target: {fileID: 2071961815114947142, guid: 107294cc2cc86bb48be3b15aae70f5aa, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -4161,6 +4169,14 @@ PrefabInstance:
       propertyPath: multiMissionType
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2615113929632089473, guid: 107294cc2cc86bb48be3b15aae70f5aa, type: 3}
+      propertyPath: m_SortingOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2615113929632089473, guid: 107294cc2cc86bb48be3b15aae70f5aa, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
     - target: {fileID: 3152423588345780474, guid: 107294cc2cc86bb48be3b15aae70f5aa, type: 3}
       propertyPath: m_Name
       value: DrawLine

@@ -9,21 +9,21 @@ public class Spanwer : NetworkBehaviour
     [SerializeField]
     private NetworkObject networkObjectPrefab;
 
+    private PuzzleMissonListener puzzleMissonListener;
+
+    private void Awake()
+    {
+        puzzleMissonListener = GetComponentInParent<PuzzleMissonListener>();
+    }
+
     private void Start()
     {
         if(IsServer)
         {
-            GetComponentInParent<PuzzleMissonListener>().OnStartPuzzle += StartGame;
+            StartGame(MultiMissionType.DrawLine);
         }
     }
 
-    private void OnApplicationQuit()
-    {
-        if (IsServer)
-        {
-            GetComponentInParent<PuzzleMissonListener>().OnStartPuzzle -= StartGame;
-        }
-    }
 
     public void StartGame(MultiMissionType multiMissionType)
     {
@@ -39,5 +39,20 @@ public class Spanwer : NetworkBehaviour
     {
         NetworkObject net = Instantiate(networkObject, transform.parent);
         net.SpawnWithOwnership(netId);
+        DrawLineWithMesh drawLineWithMesh = net.GetComponent<DrawLineWithMesh>();
+        CatmullRomPath[] catmullRomPaths = FindObjectsByType<CatmullRomPath>(FindObjectsSortMode.None);
+
+        if (netId == NetworkPlayer.ClientPlayerId)
+        {
+            catmullRomPaths[0].Initialize(drawLineWithMesh);
+        }
+        else
+        {
+            catmullRomPaths[1].Initialize(drawLineWithMesh);
+        }
+
+        puzzleMissonListener.OnStartPuzzle += drawLineWithMesh.StartGame;
+        puzzleMissonListener.OnEndPuzzle += drawLineWithMesh.EndGame;
     }
+
 }

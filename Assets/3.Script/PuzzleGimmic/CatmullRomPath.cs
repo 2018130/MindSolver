@@ -29,6 +29,9 @@ public class CatmullRomPath : NetworkBehaviour
     private NetworkVariable<bool> isServerPath = new NetworkVariable<bool>();
     public NetworkVariable<bool> IsServerPath => isServerPath;
 
+    private bool isGamePlaying = false;
+    private NetworkVariable<NetworkObjectReference> drawLineWithMesh = new NetworkVariable<NetworkObjectReference>();
+
     private void Awake()
     {
         lineRenderer = GetComponent<LineRenderer>();
@@ -39,35 +42,54 @@ public class CatmullRomPath : NetworkBehaviour
         if (IsServer)
         {
             GetComponentInParent<PuzzleMissonListener>().OnStartPuzzle += StartGame;
+            GetComponentInParent<PuzzleMissonListener>().OnEndPuzzle += EndGame;
         }
+    }
+
+    public void Initialize(DrawLineWithMesh drawLineWithMesh)
+    {
+        this.drawLineWithMesh.Value = drawLineWithMesh.GetComponent<NetworkObject>();
+        Debug.Log($"init to {drawLineWithMesh.IsOwner}");
     }
 
     private void StartGame(MultiMissionType multiMissionType)
     {
         if(multiMissionType == MultiMissionType.DrawLine)
         {
-            if (scriptCount == 1)
-            {
-                isServerPath.Value = !hasServerPath;
-            }
-            else
-            {
-                bool isServerPath = UnityEngine.Random.Range(0, 2) == 0 ? false : true;
-                this.isServerPath.Value = isServerPath;
-
-                hasServerPath = isServerPath;
-            }
-            Debug.Log($"{gameObject}'s owner is server {hasServerPath}");
-            scriptCount++;
-
-
             CreateWaypoint(waypointCount);
 
             if (waypoints == null || waypoints.Count < 2)
                 return;
 
+            drawLineWithMesh.Value.TryGet(out NetworkObject networkObject);
+            networkObject.GetComponent<DrawLineWithMesh>().InitGame();
+
             DrawCatmullRom();
+            StartGame_ClientRpc();
         }
+    }
+
+    [ClientRpc]
+    private void StartGame_ClientRpc()
+    {
+        isGamePlaying = true;
+    }
+
+    private void EndGame(bool isClear, MultiMissionType multiMissionType)
+    {
+        if(multiMissionType == MultiMissionType.DrawLine)
+        {
+            waypoints.Clear();
+            EndGame_ClientRpc();
+        }
+    }
+
+    [ClientRpc]
+    private void EndGame_ClientRpc()
+    {
+        Debug.Log($"End game path, {gameObject} owned {IsOwner}");
+        lineRenderer.positionCount = 0;
+        isGamePlaying = false;
     }
 
     public override void OnNetworkDespawn()
@@ -79,7 +101,7 @@ public class CatmullRomPath : NetworkBehaviour
 
     private void Update()
     {
-        if (waypoints == null || waypoints.Count < 2)
+        if (waypoints == null || waypoints.Count < 2 || !isGamePlaying)
             return;
 
         DrawCatmullRom();
@@ -87,6 +109,18 @@ public class CatmullRomPath : NetworkBehaviour
 
     private void DrawCatmullRom()
     {
+        if (drawLineWithMesh.Value.TryGet(out NetworkObject networkObject) &&
+            networkObject.IsOwner)
+        {
+            lineRenderer.startColor = Color.red;
+            lineRenderer.endColor = Color.red;
+        }
+        else
+        {
+            lineRenderer.startColor = Color.blue;
+            lineRenderer.endColor = Color.blue;
+        }
+
         List<Vector3> points = new List<Vector3>();
 
         for (int i = 0; i < waypoints.Count; i++)

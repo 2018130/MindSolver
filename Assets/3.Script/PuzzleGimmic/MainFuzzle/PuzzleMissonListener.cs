@@ -24,11 +24,12 @@ public class PuzzleMissonListener : MonoBehaviour
 
     [SerializeField]
     private MultiMissionType multiMissionType = MultiMissionType.ThreadDrawer;
+    public MultiMissionType MultiMissionType => multiMissionType;
 
     private PuzzleMissionTrigger sender;
 
     public event Action<MultiMissionType> OnStartPuzzle;
-    public event Action<MultiMissionType> OnEndPuzzle;
+    public event Action<bool, MultiMissionType> OnEndPuzzle;
 
     public void StartPuzzle(PuzzleMissionTrigger sender)
     {
@@ -48,9 +49,9 @@ public class PuzzleMissonListener : MonoBehaviour
     {
         if (missionType == MissionType.Multi)
         {
-            if (isClear && sender != null)
+            if (sender != null)
             {
-                OnEndPuzzle?.Invoke(multiMissionType);
+                OnEndPuzzle?.Invoke(isClear, multiMissionType);
             }
         }
         else
