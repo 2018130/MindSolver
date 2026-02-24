@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
-public class CatmullRomPath : NetworkBehaviour
+public class CatmullRomPath : NetworkBehaviour, IInteractable
 {
     [SerializeField]
     private Vector2 widthRange;
@@ -32,6 +32,10 @@ public class CatmullRomPath : NetworkBehaviour
     private bool isGamePlaying = false;
     private NetworkVariable<NetworkObjectReference> drawLineWithMesh = new NetworkVariable<NetworkObjectReference>();
 
+    private NetworkVariable<int> touchCount = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    [SerializeField]
+    private GameObject bg;
+
     private void Awake()
     {
         lineRenderer = GetComponent<LineRenderer>();
@@ -46,33 +50,59 @@ public class CatmullRomPath : NetworkBehaviour
         }
     }
 
+    [ServerRpc(RequireOwnership = false)]
+    private void AddTouchCount_ServerRpc()
+    {
+        touchCount.Value++;
+    }
+    [ServerRpc(RequireOwnership = false)]
+    private void ReduceTouchCount_ServerRpc()
+    {
+        touchCount.Value--;
+    }
+
     public void Initialize(DrawLineWithMesh drawLineWithMesh)
     {
         this.drawLineWithMesh.Value = drawLineWithMesh.GetComponent<NetworkObject>();
-        Debug.Log($"init to {drawLineWithMesh.IsOwner}");
     }
 
     private void StartGame(MultiMissionType multiMissionType)
     {
         if(multiMissionType == MultiMissionType.DrawLine)
         {
-            CreateWaypoint(waypointCount);
-
-            if (waypoints == null || waypoints.Count < 2)
-                return;
-
-            drawLineWithMesh.Value.TryGet(out NetworkObject networkObject);
-            networkObject.GetComponent<DrawLineWithMesh>().InitGame();
-
-            DrawCatmullRom();
-            StartGame_ClientRpc();
+            StartCoroutine(StartGame_co());
         }
     }
 
-    [ClientRpc]
+    [ClientRpc()]
     private void StartGame_ClientRpc()
     {
+        bg.SetActive(true);
         isGamePlaying = true;
+    }
+
+    private IEnumerator StartGame_co()
+    {
+        GameUIManager.Singleton.SetText($"아래를 터치해 주세요!!");
+
+        CreateWaypoint(waypointCount);
+
+        if (waypoints == null || waypoints.Count < 2)
+            yield break;
+
+        drawLineWithMesh.Value.TryGet(out NetworkObject networkObject);
+
+        DrawCatmullRom();
+        transform.position = waypoints[0];
+        StartGame_ClientRpc();
+
+        yield return new WaitUntil(() => { Debug.Log(touchCount.Value); return touchCount.Value == 2; });
+
+        networkObject.GetComponent<DrawLineWithMesh>().InitGame();
+
+        Floating floating = GetComponentInChildren<Floating>();
+        floating.SetFloating(false);
+
     }
 
     private void EndGame(bool isClear, MultiMissionType multiMissionType)
@@ -87,7 +117,7 @@ public class CatmullRomPath : NetworkBehaviour
     [ClientRpc]
     private void EndGame_ClientRpc()
     {
-        Debug.Log($"End game path, {gameObject} owned {IsOwner}");
+        bg.SetActive(false);
         lineRenderer.positionCount = 0;
         isGamePlaying = false;
     }
@@ -112,6 +142,9 @@ public class CatmullRomPath : NetworkBehaviour
         if (drawLineWithMesh.Value.TryGet(out NetworkObject networkObject) &&
             networkObject.IsOwner)
         {
+            Floating floating = GetComponentInChildren<Floating>();
+            floating.SetFloating(true);
+
             lineRenderer.startColor = Color.red;
             lineRenderer.endColor = Color.red;
         }
@@ -170,6 +203,26 @@ public class CatmullRomPath : NetworkBehaviour
             float height = waypoints[0].y + UnityEngine.Random.Range(heightRange.x, heightRange.y);
 
             waypoints.Add(new Vector2(width, height));
+        }
+    }
+
+    bool isInteracted = false;
+    public void Interact(Vector2 worldPosFromMousePosition)
+    {
+        if(!isInteracted)
+        {
+            AddTouchCount_ServerRpc();
+            isInteracted = true;
+        }
+    }
+
+    public void EndInteract()
+    {
+        if(isInteracted)
+        {
+            ReduceTouchCount_ServerRpc();
+
+            isInteracted = false;
         }
     }
 }

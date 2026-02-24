@@ -8,7 +8,7 @@ public class SandwichMain : NetworkBehaviour, IInteractable
 {
     [SerializeField]
     private SliderController sliderController;
-    
+
     [SerializeField]
     private SandwichPiece sandwichPieces;
 
@@ -31,47 +31,116 @@ public class SandwichMain : NetworkBehaviour, IInteractable
     private NetworkVariable<float> sliderValue = new NetworkVariable<float>();
     [SerializeField]
     private Vector2 successRange;
-    
+    [SerializeField]
+    private GameObject bg;
+    private SpriteRenderer spriteRenderer;
+    [SerializeField]
+    private Canvas canvas;
+
+    private bool isPlayingGame = false;
+    public bool IsPlayingGame => isPlayingGame;
+    private NetworkVariable<float> timer = new NetworkVariable<float>();
+
     void Start()
     {
-        Camera cam = Camera.main;
-
-        Vector3 bottomLeftScreen = new Vector3(0, 0);
-        bottomLeftWorldPos = cam.ScreenToWorldPoint(bottomLeftScreen);
-
-        Vector3 topRightScreen = new Vector3(Screen.width, Screen.height);
-        topRightWorldPos = cam.ScreenToWorldPoint(topRightScreen);
-        sliderController.SetValue(sandwichValue);
-
-        if(IsServer)
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderer.enabled = false;
+        canvas.gameObject.SetActive(false);
+        if (IsServer)
         {
-            sliderValue.Value = sliderController.GetValue();
+            sliderValue.Value = -1;
+        }
+
+        GetComponentInParent<PuzzleMissonListener>().OnStartPuzzle += StartGame;
+        GetComponentInParent<PuzzleMissonListener>().OnEndPuzzle += EndGame;
+    }
+
+    private void StartGame(MultiMissionType multiMissionType)
+    {
+        if (multiMissionType == MultiMissionType.Sandwich)
+        {
+            isPlayingGame = true;
+            spriteRenderer.enabled = true;
+            bg.SetActive(true);
+            canvas.gameObject.SetActive(true);
+            Camera cam = Camera.main;
+            timer.Value = 60;
+
+            Vector3 bottomLeftScreen = new Vector3(0, 0);
+            bottomLeftWorldPos = cam.ScreenToWorldPoint(bottomLeftScreen);
+
+            Vector3 topRightScreen = new Vector3(Screen.width, Screen.height);
+            topRightWorldPos = cam.ScreenToWorldPoint(topRightScreen);
+            sandwichValue = 0.5f;
+            sliderController.SetValue(sandwichValue);
+
+            if (IsServer)
+            {
+                sliderValue.Value = sliderController.GetValue();
+            }
+        }
+    }
+
+    private void EndGame(bool isClear, MultiMissionType multiMissionType)
+    {
+        if (multiMissionType == MultiMissionType.Sandwich)
+        {
+            isPlayingGame = false;
+            spriteRenderer.enabled = false;
+            bg.SetActive(false);
+            canvas.gameObject.SetActive(false);
+            sliderValue.Value = -1;
         }
     }
 
     private void Update()
     {
-        if(IsServer)
+        if (sliderValue.Value == -1)
+        {
+            isPlayingGame = false;
+            spriteRenderer.enabled = false;
+            bg.SetActive(false);
+            canvas.gameObject.SetActive(false);
+
+            return;
+        }
+
+        if (IsServer)
         {
             float sliderValue = sliderController.GetValue();
             if (!Mathf.Approximately(sliderValue, sandwichValue))
             {
                 float dir = sandwichValue - sliderValue;
-                
+
                 sliderController.SetValue(sliderValue + dir * Time.deltaTime * sandwichValueSyncWithUISpeed);
                 this.sliderValue.Value = sliderController.GetValue();
             }
 
-            if(this.sliderValue.Value < successRange.x ||
-                this.sliderValue.Value > successRange.y)
+            if (isPlayingGame)
             {
-                Debug.Log($"게임 실패!!!");
+                timer.Value -= Time.deltaTime;
+                int seconds = Mathf.FloorToInt(timer.Value);
+                GameUIManager.Singleton.SetText(string.Format(seconds.ToString("D2")));
+
+                if (this.sliderValue.Value < successRange.x ||
+                    this.sliderValue.Value > successRange.y)
+                {
+                    Debug.Log($"게임 끝 {successRange.x} < {this.sliderValue.Value} < {successRange.y}");
+                    isPlayingGame = false;
+                    GetComponentInParent<PuzzleMissonListener>().EndPuzzle(false);
+                }
             }
+
         }
         else
         {
+            isPlayingGame = true;
+            spriteRenderer.enabled = true;
+            bg.SetActive(true);
+            canvas.gameObject.SetActive(true);
             sliderController.SetValue(sliderValue.Value);
         }
+
     }
 
     private void SpawnSandwich()
@@ -81,7 +150,7 @@ public class SandwichMain : NetworkBehaviour, IInteractable
         Vector3 spawnPos = Vector3.zero;
         spawnPos.x = UnityEngine.Random.Range(bottomLeftWorldPos.x, topRightWorldPos.x);
         // x축이 가운데 겹친 경우
-        if(spawnPos.x >= -outBoundDistanceOfCenter &&
+        if (spawnPos.x >= -outBoundDistanceOfCenter &&
             spawnPos.x <= outBoundDistanceOfCenter)
         {
             float posY1 = UnityEngine.Random.Range(bottomLeftWorldPos.y,
@@ -89,7 +158,7 @@ public class SandwichMain : NetworkBehaviour, IInteractable
             float posY2 = UnityEngine.Random.Range(MathF.Sqrt(outBoundDistanceOfCenter * outBoundDistanceOfCenter - spawnPos.x * spawnPos.x),
                 topRightWorldPos.y);
 
-            if(UnityEngine.Random.Range(0, 2) == 0)
+            if (UnityEngine.Random.Range(0, 2) == 0)
             {
                 spawnPos.y = posY1;
             }
@@ -110,7 +179,7 @@ public class SandwichMain : NetworkBehaviour, IInteractable
 
     public void Interact(Vector2 worldPosFromMousePosition)
     {
-        if (DateTime.Now < lastTouchTime.AddSeconds(touchDelay) || !IsOwner)
+        if (DateTime.Now < lastTouchTime.AddSeconds(touchDelay) || !IsOwner || !isPlayingGame)
             return;
 
         SpawnSandwich();
@@ -128,7 +197,7 @@ public class SandwichMain : NetworkBehaviour, IInteractable
     public void ReduceValue(float reduceAmount, bool setUIImmadiately = true)
     {
         sandwichValue -= reduceAmount;
-        if(setUIImmadiately)
+        if (setUIImmadiately)
         {
             sliderController.SetValue(sandwichValue);
             this.sliderValue.Value = sliderController.GetValue();

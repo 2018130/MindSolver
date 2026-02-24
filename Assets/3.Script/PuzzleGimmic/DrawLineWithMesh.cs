@@ -34,7 +34,6 @@ public class DrawLineWithMesh : NetworkBehaviour
         if (IsServer)
         {
             CatmullRomPath[] catmullRomPaths = FindObjectsByType<CatmullRomPath>(FindObjectsSortMode.None);
-            Debug.Log(catmullRomPaths.Length + " " + gameObject);
 
             if (IsOwner)
             {
@@ -96,7 +95,7 @@ public class DrawLineWithMesh : NetworkBehaviour
             uvs.Clear();
             triangles.Clear();
         }
-        Debug.Log($"End game called : {gameObject} owned : {IsOwner}");
+
         mesh.Clear();
         mesh.RecalculateBounds();
     }
@@ -222,7 +221,6 @@ public class DrawLineWithMesh : NetworkBehaviour
 
     private void RefreshMesh()
     {
-        Debug.Log($"{vertices.Count} {triangles.Count} {uvs.Count}");
         if (vertices.Count == 0 || triangles.Count == 0) return;
         if (vertices.Count % 2 != 0 || triangles.Count % 6 != 0 || vertices.Count != uvs.Count) return;
 

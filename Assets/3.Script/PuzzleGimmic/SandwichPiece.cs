@@ -18,6 +18,14 @@ public class SandwichPiece : NetworkBehaviour, IInteractable
         owner = sandwichMain;
     }
 
+    private void Update()
+    {
+        if(owner != null && !owner.IsPlayingGame)
+        {
+            Destroy(gameObject);
+        }
+    }
+
     [ServerRpc]
     private void TouchSandwichPiece_ServerRpc()
     {

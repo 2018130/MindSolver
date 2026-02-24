@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Net.NetworkInformation;
 using UnityEngine;
 using UnityEngine.Events;
@@ -14,6 +15,7 @@ public enum MultiMissionType
     ThreadDrawer,
     DrawLine,
     Sandwich,
+    Pipe,
 }
 
 public class PuzzleMissonListener : MonoBehaviour
@@ -30,6 +32,9 @@ public class PuzzleMissonListener : MonoBehaviour
 
     public event Action<MultiMissionType> OnStartPuzzle;
     public event Action<bool, MultiMissionType> OnEndPuzzle;
+
+    [SerializeField]
+    private float endDelayTime = 3f;
 
     public void StartPuzzle(PuzzleMissionTrigger sender)
     {
@@ -49,14 +54,32 @@ public class PuzzleMissonListener : MonoBehaviour
     {
         if (missionType == MissionType.Multi)
         {
-            if (sender != null)
-            {
-                OnEndPuzzle?.Invoke(isClear, multiMissionType);
-            }
+            StartCoroutine(EndPuzzle_co(isClear));
+
         }
         else
         {
             gameObject.SetActive(false);
+        }
+    }
+
+    private IEnumerator EndPuzzle_co(bool isClear)
+    {
+        if (isClear)
+        {
+            GameUIManager.Singleton.SetText("미션 성공!!!!");
+        }
+        else
+        {
+            GameUIManager.Singleton.SetText("미션 실패ㅠㅜ");
+        }
+
+        yield return new WaitForSeconds(endDelayTime);
+
+        GameUIManager.Singleton.SetText("");
+        if (sender != null)
+        {
+            OnEndPuzzle?.Invoke(isClear, multiMissionType);
         }
     }
 }

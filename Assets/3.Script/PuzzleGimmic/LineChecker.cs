@@ -15,27 +15,54 @@ public class LineChecker : NetworkBehaviour
     private static int checkCount = 0;
     private bool isChecked = false;
 
+    // 유저간 허용거리
+    private static NetworkVariable<float> fastPosX = new NetworkVariable<float>(-100);
+    [SerializeField]
+    private float allowedLengthDelta = 1f;
+    [SerializeField]
+    private LineRenderer limitLineRenderer;
+
     private void Awake()
     {
         _carmullRomPath = GetComponent<CatmullRomPath>();
+
+        // 초기에는 안 보이게 설정
+        limitLineRenderer.enabled = false;
     }
 
     public void Initialize(DrawLineWithMesh drawLineWithMesh)
     {
-        Debug.Log($"Init line checker, owner : {drawLineWithMesh.IsOwner} {gameObject}");
+        fastPosX.Value = -50f; 
+        limitLineRenderer.positionCount = 4;
         _drawLineWithMesh = drawLineWithMesh;
         isChecked = false;
-        checkCount = 0; // 초기화 시 카운트도 리셋
+        checkCount = 0;
     }
 
-    public void StartGame(MultiMissionType multiMissionType)
-    {
-        StartGame_ClientRpc();
-    }
 
-    [ClientRpc]
-    private void StartGame_ClientRpc()
+    private void Update()
     {
+        if(Mathf.Approximately(fastPosX.Value, -100f))
+        {
+            limitLineRenderer.positionCount = 0;
+        }
+
+        if(IsClient)
+        {
+            limitLineRenderer.enabled = true;
+            float topY = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 1f, 0f)).y;
+            float bottomY = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0f, 0f)).y;
+
+            Vector3 v0 = new Vector3(fastPosX.Value, topY, -0.9f);
+            Vector3 v1 = new Vector3(fastPosX.Value - allowedLengthDelta, topY, -0.9f);
+            Vector3 v2 = new Vector3(fastPosX.Value - allowedLengthDelta, bottomY, -0.9f);
+            Vector3 v3 = new Vector3(fastPosX.Value, bottomY, -0.9f);
+            limitLineRenderer.positionCount = 4;
+            limitLineRenderer.SetPosition(0, v0);
+            limitLineRenderer.SetPosition(1, v1);
+            limitLineRenderer.SetPosition(2, v2);
+            limitLineRenderer.SetPosition(3, v3);
+        }
     }
 
     public void CheckDistance(NetworkListEvent<Vector3> networkListEvent)
@@ -46,16 +73,28 @@ public class LineChecker : NetworkBehaviour
             return;
         }
 
-        Debug.Log(_carmullRomPath.Waypoints.Count + " " + _drawLineWithMesh.Vertices.Count);
-
         if (_drawLineWithMesh.Vertices.Count % 2 == 0)
         {
-            // 1. 선의 끝부분 중간점 구하기 (현재 로컬 좌표)
             Vector3 localMiddlePoint = (_drawLineWithMesh.Vertices[_drawLineWithMesh.Vertices.Count - 1] +
                                         _drawLineWithMesh.Vertices[_drawLineWithMesh.Vertices.Count - 2]) / 2f;
 
-            // 💡 중요: 로컬 좌표를 월드 좌표로 변환하여 웨이포인트와 좌표계를 맞춥니다.
             Vector3 worldMiddlePoint = _drawLineWithMesh.transform.TransformPoint(localMiddlePoint);
+
+            if(fastPosX.Value < worldMiddlePoint.x)
+            {
+                if (!limitLineRenderer.enabled)
+                    limitLineRenderer.enabled = true;
+
+                fastPosX.Value = worldMiddlePoint.x;
+            }
+
+            // 유저간 간격 격차로 인한 실패
+            if(fastPosX.Value > worldMiddlePoint.x + allowedLengthDelta)
+            {
+                fastPosX.Value = -100f;
+                isChecked = true;
+                GetComponentInParent<PuzzleMissonListener>().EndPuzzle(false);
+            }
 
             for (int i = 0; i < _carmullRomPath.Waypoints.Count; i++)
             {
@@ -70,38 +109,35 @@ public class LineChecker : NetworkBehaviour
                         {
                             isChecked = true;
 
-                            // 💡 현재 static을 뺐기 때문에 이 객체 혼자서는 endCount가 2가 될 수 없습니다.
-                            // 두 선이 모두 도착했는지(성공했는지)는 PuzzleMissonListener에서 체크하도록 넘기는 것이 정석입니다.
                             Debug.Log($"{gameObject} 미션 부분 성공!");
                             checkCount++;
                         }
 
                         if(checkCount >= 2)
                         {
+                            fastPosX.Value = -100f;
                             Debug.Log("게임종료, 미션 최종 성공!!!!");
                             GetComponentInParent<PuzzleMissonListener>().EndPuzzle(true);
                         }
                     }
                     else
                     {
-                        // 실패(이탈) 판정
                         Vector2 preWayPoint = (i == 0) ? (Vector2)transform.position : (Vector2)_carmullRomPath.Waypoints[i - 1];
                         Vector2 nextWayPoint = _carmullRomPath.Waypoints[i]; // i가 Count와 같아질 일은 없으므로 안전함
 
-                        // X를 기준으로 현재 Y 위치(예측값) 계산 (선형 보간)
                         float t = (worldMiddlePoint.x - preWayPoint.x) / (nextWayPoint.x - preWayPoint.x);
                         float predictY = Mathf.Lerp(preWayPoint.y, nextWayPoint.y, t);
-                        Debug.Log($"Current pos : {worldMiddlePoint}, predict : {predictY}");
-                        // 범위를 벗어난 경우 (월드 좌표 Y 기준)
+
                         if (worldMiddlePoint.y > predictY + (outLineLength / 2f) ||
                             worldMiddlePoint.y < predictY - (outLineLength / 2f))
                         {
+                            fastPosX.Value = -100f;
                             Debug.Log($"선 이탈! 미션 실패!!!!");
-                            isChecked = true; // 더 이상 검사하지 않음
+                            isChecked = true;
                             GetComponentInParent<PuzzleMissonListener>().EndPuzzle(false);
                         }
 
-                        break; // 현재 선의 X 위치가 속한 구간을 찾았으므로 for문 탈출
+                        break;
                     }
                 }
             }
