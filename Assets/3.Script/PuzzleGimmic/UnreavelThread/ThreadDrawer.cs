@@ -10,8 +10,8 @@ public class ThreadDrawer : NetworkBehaviour
     [SerializeField]
     private LineRenderer lineRenderer;
 
-    private NetworkList<NetworkObjectReference> _netRopeNodes_ownedRed;
-    private NetworkList<NetworkObjectReference> _netRopeNodes_ownedBlue;
+    private NetworkList<NetworkObjectReference> _netRopeNodes_ownedRed = new NetworkList<NetworkObjectReference>();
+    private NetworkList<NetworkObjectReference> _netRopeNodes_ownedBlue = new NetworkList<NetworkObjectReference>();
 
     [Header("Setting"), Space(10f)]
 
@@ -19,24 +19,19 @@ public class ThreadDrawer : NetworkBehaviour
     private Joint hingePrefab;
 
     [SerializeField]
-    private int hingeCount = 50;
+    private int hingeCount = 30;
 
     [SerializeField]
-    private float distancePerHinge = 0.08f;
-
+    private int angleCount = 10;
     [SerializeField]
-    private int angleCount = 5;
+    private float minRadius = 0.5f;
     [SerializeField]
-    private float minRadius = 2.0f;
-    [SerializeField]
-    private float maxRadius = 5.0f;
-    [SerializeField]
-    private float forwardStep = 0.5f;
+    private float maxRadius = 0.5f;
 
     [SerializeField]
     private GameObject handlePrefab;
     [SerializeField]
-    private Rigidbody owned_rb;
+    private Rigidbody owned_handle;
 
     [SerializeField]
     private float cycleCheckDelay = 0.3f;
@@ -46,255 +41,294 @@ public class ThreadDrawer : NetworkBehaviour
     [SerializeField]
     private GameObject background;
 
+    [SerializeField]
+    private Vector3 redHandleSpawnPoint = new Vector3(-3, 0, 0);
+    [SerializeField]
+    private Vector3 blueHandleSpawnPoint = new Vector3(3, 0, 0);
+
+    private bool isGameStarting = false;
+
     private void Awake()
     {
-        _netRopeNodes_ownedRed = new NetworkList<NetworkObjectReference>();
-        _netRopeNodes_ownedBlue = new NetworkList<NetworkObjectReference>();
-
         lineRenderer = GetComponent<LineRenderer>();
+    }
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
 
-        lineRenderer.startWidth = 0.05f;
-        lineRenderer.endWidth = 0.05f;
-
+        if(IsServer)
+        {
+            SpawnHinge();
+            ConnectJoint(_netRopeNodes_ownedRed);
+            GetComponentInParent<PuzzleMissonListener>().OnStartPuzzle += StartGame;
+        }
+        else
+        {
+            ConnectJoint(_netRopeNodes_ownedBlue, true);
+        }
     }
 
-
-    public void InitThread()
+    public void StartGame(MultiMissionType multiMissionType)
     {
-        float startAngle = 270f;
-        float angleStep = 360f / angleCount;
-        float radius = UnityEngine.Random.Range(minRadius, maxRadius);
-        Vector3 spawnOffset = new Vector3(forwardStep, radius);
-
-        if (IsServer)
+        Debug.Log("1111");
+        if(multiMissionType == MultiMissionType.ThreadDrawer)
         {
-            for (int i = 0; i < hingeCount / 2; i++)
+            Debug.Log("2222");
+            StartGame_ClientRpc();
+            SetHingePosition();
+            StartCoroutine(CheckCycle());
+        }
+    }
+
+    /// <summary>
+    /// 서버에서 호출될 함수, 힌지를 스폰함
+    /// </summary>
+    private void SpawnHinge()
+    {
+        if (!IsServer)
+            return;
+
+        for(int i = 0; i < hingeCount / 2; i++)
+        {
+            Joint spawn = Instantiate(hingePrefab);
+            NetworkObject networkObj = spawn.GetComponent<NetworkObject>();
+            networkObj.Spawn();
+
+            _netRopeNodes_ownedRed.Add(networkObj);
+        }
+
+        for(int i = 0; i < hingeCount/ 2; i++)
+        {
+            Joint spawn = Instantiate(hingePrefab);
+            NetworkObject networkObj = spawn.GetComponent<NetworkObject>();
+            networkObj.SpawnWithOwnership(NetworkPlayer.ClientPlayerId);
+
+            _netRopeNodes_ownedBlue.Add(networkObj);
+        }
+    }
+
+    private void SetHingePosition()
+    {
+        int blueCount = _netRopeNodes_ownedBlue.Count;
+        if (blueCount > 0)
+        {
+            float blueRadius = UnityEngine.Random.Range(minRadius, maxRadius);
+            Vector3[] bluePositions = CalculateNodePositions(blueRadius, Vector3.zero, blueCount);
+
+            for (int i = 0; i < blueCount; i++)
             {
-                if (i != 0)
+                if (_netRopeNodes_ownedBlue[i].TryGet(out NetworkObject obj))
                 {
-                    float angle = (angleStep * (i % angleCount) + startAngle) * Mathf.Deg2Rad;
-
-                    Vector3 spawnPos = spawnOffset;
-
-                    spawnPos.x += Mathf.Cos(angle) * radius;
-                    spawnPos.y += Mathf.Sin(angle) * radius;
-
-                    Joint newNode = Instantiate(hingePrefab, spawnPos, Quaternion.identity, transform);
-                    NetworkObject netObj = newNode.GetComponent<NetworkObject>();
-                    netObj.SpawnWithOwnership(NetworkPlayer.ServerPlayerId);
-
-                    _netRopeNodes_ownedRed.Add(netObj);
-
-                    if (_netRopeNodes_ownedRed[i].TryGet(out NetworkObject networkObject) &&
-                        _netRopeNodes_ownedRed[i - 1].TryGet(out NetworkObject preNetworkObject))
-                    {
-                        networkObject.GetComponent<Joint>().connectedBody =
-                            preNetworkObject.GetComponent<Rigidbody>();
-                    }
-
-                    if (i == hingeCount / 2 - 1)
-                    {
-                        if (_netRopeNodes_ownedRed[i].TryGet(out networkObject))
-                        {
-                            networkObject.GetComponent<Rigidbody>().isKinematic = true;
-                        }
-                    }
-                }
-                else
-                {
-                    owned_rb = Instantiate(handlePrefab).GetComponent<Rigidbody>();
-                    owned_rb.GetComponent<NetworkObject>().SpawnWithOwnership(NetworkPlayer.ServerPlayerId);
-
-                    Joint newNode = Instantiate(hingePrefab, owned_rb.transform.position, Quaternion.identity, transform);
-                    NetworkObject netObj = newNode.GetComponent<NetworkObject>();
-                    netObj.SpawnWithOwnership(NetworkPlayer.ServerPlayerId);
-
-                    owned_rb.transform.position = newNode.transform.position;
-
-                    _netRopeNodes_ownedRed.Add(netObj);
-
-                    if (_netRopeNodes_ownedRed[i].TryGet(out NetworkObject networkObject))
-                    {
-                        networkObject.GetComponent<Joint>().connectedBody = owned_rb;
-                    }
-                }
-            }
-
-
-            // 클라 소유
-            for (int i = 0; i < hingeCount / 2; i++)
-            {
-                if (i != hingeCount / 2 - 1)
-                {
-                    float angle = (angleStep * (i % angleCount) + startAngle) * Mathf.Deg2Rad;
-
-                    Vector3 spawnPos = spawnOffset;
-
-                    spawnPos.x += Mathf.Cos(angle) * radius;
-                    spawnPos.y += Mathf.Sin(angle) * radius;
-
-                    Joint newNode = Instantiate(hingePrefab, spawnPos, Quaternion.identity, transform);
-                    NetworkObject netObj = newNode.GetComponent<NetworkObject>();
-                    netObj.SpawnWithOwnership(NetworkPlayer.ClientPlayerId);
-
-                    _netRopeNodes_ownedBlue.Add(netObj);
-                }
-                else
-                {
-                    Rigidbody rb = Instantiate(handlePrefab, Vector3.right * 3f, Quaternion.identity).GetComponent<Rigidbody>();
-                    rb.GetComponent<NetworkObject>().SpawnWithOwnership(NetworkPlayer.ClientPlayerId);
-
-                    Joint newNode = Instantiate(hingePrefab, rb.transform.position, Quaternion.identity, transform);
-                    NetworkObject netObj = newNode.GetComponent<NetworkObject>();
-                    netObj.SpawnWithOwnership(NetworkPlayer.ClientPlayerId);
-
-                    _netRopeNodes_ownedBlue.Add(netObj);
+                    obj.transform.position = bluePositions[i];
                 }
             }
         }
-        // 클라이언트
+
+        int redCount = _netRopeNodes_ownedRed.Count;
+        if (redCount > 0)
+        {
+            float redRadius = UnityEngine.Random.Range(minRadius, maxRadius);
+            Vector3[] redPositions = CalculateNodePositions(redRadius, Vector3.zero, redCount);
+
+            for (int i = 0; i < redCount; i++)
+            {
+                if (_netRopeNodes_ownedRed[i].TryGet(out NetworkObject obj))
+                {
+                    obj.transform.position = redPositions[i];
+                }
+            }
+        }
+    }
+
+    private Vector3[] CalculateNodePositions(float radius, Vector3 spawnOffset, int nodeCount)
+    {
+        Vector3[] positions = new Vector3[nodeCount];
+
+        if (nodeCount == 0) return positions;
+
+        float startAngle = 270f;
+        float angleStep = 360f / nodeCount;
+
+        for (int i = 0; i < nodeCount; i++)
+        {
+            float angle = (angleStep * i + startAngle) * Mathf.Deg2Rad;
+
+            Vector3 pos = spawnOffset;
+            pos.x += Mathf.Cos(angle) * radius;
+            pos.y += Mathf.Sin(angle) * radius;
+
+            positions[i] = pos;
+        }
+
+        return positions;
+    }
+
+    private void InitHandle(ulong clientId)
+    {
+        if (IsServer)
+        {
+            owned_handle = Instantiate(handlePrefab, redHandleSpawnPoint, Quaternion.identity).GetComponent<Rigidbody>();
+            owned_handle.GetComponent<NetworkObject>().Spawn();
+
+            NetworkObject clientHandle = Instantiate(handlePrefab, blueHandleSpawnPoint, Quaternion.identity).GetComponent<NetworkObject>();
+            clientHandle.SpawnWithOwnership(clientId);
+        }
         else
         {
             foreach(var handle in FindObjectsByType<ThreadHandle>(FindObjectsSortMode.None))
             {
-                if(handle.GetComponent<NetworkObject>().IsOwner)
+                if(handle.GetComponent<NetworkObject>() &&
+                    handle.IsOwner)
                 {
-                    owned_rb = handle.GetComponent<Rigidbody>();
-                }
-            }
-            for (int i = 0; i < hingeCount / 2; i++)
-            {
-                if (i != hingeCount / 2 - 1)
-                {
-                    float angle = (angleStep * (i % angleCount) + startAngle) * Mathf.Deg2Rad;
-
-                    Vector3 spawnPos = Vector3.up;
-                    if(_netRopeNodes_ownedRed[_netRopeNodes_ownedRed.Count - 1].TryGet(out NetworkObject lastRedNode))
-                    {
-                        spawnPos = lastRedNode.transform.position;
-                    }
-
-                    spawnPos.x += Mathf.Cos(angle) * radius;
-                    spawnPos.y += Mathf.Sin(angle) * radius;
-
-                    if (i != 0)
-                    {
-                        if (_netRopeNodes_ownedBlue[i - 1].TryGet(out NetworkObject networkObject) &&
-                            _netRopeNodes_ownedBlue[i].TryGet(out NetworkObject postNetworkObject))
-                        {
-                            networkObject.GetComponent<Joint>().connectedBody =
-                                postNetworkObject.GetComponent<Rigidbody>();
-                        }
-                    }
-                    else
-                    {
-                        if (_netRopeNodes_ownedBlue[i].TryGet(out NetworkObject net))
-                        {
-                            net.GetComponent<Rigidbody>().isKinematic = true;
-                        }
-                    }
-                }
-                else
-                {
-                    if (_netRopeNodes_ownedBlue[i].TryGet(out NetworkObject networkObject))
-                    {
-                        networkObject.GetComponent<Joint>().connectedBody = owned_rb;
-                    }
-
-                    if (_netRopeNodes_ownedBlue[i - 1].TryGet(out NetworkObject net) &&
-                           _netRopeNodes_ownedBlue[i].TryGet(out NetworkObject postNetworkObject))
-                    {
-                        net.GetComponent<Joint>().connectedBody =
-                            postNetworkObject.GetComponent<Rigidbody>();
-                    }
+                    owned_handle = handle.GetComponent<Rigidbody>();
                 }
             }
         }
+    }
 
-
-        if (IsServer)
+    private void ConnectJoint(NetworkList<NetworkObjectReference> networkObjects, bool isReverse = false)
+    {
+        if(owned_handle == null)
         {
-            foreach (var hinge in _netRopeNodes_ownedBlue)
-            {
-                hinge.TryGet(out NetworkObject netObj);
-                netObj.GetComponent<Rigidbody>().isKinematic = true;
-            }
-
-            StartCoroutine(CheckCycle());
+            InitHandle(NetworkPlayer.ClientPlayerId);
         }
-        else
+
+        for(int i = 0; i < networkObjects.Count; i++)
         {
-            foreach (var hinge in _netRopeNodes_ownedRed)
+            int idx = !isReverse ? i : networkObjects.Count - i - 1;
+            int jointIdx = isReverse ? idx + 1 : idx - 1;
+
+            if (jointIdx >= networkObjects.Count ||
+                jointIdx < 0)
+                continue;
+
+            if(networkObjects[idx].TryGet(out NetworkObject networkObject) &&
+                networkObjects[jointIdx].TryGet(out NetworkObject jointObject))
             {
-                hinge.TryGet(out NetworkObject netObj);
-                netObj.GetComponent<Rigidbody>().isKinematic = true;
+                networkObject.GetComponent<Joint>().connectedBody =
+                    jointObject.GetComponent<Rigidbody>();
             }
+        }
+
+        int lastIdx = !isReverse ? 0 : networkObjects.Count - 1;
+        if (networkObjects[lastIdx].TryGet(out NetworkObject lastObject))
+        {
+            lastObject.GetComponent<Joint>().connectedBody =
+                owned_handle;
         }
     }
 
     private void Update()
     {
-        DrawCircle();
+        DrawHinge();
     }
 
-    private void DrawCircle()
+    private void DrawHinge()
     {
-        if (_netRopeNodes_ownedRed == null ||
-            _netRopeNodes_ownedBlue == null ||
-            _netRopeNodes_ownedRed.Count == 0 ||
-            _netRopeNodes_ownedRed.Count == 0)
+        if (!isGameStarting)
             return;
 
-        if(!background.activeSelf)
-        {
-            background.SetActive(true);
-        }
+        lineRenderer.positionCount = _netRopeNodes_ownedBlue.Count + _netRopeNodes_ownedRed.Count;
 
-        lineRenderer.positionCount = _netRopeNodes_ownedRed.Count + _netRopeNodes_ownedBlue.Count;
+        Vector3 previousPos = Vector3.zero;
+        bool hasPrevious = false;
 
+        // --- Red 그룹 ---
         for (int i = 0; i < _netRopeNodes_ownedRed.Count; i++)
         {
-            if (_netRopeNodes_ownedRed == null ||
-                _netRopeNodes_ownedBlue == null ||
-                _netRopeNodes_ownedRed.Count == 0 ||
-                _netRopeNodes_ownedRed.Count == 0)
-                return;
+            if (_netRopeNodes_ownedRed[i].TryGet(out NetworkObject networkObject))
+            {
+                Vector3 currentPos = networkObject.transform.position;
+                lineRenderer.SetPosition(i, currentPos);
 
-            _netRopeNodes_ownedRed[i].TryGet(out NetworkObject networkObject);
-            Vector3 position = networkObject.transform.position;
-            lineRenderer.SetPosition(i, position);
+                // [디버그] 노드 위치에 빨간색 짧은 기둥 표시
+                Debug.DrawRay(currentPos, Vector3.up * 0.5f, Color.red);
+
+                // [디버그] 이전 노드와 선 연결
+                if (hasPrevious)
+                {
+                    Debug.DrawLine(previousPos, currentPos, Color.red);
+                }
+
+                previousPos = currentPos;
+                hasPrevious = true;
+            }
         }
 
+        // --- Blue 그룹 ---
         for (int i = 0; i < _netRopeNodes_ownedBlue.Count; i++)
         {
-            if (_netRopeNodes_ownedRed == null ||
-                _netRopeNodes_ownedBlue == null ||
-                _netRopeNodes_ownedRed.Count == 0 ||
-                _netRopeNodes_ownedRed.Count == 0)
-                return;
+            if (_netRopeNodes_ownedBlue[i].TryGet(out NetworkObject networkObject))
+            {
+                Vector3 currentPos = networkObject.transform.position;
+                lineRenderer.SetPosition(_netRopeNodes_ownedRed.Count + i, currentPos);
 
-            _netRopeNodes_ownedBlue[i].TryGet(out NetworkObject networkObject);
-            Vector3 position = networkObject.transform.position;
-            lineRenderer.SetPosition(_netRopeNodes_ownedRed.Count + i, position);
+                // [디버그] 노드 위치에 파란색 짧은 기둥 표시
+                Debug.DrawRay(currentPos, Vector3.up * 0.5f, Color.blue);
+
+                // [디버그] 이전 노드와 선 연결
+                if (hasPrevious)
+                {
+                    // Red의 마지막 노드와 Blue의 첫 노드가 만나는 구간은 노란색으로 표시
+                    Color lineColor = (i == 0) ? Color.yellow : Color.cyan;
+                    Debug.DrawLine(previousPos, currentPos, lineColor);
+                }
+
+                previousPos = currentPos;
+                hasPrevious = true;
+            }
         }
     }
 
+    [ClientRpc]
+    private void StartGame_ClientRpc()
+    {
+        isGameStarting = true;
+        background.SetActive(true);
+
+        if(IsServer)
+        {
+            owned_handle.transform.position = redHandleSpawnPoint;
+        }
+        else
+        {
+            owned_handle.transform.position = blueHandleSpawnPoint;
+        }
+    }
+
+    [ClientRpc]
+    private void EndGame_ClientRpc()
+    {
+        Debug.Log($"End game");
+        background.SetActive(false);
+        lineRenderer.positionCount = 0;
+        isGameStarting = false;
+    }
+
+    #region Check
     private IEnumerator CheckCycle()
     {
-        while(HasCycle(_netRopeNodes_ownedRed) || HasCycle(_netRopeNodes_ownedBlue))
+        while (HasCycle(_netRopeNodes_ownedRed) || HasCycle(_netRopeNodes_ownedBlue))
         {
             yield return new WaitForSeconds(cycleCheckDelay);
         }
 
-        Debug.Log($"End game");
-        PuzzleMissonListener puzzleMissonListener = GetComponentInParent<PuzzleMissonListener>();
-        if(puzzleMissonListener != null)
-        {
-            _netRopeNodes_ownedRed = null;
-            _netRopeNodes_ownedBlue = null;
+        yield return new WaitForSeconds(3f);
 
-            puzzleMissonListener.EndPuzzle(true);
+        EndGame_ClientRpc();
+    }
+
+    private List<Vector3> GetNodePositions(NetworkList<NetworkObjectReference> networkList)
+    {
+        List<Vector3> positions = new List<Vector3>();
+        foreach (var nodeRef in networkList)
+        {
+            if (nodeRef.TryGet(out NetworkObject netObj) && netObj != null)
+            {
+                positions.Add(netObj.transform.position);
+            }
         }
+        return positions;
     }
 
     public bool HasCycle(NetworkList<NetworkObjectReference> networkList)
@@ -319,7 +353,7 @@ public class ThreadDrawer : NetworkBehaviour
             totalAngle += angle;
         }
 
-        if (Mathf.Abs(totalAngle) > 270f)
+        if (Mathf.Abs(totalAngle) > 210f)
         {
             Debug.Log($"사이클 감지됨! 총 회전각: {totalAngle}");
             return true;
@@ -327,17 +361,5 @@ public class ThreadDrawer : NetworkBehaviour
 
         return false;
     }
-
-    private List<Vector3> GetNodePositions(NetworkList<NetworkObjectReference> networkList)
-    {
-        List<Vector3> positions = new List<Vector3>();
-        foreach (var nodeRef in networkList)
-        {
-            if (nodeRef.TryGet(out NetworkObject netObj) && netObj != null)
-            {
-                positions.Add(netObj.transform.position);
-            }
-        }
-        return positions;
-    }
+    #endregion
 }

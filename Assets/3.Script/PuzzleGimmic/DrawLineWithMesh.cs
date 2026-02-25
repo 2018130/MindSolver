@@ -1,6 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+Ôªøusing System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -12,13 +10,17 @@ public class DrawLineWithMesh : NetworkBehaviour
     private Mesh mesh;
     private NetworkList<Vector3> vertices = new NetworkList<Vector3>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     public NetworkList<Vector3> Vertices => vertices;
-    
+
     private NetworkList<int> triangles = new NetworkList<int>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     private NetworkList<Vector2> uvs = new NetworkList<Vector2>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
     private Vector3 lastLocalMousePos;
     private bool isNewStroke = true;
     private bool hasFirstPair = false;
+    private bool isMeshDirty = false;
+
+    CatmullRomPath catmullRomPath;
+    private bool isGamePlaying;
 
     private void Awake()
     {
@@ -27,95 +29,144 @@ public class DrawLineWithMesh : NetworkBehaviour
         GetComponent<MeshFilter>().mesh = mesh;
     }
 
-    private void Start()
+    public void InitGame()
     {
-        if (IsOwner)
-            return;
+        if (IsServer)
+        {
+            CatmullRomPath[] catmullRomPaths = FindObjectsByType<CatmullRomPath>(FindObjectsSortMode.None);
 
-        vertices.OnListChanged += OnVerticesChanged;
-        triangles.OnListChanged += OnTrianglesChanged;
-        uvs.OnListChanged += OnUVChanged;
+            if (IsOwner)
+            {
+                catmullRomPath = catmullRomPaths[0];
+                catmullRomPaths[0].GetComponent<LineChecker>().Initialize(this);
+                vertices.OnListChanged += catmullRomPaths[0].GetComponent<LineChecker>().CheckDistance;
+            }
+            else
+            {
+                catmullRomPath = catmullRomPaths[1];
+                catmullRomPaths[1].GetComponent<LineChecker>().Initialize(this);
+                vertices.OnListChanged += catmullRomPaths[1].GetComponent<LineChecker>().CheckDistance;
+            }
+        }
+    }
+    
+    public void StartGame(MultiMissionType multiMissionType)
+    {
+        if (multiMissionType == MultiMissionType.DrawLine)
+        {
+            StartGame_ClientRpc();
+        }
+    }
+
+    [ClientRpc]
+    private void StartGame_ClientRpc()
+    {
+        if (!IsOwner)
+        {
+            isMeshDirty = true;
+        }
+        else
+        {
+            vertices.Clear();
+            uvs.Clear();
+            triangles.Clear();
+        }
+        isNewStroke = true;
+        hasFirstPair = false;
+        isMeshDirty = false;
+        isGamePlaying = true;
+    }
+
+    public void EndGame(bool isClear, MultiMissionType multiMissionType)
+    {
+        if(multiMissionType == MultiMissionType.DrawLine)
+        {
+            EndGame_ClientRpc();
+        }
+    }
+
+    [ClientRpc]
+    private void EndGame_ClientRpc()
+    {
+        isGamePlaying = false;
+        if(IsOwner)
+        {
+            vertices.Clear();
+            uvs.Clear();
+            triangles.Clear();
+        }
+
+        mesh.Clear();
+        mesh.RecalculateBounds();
     }
 
     public override void OnNetworkSpawn()
     {
-        base.OnNetworkSpawn();
-
-        if(IsServer)
+        if (!IsOwner)
         {
-            foreach(var path in FindObjectsByType<CatmullRomPath>(FindObjectsSortMode.None))
+            vertices.OnListChanged += OnNetworkListChanged;
+            triangles.OnListChanged += OnNetworkListChanged;
+            uvs.OnListChanged += OnNetworkListChanged;
+
+            isMeshDirty = true;
+        }
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        if (!IsOwner)
+        {
+            vertices.OnListChanged -= OnNetworkListChanged;
+            triangles.OnListChanged -= OnNetworkListChanged;
+            uvs.OnListChanged -= OnNetworkListChanged;
+        }
+
+        if (IsServer)
+        {
+            foreach (var path in FindObjectsByType<CatmullRomPath>(FindObjectsSortMode.None))
             {
-                if (path.IsServerPath.Value)
+                var checker = path.GetComponent<LineChecker>();
+                if (checker != null)
                 {
-                    if(IsOwner)
-                    {
-                        path.GetComponent<LineChecker>().Initialize(this);
-                        vertices.OnListChanged += path.GetComponent<LineChecker>().CheckDistance;
-                    }
-                }
-                else
-                {
-                    if(!IsOwner)
-                    {
-                        path.GetComponent<LineChecker>().Initialize(this);
-                        vertices.OnListChanged += path.GetComponent<LineChecker>().CheckDistance;
-                    }
+                    vertices.OnListChanged -= checker.CheckDistance;
                 }
             }
+
+            catmullRomPath.GetComponentInParent<PuzzleMissonListener>().OnEndPuzzle -= EndGame;
+            catmullRomPath.GetComponentInParent<PuzzleMissonListener>().OnStartPuzzle -= StartGame;
         }
     }
 
-    private void OnVerticesChanged(NetworkListEvent<Vector3> networkListEvent)
+    private void OnNetworkListChanged<T>(NetworkListEvent<T> changeEvent)
     {
-        List<Vector3> vectorVertices = new List<Vector3>();
-        foreach (var vertex in vertices)
-        {
-            vectorVertices.Add(vertex);
-        }
-
-        if (vectorVertices.Count % 2 == 0)
-        {
-            mesh.SetVertices(vectorVertices);
-        }
-    }
-
-    private void OnTrianglesChanged(NetworkListEvent<int> netowrkListEvent)
-    {
-        List<int> vectorTriangles = new List<int>();
-        foreach (var triangles in triangles)
-        {
-            vectorTriangles.Add(triangles);
-        }
-
-        if(vectorTriangles.Count % 6 == 0)
-            mesh.SetTriangles(vectorTriangles, 0);
-    }
-
-    private void OnUVChanged(NetworkListEvent<Vector2> networkListEvent)
-    {
-        List<Vector2> vectorUV = new List<Vector2>();
-        foreach (var uv in uvs)
-        {
-            vectorUV.Add(uv);
-        }
-
-        if(vectorUV.Count % 2 == 0 && vertices.Count == uvs.Count)
-            mesh.SetUVs(0, vectorUV);
+        isMeshDirty = true;
     }
 
     private void Update()
     {
-        if (!IsOwner)
+        if (!isGamePlaying)
             return;
 
-        if (InputManager.Singleton.LeftButtonClicked)
+        if (IsOwner)
         {
-            AddBrushStep();
+            if (InputManager.Singleton.LeftButtonClicked)
+            {
+                AddBrushStep();
+            }
+            else
+            {
+                isNewStroke = true;
+                hasFirstPair = false;
+            }
         }
         else
         {
-            isNewStroke = true;
-            hasFirstPair = false;
+            // Ï£ºÏù∏Ïù¥ ÏïÑÎãå Í≤ΩÏö∞ Î©îÏâ¨Í∞Ä Î≥ÄÍ≤ΩÎêòÏóàÏùÑ ÎïåÎßå Í∑∏Î¶¨Í∏∞
+            if (isMeshDirty)
+            {
+                RefreshMesh();
+                isMeshDirty = false;
+            }
         }
     }
 
@@ -154,50 +205,45 @@ public class DrawLineWithMesh : NetworkBehaviour
         triangles.Add(vIndex + 0);
         triangles.Add(vIndex + 1);
 
-        // parsing vertieces 
-        List<Vector3> vectorVertices = new List<Vector3>();
-        foreach (var vertex in vertices)
-        {
-            vectorVertices.Add(vertex);
-        }
-        mesh.SetVertices(vectorVertices);
-
-        // parsing triagles
-        List<int> vectorTriangles = new List<int>();
-        foreach (var triangles in triangles)
-        {
-            vectorTriangles.Add(triangles);
-        }
-        mesh.SetTriangles(vectorTriangles, 0);
-
-
-        // parsing vertieces 
-        List<Vector2> vectorUV = new List<Vector2>();
-        foreach (var uv in vectorUV)
-        {
-            vectorUV.Add(uv);
-        }
-        mesh.SetUVs(0, vectorUV);
-        mesh.RecalculateBounds();
+        RefreshMesh();
 
         lastLocalMousePos = currentLocalPos;
     }
 
     private void CreateVertexPair(Vector3 pos, Vector3 normal)
     {
-        vertices.Add(pos + normal * (brushWidth * 0.5f)); // ¡¬√¯ ¡§¡°
-        vertices.Add(pos - normal * (brushWidth * 0.5f)); // øÏ√¯ ¡§¡°
+        vertices.Add(pos + normal * (brushWidth * 0.5f));
+        vertices.Add(pos - normal * (brushWidth * 0.5f));
 
-        uvs.Add(new Vector2(0, vertices.Count / 2));
-        uvs.Add(new Vector2(1, vertices.Count / 2));
+        uvs.Add(new Vector2(0, vertices.Count / 2f));
+        uvs.Add(new Vector2(1, vertices.Count / 2f));
+    }
+
+    private void RefreshMesh()
+    {
+        if (vertices.Count == 0 || triangles.Count == 0) return;
+        if (vertices.Count % 2 != 0 || triangles.Count % 6 != 0 || vertices.Count != uvs.Count) return;
+
+        List<Vector3> vectorVertices = new List<Vector3>();
+        foreach (var v in vertices) vectorVertices.Add(v);
+
+        List<int> vectorTriangles = new List<int>();
+        foreach (var t in triangles) vectorTriangles.Add(t);
+
+        List<Vector2> vectorUV = new List<Vector2>();
+        foreach (var uv in uvs) vectorUV.Add(uv);
+        mesh.Clear();
+        mesh.SetVertices(vectorVertices);
+        mesh.SetUVs(0, vectorUV);
+        mesh.SetTriangles(vectorTriangles, 0);
+        mesh.RecalculateBounds();
     }
 
     private Vector3 GetMousePositionToWorldPos()
     {
         Vector3 mousePos = InputManager.Singleton.MousePosition;
         Vector3 worldPos = Camera.main.ScreenToWorldPoint(mousePos);
-        worldPos.z = 0f;
-
+        worldPos.z = -0.1f;
         return worldPos;
     }
 }

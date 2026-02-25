@@ -12,12 +12,8 @@ public class WaterSpawner : NetworkBehaviour
     [SerializeField]
     private Vector2 waterForceDir;
 
-#if UNITY_EDITOR
-    [SerializeField]
-    private bool canSpawn = false;
-#else
     private NetworkVariable<bool> canSpawn = new NetworkVariable<bool>(false);
-#endif
+
     [SerializeField]
     private float spawnDelay = 0.1f;
 
@@ -31,36 +27,24 @@ public class WaterSpawner : NetworkBehaviour
     private int waterSpawnableCount = 0;
     private int maxWaterSpawnableCount = 10;
 
-#if UNITY_EDITOR
-#else
-#endif
+    [SerializeField]
+    private ColorType colorType;
 
     private void Start()
     {
         CreatePool();
         StartCoroutine(SpawnWater_co());
-#if UNITY_EDITOR
-        OpenFauset();
-#else
-        OpenFauset_ServerRpc();
-#endif
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        base.OnNetworkDespawn();
+
+        StopAllCoroutines();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-#if UNITY_EDITOR
-        if (LayerMask.LayerToName(collision.gameObject.layer) == "Water")
-        {
-            waterSpawnableCount++;
-
-            Debug.Log($"{gameObject} spawnWater : {waterSpawnableCount} {maxWaterSpawnableCount}");
-            if (waterSpawnableCount > maxWaterSpawnableCount)
-            {
-                Debug.Log("1111");
-                CloseFauset();
-            }
-        }
-#else
         if(IsServer)
         {
             if (LayerMask.LayerToName(collision.gameObject.layer) == "Water")
@@ -73,22 +57,10 @@ public class WaterSpawner : NetworkBehaviour
                 }
             }
         }
-#endif
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-#if UNITY_EDITOR
-        if (LayerMask.LayerToName(collision.gameObject.layer) == "Water")
-        {
-            waterSpawnableCount--;
-
-            if (waterSpawnableCount < maxWaterSpawnableCount)
-            {
-                OpenFauset();
-            }
-        }
-#else
         if (IsServer)
         {
             if (LayerMask.LayerToName(collision.gameObject.layer) == "Water")
@@ -101,36 +73,19 @@ public class WaterSpawner : NetworkBehaviour
                 }
             }
         }
-#endif
     }
 
-#if UNITY_EDITOR
-    public void OpenFauset()
-    {
-        canSpawn = true;
-    }
-#else
     [ServerRpc]
     public void OpenFauset_ServerRpc()
     {
         canSpawn.Value = true;
     }
-#endif
 
-#if UNITY_EDITOR
-    private void CloseFauset()
-    {
-        canSpawn = false;
-    }
-
-#else
     [ServerRpc]
-    private void CloseFauset_ServerRpc()
+    public void CloseFauset_ServerRpc()
     {
         canSpawn.Value = false;
     }
-
-#endif
 
     private IEnumerator SpawnWater_co()
     {
@@ -138,19 +93,11 @@ public class WaterSpawner : NetworkBehaviour
         {
             yield return null;
 
-#if UNITY_EDITOR
-            if (canSpawn)
-            {
-                SpawnWaterFromPool();
-                yield return new WaitForSeconds(spawnDelay);
-            }
-#else
                 if(canSpawn.Value)
             {
                 SpawnWaterFromPool();
                 yield return new WaitForSeconds(spawnDelay);
             }
-#endif
         }
     }
 
@@ -164,6 +111,7 @@ public class WaterSpawner : NetworkBehaviour
                 water.transform.localPosition = Vector3.zero;
                 waterPool[i].SetActive(true);
                 water.GetComponent<Rigidbody2D>().AddForce(waterForceDir);
+                water.GetComponent<PipeWater>().SetColor(colorType);
 
                 break;
             }

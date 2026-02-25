@@ -100,8 +100,8 @@ SpringJoint:
   m_ConnectedAnchor: {x: 0, y: 0, z: 0}
   m_Spring: 1
   m_Damper: 0
-  m_MinDistance: 0
-  m_MaxDistance: 0
+  m_MinDistance: 0.3
+  m_MaxDistance: 0.5
   m_Tolerance: 0.025
   m_BreakForce: Infinity
   m_BreakTorque: Infinity

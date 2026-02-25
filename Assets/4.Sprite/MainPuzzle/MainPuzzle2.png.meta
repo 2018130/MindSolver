@@ -1,14 +1,10 @@
 fileFormatVersion: 2
-guid: 834e199c26f9ca34da9c0bef3e425cd4
-AssetOrigin:
-  serializedVersion: 1
-  productId: 233783
-  packageName: Fantasy Tileset
-  packageVersion: 1.0
-  assetPath: Assets/Mocapot/Fantasy Tileset/Sprites/isometric-tile_brick_03.png
-  uploadId: 528958
+guid: e0aab9f28de85314a83e25407eb03baf
 TextureImporter:
-  internalIDToNameTable: []
+  internalIDToNameTable:
+  - first:
+      213: -1057525916592319784
+    second: MainPuzzle2_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -53,9 +49,9 @@ TextureImporter:
   spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
-  alignment: 9
-  spritePivot: {x: 0.5, y: 0.25}
-  spritePixelsToUnits: 128
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -89,19 +85,6 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 4
     buildTarget: Standalone
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 4
-    buildTarget: Server
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -154,14 +137,36 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: MainPuzzle2_0
+      rect:
+        serializedVersion: 2
+        x: 109
+        y: 43
+        width: 1060
+        height: 1212
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8d2deb828c9e251f0800000000000000
+      internalID: -1057525916592319784
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape:
-    - - {x: -64, y: 31}
-      - {x: 0, y: 0}
-      - {x: 63, y: 32}
-      - {x: 0, y: 63}
+    - - {x: -509, y: -301}
+      - {x: 14, y: -595}
+      - {x: 511, y: -315}
+      - {x: -1, y: -113}
     bones: []
     spriteID: 5e97eb03825dee720800000000000000
     internalID: 1537655665
@@ -172,7 +177,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      MainPuzzle2_0: -1057525916592319784
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
-public class CatmullRomPath : NetworkBehaviour
+public class CatmullRomPath : NetworkBehaviour, IInteractable
 {
     [SerializeField]
     private Vector2 widthRange;
@@ -29,39 +29,97 @@ public class CatmullRomPath : NetworkBehaviour
     private NetworkVariable<bool> isServerPath = new NetworkVariable<bool>();
     public NetworkVariable<bool> IsServerPath => isServerPath;
 
+    private bool isGamePlaying = false;
+    private NetworkVariable<NetworkObjectReference> drawLineWithMesh = new NetworkVariable<NetworkObjectReference>();
+
+    private NetworkVariable<int> touchCount = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    [SerializeField]
+    private GameObject bg;
+
     private void Awake()
     {
         lineRenderer = GetComponent<LineRenderer>();
     }
 
-    public override void OnNetworkSpawn()
+    private void Start()
     {
-        base.OnNetworkSpawn();
-
-        if(IsServer)
+        if (IsServer)
         {
-            if (scriptCount == 1)
-            {
-                isServerPath.Value = !hasServerPath;
-            }
-            else
-            {
-                bool isServerPath = UnityEngine.Random.Range(0, 2) == 0 ? false : true;
-                this.isServerPath.Value = isServerPath;
-
-                hasServerPath = isServerPath;
-            }
-            Debug.Log($"{gameObject}'s owner is server {hasServerPath}");
-            scriptCount++;
-
-
-            CreateWaypoint(waypointCount);
+            GetComponentInParent<PuzzleMissonListener>().OnStartPuzzle += StartGame;
+            GetComponentInParent<PuzzleMissonListener>().OnEndPuzzle += EndGame;
         }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void AddTouchCount_ServerRpc()
+    {
+        touchCount.Value++;
+    }
+    [ServerRpc(RequireOwnership = false)]
+    private void ReduceTouchCount_ServerRpc()
+    {
+        touchCount.Value--;
+    }
+
+    public void Initialize(DrawLineWithMesh drawLineWithMesh)
+    {
+        this.drawLineWithMesh.Value = drawLineWithMesh.GetComponent<NetworkObject>();
+    }
+
+    private void StartGame(MultiMissionType multiMissionType)
+    {
+        if(multiMissionType == MultiMissionType.DrawLine)
+        {
+            StartCoroutine(StartGame_co());
+        }
+    }
+
+    [ClientRpc()]
+    private void StartGame_ClientRpc()
+    {
+        bg.SetActive(true);
+        isGamePlaying = true;
+    }
+
+    private IEnumerator StartGame_co()
+    {
+        GameUIManager.Singleton.SetText($"아래를 터치해 주세요!!");
+
+        CreateWaypoint(waypointCount);
 
         if (waypoints == null || waypoints.Count < 2)
-            return;
+            yield break;
+
+        drawLineWithMesh.Value.TryGet(out NetworkObject networkObject);
 
         DrawCatmullRom();
+        transform.position = waypoints[0];
+        StartGame_ClientRpc();
+
+        yield return new WaitUntil(() => { Debug.Log(touchCount.Value); return touchCount.Value == 2; });
+
+        networkObject.GetComponent<DrawLineWithMesh>().InitGame();
+
+        Floating floating = GetComponentInChildren<Floating>();
+        floating.SetFloating(false);
+
+    }
+
+    private void EndGame(bool isClear, MultiMissionType multiMissionType)
+    {
+        if(multiMissionType == MultiMissionType.DrawLine)
+        {
+            waypoints.Clear();
+            EndGame_ClientRpc();
+        }
+    }
+
+    [ClientRpc]
+    private void EndGame_ClientRpc()
+    {
+        bg.SetActive(false);
+        lineRenderer.positionCount = 0;
+        isGamePlaying = false;
     }
 
     public override void OnNetworkDespawn()
@@ -73,17 +131,32 @@ public class CatmullRomPath : NetworkBehaviour
 
     private void Update()
     {
-        if (waypoints == null || waypoints.Count < 2)
+        if (waypoints == null || waypoints.Count < 2 || !isGamePlaying)
             return;
 
-        //DrawCatmullRom();
+        DrawCatmullRom();
     }
 
     private void DrawCatmullRom()
     {
+        if (drawLineWithMesh.Value.TryGet(out NetworkObject networkObject) &&
+            networkObject.IsOwner)
+        {
+            Floating floating = GetComponentInChildren<Floating>();
+            floating.SetFloating(true);
+
+            lineRenderer.startColor = Color.red;
+            lineRenderer.endColor = Color.red;
+        }
+        else
+        {
+            lineRenderer.startColor = Color.blue;
+            lineRenderer.endColor = Color.blue;
+        }
+
         List<Vector3> points = new List<Vector3>();
 
-        for(int i = 0; i < waypoints.Count; i++)
+        for (int i = 0; i < waypoints.Count; i++)
         {
             Vector2 p0 = waypoints[ClampIndex(i - 1)];
             Vector2 p1 = waypoints[ClampIndex(i)];
@@ -130,6 +203,26 @@ public class CatmullRomPath : NetworkBehaviour
             float height = waypoints[0].y + UnityEngine.Random.Range(heightRange.x, heightRange.y);
 
             waypoints.Add(new Vector2(width, height));
+        }
+    }
+
+    bool isInteracted = false;
+    public void Interact(Vector2 worldPosFromMousePosition)
+    {
+        if(!isInteracted)
+        {
+            AddTouchCount_ServerRpc();
+            isInteracted = true;
+        }
+    }
+
+    public void EndInteract()
+    {
+        if(isInteracted)
+        {
+            ReduceTouchCount_ServerRpc();
+
+            isInteracted = false;
         }
     }
 }

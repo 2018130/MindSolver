@@ -1,13 +1,21 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using Unity.Netcode;
+using System.Net.NetworkInformation;
 using UnityEngine;
+using UnityEngine.Events;
 
 public enum MissionType
 {
     Single,
     Multi,
+}
+
+public enum MultiMissionType
+{
+    ThreadDrawer,
+    DrawLine,
+    Sandwich,
+    Pipe,
 }
 
 public class PuzzleMissonListener : MonoBehaviour
@@ -16,30 +24,62 @@ public class PuzzleMissonListener : MonoBehaviour
     private MissionType missionType = MissionType.Single;
     public MissionType MissionType => missionType;
 
+    [SerializeField]
+    private MultiMissionType multiMissionType = MultiMissionType.ThreadDrawer;
+    public MultiMissionType MultiMissionType => multiMissionType;
+
     private PuzzleMissionTrigger sender;
+
+    public event Action<MultiMissionType> OnStartPuzzle;
+    public event Action<bool, MultiMissionType> OnEndPuzzle;
+
+    [SerializeField]
+    private float endDelayTime = 3f;
 
     public void StartPuzzle(PuzzleMissionTrigger sender)
     {
-        gameObject.SetActive(true);
         this.sender = sender;
 
         if(missionType == MissionType.Multi)
         {
-            ThreadDrawer drawer = GetComponentInChildren<ThreadDrawer>();
-            if(drawer != null)
-            {
-                drawer.InitThread();
-            }
+            OnStartPuzzle?.Invoke(multiMissionType);
+        }
+        else
+        {
+            gameObject.SetActive(true);
         }
     }
 
     public void EndPuzzle(bool isClear)
     {
-        gameObject.SetActive(false);
-
-        if(isClear && sender != null)
+        if (missionType == MissionType.Multi)
         {
-            sender.ClearPuzzle();
+            StartCoroutine(EndPuzzle_co(isClear));
+
+        }
+        else
+        {
+            gameObject.SetActive(false);
+        }
+    }
+
+    private IEnumerator EndPuzzle_co(bool isClear)
+    {
+        if (isClear)
+        {
+            GameUIManager.Singleton.SetText("미션 성공!!!!");
+        }
+        else
+        {
+            GameUIManager.Singleton.SetText("미션 실패ㅠㅜ");
+        }
+
+        yield return new WaitForSeconds(endDelayTime);
+
+        GameUIManager.Singleton.SetText("");
+        if (sender != null)
+        {
+            OnEndPuzzle?.Invoke(isClear, multiMissionType);
         }
     }
 }
