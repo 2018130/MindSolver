@@ -21,7 +21,7 @@ EditorBuildSettings:
     path: Assets/1.Scene/LobbyScene.unity
     guid: 63e230532e1b84048b9ba7a8098e1327
   - enabled: 1
-    path: Assets/1.Scene/TutorialScene.unity
+    path: Assets/1.Scene/TestScene/TutorialScene.unity
     guid: d13e602169b07784db5c432b72ad740d
   - enabled: 1
     path: Assets/1.Scene/TestScene/SongJunYeop.unity
