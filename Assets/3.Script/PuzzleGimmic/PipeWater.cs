@@ -19,6 +19,7 @@ public class PipeWater : MonoBehaviour
 
     [SerializeField]
     private ColorType colorType = ColorType.Red;
+    public ColorType ColorType => colorType;
 
     private SpriteRenderer spriteRenderer;
 
@@ -37,6 +38,14 @@ public class PipeWater : MonoBehaviour
         else
         {
             colorType = ColorType.Blue;
+        }
+    }
+
+    private void Update()
+    {
+        if(!Pipe.s_isConnected && colorType == ColorType.Mixed)
+        {
+            WaterSpawner.ReturnToPool(gameObject);
         }
     }
 

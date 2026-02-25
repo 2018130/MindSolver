@@ -39,10 +39,14 @@ public class Pipe : NetworkBehaviour
     private float rotDuration = 1f;
     private static bool s_isRotating = false;
 
+    public static bool s_isConnected = false;
+    public static int s_startPipeCount = 0;
+
     private void Awake()
     {
         _pipeCollider = GetComponent<Collider2D>();
     }
+
     private void Start()
     {
         allPipes = FindObjectsByType<Pipe>(FindObjectsSortMode.None);
@@ -50,7 +54,6 @@ public class Pipe : NetworkBehaviour
 
         rotateDir.OnValueChanged += OnRotateDirChanged;
     }
-
 
     private void OnEnable()
     {
@@ -63,6 +66,9 @@ public class Pipe : NetworkBehaviour
             {
                 CheckNearlyPipeAndSetFlowEnabled((int)holeDirections[i]);
             }
+        }
+        else
+        {
             rotateDir.Value = 0;
             transform.localEulerAngles = new Vector3(0, 0, 0);
             s_isRotating = false;
@@ -128,6 +134,7 @@ public class Pipe : NetworkBehaviour
 
     public void OnRotateDirChanged(int oldValue, int value)
     {
+        s_startPipeCount = 0;
         Debug.Log($"Changed {gameObject}'s dir value {oldValue} to {value}");
         StartCoroutine(Rotate(value));
 
@@ -158,6 +165,23 @@ public class Pipe : NetworkBehaviour
             _pipeCollider = GetComponent<Collider2D>();
         }
 
+        //시작 타일이 연결되어 있는지 확인 이 때 연결되어 있지 않다면 보라색 물을 없앰
+        if(isStartTile)
+        {
+            s_startPipeCount++;
+
+            if(s_startPipeCount == 2)
+            {
+                s_isConnected = true;
+            }
+            else
+            {
+                s_isConnected = false;
+            }
+
+            Debug.Log($"{gameObject} start pipe count : {s_startPipeCount}");
+        }
+
         int[] dx = new int[4] { 0, 1, 0, -1 };
         int[] dy = new int[4] { 1, 0, -1, 0 };
         isChecked = true;
@@ -172,60 +196,66 @@ public class Pipe : NetworkBehaviour
         if (hit.collider != null)
         {
             Pipe nearlyPipe = hit.collider.GetComponent<Pipe>();
-            switch ((Direction)dir)
+
+            for(int j = 0; j < holeDirections.Count; j++)
             {
-                case Direction.Up:
-                    if(nearlyPipe.CheckHole(Direction.Down))
-                    {
-                        nearlyPipe.SetFlowEnabled(true);
-                        // 인접한 타일의 타일 흐름 정보 갱신
-                        for (int i = 0; i < 4; i++)
+                Direction pipeDir = holeDirections[j];
+
+                switch (pipeDir)
+                {
+                    case Direction.Up:
+                        if (nearlyPipe.CheckHole(Direction.Down))
                         {
-                            if(!nearlyPipe.isChecked)
-                                nearlyPipe.CheckNearlyPipeAndSetFlowEnabled(i);
+                            nearlyPipe.SetFlowEnabled(true);
+                            // 인접한 타일의 타일 흐름 정보 갱신
+                            for (int i = 0; i < 4; i++)
+                            {
+                                if (!nearlyPipe.isChecked)
+                                    nearlyPipe.CheckNearlyPipeAndSetFlowEnabled(i);
+                            }
+                            isFlowed = true;
                         }
-                        isFlowed = true;
-                    }
-                    break;
-                case Direction.Right:
-                    if (nearlyPipe.CheckHole(Direction.Left))
-                    {
-                        nearlyPipe.SetFlowEnabled(true);
-                        // 인접한 타일의 타일 흐름 정보 갱신
-                        for (int i = 0; i < 4; i++)
+                        break;
+                    case Direction.Right:
+                        if (nearlyPipe.CheckHole(Direction.Left))
                         {
-                            if (!nearlyPipe.isChecked)
-                                nearlyPipe.CheckNearlyPipeAndSetFlowEnabled(i);
+                            nearlyPipe.SetFlowEnabled(true);
+                            // 인접한 타일의 타일 흐름 정보 갱신
+                            for (int i = 0; i < 4; i++)
+                            {
+                                if (!nearlyPipe.isChecked)
+                                    nearlyPipe.CheckNearlyPipeAndSetFlowEnabled(i);
+                            }
+                            isFlowed = true;
                         }
-                        isFlowed = true;
-                    }
-                    break;
-                case Direction.Down:
-                    if (nearlyPipe.CheckHole(Direction.Up))
-                    {
-                        nearlyPipe.SetFlowEnabled(true);
-                        // 인접한 타일의 타일 흐름 정보 갱신
-                        for (int i = 0; i < 4; i++)
+                        break;
+                    case Direction.Down:
+                        if (nearlyPipe.CheckHole(Direction.Up))
                         {
-                            if (!nearlyPipe.isChecked)
-                                nearlyPipe.CheckNearlyPipeAndSetFlowEnabled(i);
+                            nearlyPipe.SetFlowEnabled(true);
+                            // 인접한 타일의 타일 흐름 정보 갱신
+                            for (int i = 0; i < 4; i++)
+                            {
+                                if (!nearlyPipe.isChecked)
+                                    nearlyPipe.CheckNearlyPipeAndSetFlowEnabled(i);
+                            }
+                            isFlowed = true;
                         }
-                        isFlowed = true;
-                    }
-                    break;
-                case Direction.Left:
-                    if (nearlyPipe.CheckHole(Direction.Right))
-                    {
-                        nearlyPipe.SetFlowEnabled(true);
-                        // 인접한 타일의 타일 흐름 정보 갱신
-                        for (int i = 0; i < 4; i++)
+                        break;
+                    case Direction.Left:
+                        if (nearlyPipe.CheckHole(Direction.Right))
                         {
-                            if (!nearlyPipe.isChecked)
-                                nearlyPipe.CheckNearlyPipeAndSetFlowEnabled(i);
+                            nearlyPipe.SetFlowEnabled(true);
+                            // 인접한 타일의 타일 흐름 정보 갱신
+                            for (int i = 0; i < 4; i++)
+                            {
+                                if (!nearlyPipe.isChecked)
+                                    nearlyPipe.CheckNearlyPipeAndSetFlowEnabled(i);
+                            }
+                            isFlowed = true;
                         }
-                        isFlowed = true;
-                    }
-                    break;
+                        break;
+                }
             }
         }
 

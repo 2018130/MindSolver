@@ -36,6 +36,13 @@ public class WaterSpawner : NetworkBehaviour
         StartCoroutine(SpawnWater_co());
     }
 
+    public override void OnNetworkDespawn()
+    {
+        base.OnNetworkDespawn();
+
+        StopAllCoroutines();
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if(IsServer)
