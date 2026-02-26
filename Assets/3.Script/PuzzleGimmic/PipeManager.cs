@@ -40,7 +40,10 @@ public class PipeManager : NetworkBehaviour
     {
         if(multiMissionType == MultiMissionType.Pipe)
         {
-            StartGame_ClientRpc();
+            if(GetComponentInParent<PuzzleMissonListener>().MissionType ==MissionType.Multi)
+            {
+                StartGame_ClientRpc();
+            }
             waterSpawner_red.OpenFauset_ServerRpc();
             waterSpawner_blue.OpenFauset_ServerRpc();
         }
@@ -49,7 +52,10 @@ public class PipeManager : NetworkBehaviour
     {
         if (multiMissionType == MultiMissionType.Pipe)
         {
-            EndGame_ClientRpc();
+            if (GetComponentInParent<PuzzleMissonListener>().MissionType == MissionType.Multi)
+            {
+                EndGame_ClientRpc();
+            }
             waterSpawner_red.CloseFauset_ServerRpc();
             waterSpawner_blue.CloseFauset_ServerRpc();
         }

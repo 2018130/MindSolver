@@ -28,7 +28,7 @@ public class SandwichMain : NetworkBehaviour, IInteractable
     private float addAmount = 0.1f;
     [SerializeField]
     private float sandwichValueSyncWithUISpeed = 1f;
-    private NetworkVariable<float> sliderValue = new NetworkVariable<float>();
+    private NetworkVariable<float> sliderValue = new NetworkVariable<float>(-1);
     [SerializeField]
     private Vector2 successRange;
     [SerializeField]
@@ -45,11 +45,6 @@ public class SandwichMain : NetworkBehaviour, IInteractable
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         spriteRenderer.enabled = false;
-        canvas.gameObject.SetActive(false);
-        if (IsServer)
-        {
-            sliderValue.Value = -1;
-        }
 
         GetComponentInParent<PuzzleMissonListener>().OnStartPuzzle += StartGame;
         GetComponentInParent<PuzzleMissonListener>().OnEndPuzzle += EndGame;
@@ -100,7 +95,6 @@ public class SandwichMain : NetworkBehaviour, IInteractable
             isPlayingGame = false;
             spriteRenderer.enabled = false;
             bg.SetActive(false);
-            canvas.gameObject.SetActive(false);
 
             return;
         }
@@ -120,7 +114,7 @@ public class SandwichMain : NetworkBehaviour, IInteractable
             {
                 timer.Value -= Time.deltaTime;
                 int seconds = Mathf.FloorToInt(timer.Value);
-                GameUIManager.Singleton.SetText(string.Format(seconds.ToString("D2")));
+                GameUIManager.Singleton.SetclearText(string.Format(seconds.ToString("D2")));
 
                 if (this.sliderValue.Value < successRange.x ||
                     this.sliderValue.Value > successRange.y)
@@ -137,8 +131,6 @@ public class SandwichMain : NetworkBehaviour, IInteractable
             isPlayingGame = true;
             spriteRenderer.enabled = true;
             bg.SetActive(true);
-            canvas.gameObject.SetActive(true);
-            sliderController.SetValue(sliderValue.Value);
         }
 
     }

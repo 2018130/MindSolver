@@ -52,7 +52,7 @@ public class TileController : MonoBehaviour
         {
             for (int j = 0; j <= widthSize; j++)
             {
-                //Instantiate(tilePointTransformPrefab, GetTilePos(i, j), Quaternion.identity);
+                Instantiate(tilePointTransformPrefab, GetTilePos(i, j), Quaternion.identity);
             }
         }*/
     }

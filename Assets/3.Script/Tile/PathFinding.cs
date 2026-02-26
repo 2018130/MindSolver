@@ -25,7 +25,7 @@ public class PathFinding : MonoBehaviour
     private void Start()
     {
         tileController = FindAnyObjectByType<TileController>();
-        StartCoroutine(PathFinding_co());
+        //StartCoroutine(PathFinding_co());
     }
 
     private void CreateTiles()
@@ -122,7 +122,7 @@ public class PathFinding : MonoBehaviour
                 int newH = (Mathf.Abs(destIndex.x - newIdxX) + Mathf.Abs(destIndex.y - newIdxY)) * weight;
                 int newF = newG + newH;
 
-                if (checkTile.g == 0 || true)
+                if (checkTile.g == 0 || newG < checkTile.g)
                 {
                     checkTile.g = newG;
                     checkTile.h = newH;
@@ -130,8 +130,9 @@ public class PathFinding : MonoBehaviour
                     checkTile.preTile = curTile;
 
                     queue.Enqueue(checkTile);
-
-                    tileController.SpawnTile(new Vector2Int(newIdxX, newIdxY));
+#if UNITY_EDITOR
+                    tileController.SpawnTile(new Vector2Int(newIdxX, newIdxY)); // 타일 생성
+#endif
                 }
             }
 

@@ -27,6 +27,9 @@ EditorBuildSettings:
     path: Assets/1.Scene/TestScene/SongJunYeop.unity
     guid: de91d4960aee1164a912ea9e14aaf690
   - enabled: 1
+    path: Assets/1.Scene/Stage/Stage.unity
+    guid: c1a73332d6a553e498d0b61d0467400f
+  - enabled: 1
     path: Assets/1.Scene/BootStrapScene.unity
     guid: 2561c3db99e0f3a4982c340eeacfd9cc
   m_configObjects:

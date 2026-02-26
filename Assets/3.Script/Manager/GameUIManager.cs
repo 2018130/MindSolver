@@ -10,7 +10,10 @@ public class GameUIManager : NetworkBehaviour
     public static GameUIManager Singleton;
 
     [SerializeField]
-    private TMP_Text text;
+    private TMP_Text clearText;
+
+    [SerializeField]
+    private TMP_Text canMoveText;
 
     private void Awake()
     {
@@ -24,14 +27,27 @@ public class GameUIManager : NetworkBehaviour
         }
     }
 
-    public void SetText(string str)
+    public void SetCanMoveText(int moveCount)
     {
-        SetText_ClientRpc(str);
+        Debug.Log("1111");
+        canMoveText.text = "이동가능 횟수\n" + moveCount;
+    }
+
+    public void SetclearText(string str, bool isNetwork = true)
+    {
+        if(isNetwork)
+        {
+            SetclearText_ClientRpc(str);
+        }
+        else
+        {
+            clearText.text = str;
+        }
     }
 
     [ClientRpc]
-    private void SetText_ClientRpc(string str)
+    private void SetclearText_ClientRpc(string str)
     {
-        text.text = str;
+        clearText.text = str;
     }
 }

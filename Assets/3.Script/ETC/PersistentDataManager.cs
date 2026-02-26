@@ -7,7 +7,7 @@ using UnityEngine;
 [Serializable]
 public class PlayerDataJson
 {
-    public int MaxClearStage = 0;
+    public string MaxClearStage = "";
 }
 
 public class PersistentDataManager : SingletonBehaviour<PersistentDataManager>

@@ -81,7 +81,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingOrder: 103
   m_Sprite: {fileID: 21300000, guid: 6c4ff7027da72ef459ff10b31b59d3f7, type: 3}
   m_Color: {r: 1, g: 0.3019608, b: 0.28627452, a: 1}
   m_FlipX: 0
@@ -168,3 +168,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 766eafcbd019fa842bdd107bde34a144, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PipeWater
+  colorType: 0
