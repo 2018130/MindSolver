@@ -41,6 +41,11 @@ public class PipeWater : MonoBehaviour
         }
     }
 
+    private void OnDisable()
+    {
+        WaterSpawner_Single.ReturnToPool(gameObject);
+    }
+
     private void Update()
     {
         if(!Pipe.s_isConnected && colorType == ColorType.Mixed)

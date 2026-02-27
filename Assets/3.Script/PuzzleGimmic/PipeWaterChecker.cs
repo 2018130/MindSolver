@@ -8,6 +8,9 @@ public class PipeWaterChecker : MonoBehaviour
     [SerializeField]
     private LayerMask waterLayer;
 
+    [SerializeField]
+    private ColorType colorType;
+
     private PuzzleMissonListener puzzleMissonListener;
 
     private void Start()
@@ -17,11 +20,11 @@ public class PipeWaterChecker : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.layer == waterLayer)
+        if (((1 << collision.gameObject.layer) & waterLayer.value) != 0)
         {
-            if(collision.TryGetComponent<PipeWater>(out PipeWater pipeWater))
+            if (collision.TryGetComponent<PipeWater>(out PipeWater pipeWater))
             {
-                if(pipeWater.ColorType == ColorType.Mixed)
+                if (pipeWater.ColorType == colorType)
                 {
                     puzzleMissonListener.EndPuzzle(true);
                 }

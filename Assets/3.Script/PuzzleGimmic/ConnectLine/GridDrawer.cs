@@ -33,6 +33,8 @@ public class GridDrawer : MonoBehaviour, IInteractable
     [SerializeField]
     private List<ConnectLinePuzzleData> resultLineData = new List<ConnectLinePuzzleData>();
 
+    private int maxLineCount = 0;
+
     public void EndInteract()
     {
         if (!isGamePlaying)
@@ -69,6 +71,7 @@ public class GridDrawer : MonoBehaviour, IInteractable
                 }
             }
 
+            SetMaxLineCount(maxLineCount - 1);
             isInteracting = false;
             previewLineRenderer.positionCount = 0;
         }
@@ -129,9 +132,11 @@ public class GridDrawer : MonoBehaviour, IInteractable
 
     private void OnDisable()
     {
+        GameUIManager.Singleton.SetMaxLineText(0);
         lineRenderer.positionCount = 0;
         previewLineRenderer.positionCount = 0;
     }
+
     private void DrawResultLine(int idx)
     {
         ConnectLinePuzzleData currentLineData = resultLineData[idx];
@@ -144,6 +149,7 @@ public class GridDrawer : MonoBehaviour, IInteractable
             resultLineRenderer.SetPosition(i, gridPosition[pathIdx.y, pathIdx.x]);
         }
 
+        SetMaxLineCount(currentLineData.correctPath.Count);
         resultLineRenderer.SetPosition(resultLineRenderer.positionCount - 1, resultLineRenderer.GetPosition(0));
     }
 
@@ -232,6 +238,13 @@ public class GridDrawer : MonoBehaviour, IInteractable
         }
 
         return false;
+    }
+
+    private void SetMaxLineCount(int value)
+    {
+        maxLineCount = value;
+
+        GameUIManager.Singleton.SetMaxLineText(maxLineCount);
     }
 
     #region Create grid

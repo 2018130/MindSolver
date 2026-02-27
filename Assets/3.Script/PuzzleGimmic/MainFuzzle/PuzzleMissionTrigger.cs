@@ -41,6 +41,7 @@ public class PuzzleMissionTrigger : NetworkBehaviour, IInteractable
         if(isClear)
         {
             Debug.Log($"Clear puzzle listened {readyPuzzle.gameObject}");
+            StageManager.SingletonManager.ReduceRemainRemoveObstacleCount();
             Destroy(gameObject);
         }
         else
@@ -48,6 +49,7 @@ public class PuzzleMissionTrigger : NetworkBehaviour, IInteractable
             isInteracted = false;
             StageManager.SingletonManager.InsertPuzzle(readyPuzzle);
         }
+
         GameManager.Singleton.ChangeState(GameState.Playing);
         StageManager.SingletonManager.ClosePuzzleQueue();
     }

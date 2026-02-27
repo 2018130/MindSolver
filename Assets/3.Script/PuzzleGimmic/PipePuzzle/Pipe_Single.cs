@@ -17,6 +17,8 @@ public class Pipe_Single : MonoBehaviour
     [SerializeField]
     private List<Direction> holeDirections = new List<Direction>();
 
+    private List<Direction> defaultDirections = new List<Direction>();
+
     [SerializeField]
     private bool isStartTile = false;
 
@@ -34,6 +36,11 @@ public class Pipe_Single : MonoBehaviour
     private void Awake()
     {
         _pipeCollider = GetComponent<Collider2D>();
+        
+        for(int i = 0; i < holeDirections.Count; i++)
+        {
+            defaultDirections.Add(holeDirections[i]);
+        }
     }
 
     private void Start()
@@ -57,11 +64,16 @@ public class Pipe_Single : MonoBehaviour
         }
         else
         {
-            rotateDir = 0; // Value 프로퍼티 제거
+            rotateDir = 0;
+            for(int i = 0; i < defaultDirections.Count; i++)
+            {
+                holeDirections[i] = defaultDirections[i];
+            }
             transform.localEulerAngles = new Vector3(0, 0, 0);
             s_isRotating = false;
         }
     }
+
 
     /// <summary>
     /// 파이프를 시계방향으로 90도 회전시킴
@@ -173,9 +185,7 @@ public class Pipe_Single : MonoBehaviour
         {
             Pipe_Single nearlyPipe = hit.collider.GetComponent<Pipe_Single>();
 
-            for (int j = 0; j < holeDirections.Count; j++)
-            {
-                Direction pipeDir = holeDirections[j];
+                Direction pipeDir = (Direction)dir;
 
                 switch (pipeDir)
                 {
@@ -195,6 +205,7 @@ public class Pipe_Single : MonoBehaviour
                     case Direction.Right:
                         if (nearlyPipe.CheckHole(Direction.Left))
                         {
+                            Debug.Log(pipeDir);
                             nearlyPipe.SetFlowEnabled(true);
                             // 인접한 타일의 타일 흐름 정보 갱신
                             for (int i = 0; i < 4; i++)
@@ -208,6 +219,7 @@ public class Pipe_Single : MonoBehaviour
                     case Direction.Down:
                         if (nearlyPipe.CheckHole(Direction.Up))
                         {
+                            Debug.Log(pipeDir);
                             nearlyPipe.SetFlowEnabled(true);
                             // 인접한 타일의 타일 흐름 정보 갱신
                             for (int i = 0; i < 4; i++)
@@ -221,6 +233,7 @@ public class Pipe_Single : MonoBehaviour
                     case Direction.Left:
                         if (nearlyPipe.CheckHole(Direction.Right))
                         {
+                            Debug.Log(pipeDir);
                             nearlyPipe.SetFlowEnabled(true);
                             // 인접한 타일의 타일 흐름 정보 갱신
                             for (int i = 0; i < 4; i++)
@@ -231,7 +244,6 @@ public class Pipe_Single : MonoBehaviour
                             isFlowed = true;
                         }
                         break;
-                }
             }
         }
 

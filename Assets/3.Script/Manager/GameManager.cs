@@ -63,9 +63,13 @@ public class GameManager : SingletonBehaviour<GameManager>
         {
             case GameState.Playing:
                 Time.timeScale = 1;
+                GameUIManager.Singleton.SetActiveMainUI(true);
                 break;
             case GameState.UI:
                 Time.timeScale = 0;
+                break;
+            case GameState.Puzzle:
+                GameUIManager.Singleton.SetActiveMainUI(false);
                 break;
         }
         Debug.Log($"{gameState}");

@@ -34,6 +34,10 @@ public class WaterSpawner_Single : MonoBehaviour
     private void Start()
     {
         CreatePool();
+    }
+
+    private void OnEnable()
+    {
         StartCoroutine(SpawnWater_co());
     }
 

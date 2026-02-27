@@ -25,13 +25,11 @@ public class PipeManager_Single : MonoBehaviour
 
     private void OnEnable()
     {
-        Debug.Log(1111);
         StartGame();
     }
 
     private void OnDisable()
     {
-        Debug.Log(2222);
         isPlayingGame = false;
         waterCamera.gameObject.SetActive(false);
         waterSpawner.CloseFaucet();
@@ -48,7 +46,6 @@ public class PipeManager_Single : MonoBehaviour
 
     public void RotateTargetPipe()
     {
-        Debug.Log(isPlayingGame);
         if (!isPlayingGame)
             return;
 

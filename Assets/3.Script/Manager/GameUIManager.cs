@@ -13,7 +13,11 @@ public class GameUIManager : NetworkBehaviour
     private TMP_Text clearText;
 
     [SerializeField]
-    private TMP_Text canMoveText;
+    private GameObject canMoveText;
+
+    [Header("Puzzle")]
+    [SerializeField]
+    private GameObject maxDrawLineText;
 
     private void Awake()
     {
@@ -29,8 +33,7 @@ public class GameUIManager : NetworkBehaviour
 
     public void SetCanMoveText(int moveCount)
     {
-        Debug.Log("1111");
-        canMoveText.text = "이동가능 횟수\n" + moveCount;
+        canMoveText.GetComponentInChildren<TMP_Text>().text = "이동가능 횟수\n" + moveCount;
     }
 
     public void SetclearText(string str, bool isNetwork = true)
@@ -45,9 +48,28 @@ public class GameUIManager : NetworkBehaviour
         }
     }
 
+    public void SetActiveMainUI(bool active)
+    {
+        canMoveText.gameObject.SetActive(active);
+    }
+
     [ClientRpc]
     private void SetclearText_ClientRpc(string str)
     {
         clearText.text = str;
+    }
+
+    public void SetMaxLineText(int maxLineCount)
+    {
+        if(maxLineCount > 0)
+        {
+            maxDrawLineText.gameObject.SetActive(true);
+        }
+        else
+        {
+            maxDrawLineText.gameObject.SetActive(false);
+        }
+
+        maxDrawLineText.GetComponentInChildren<TMP_Text>().text = "남은 획수 : " + maxLineCount;
     }
 }
