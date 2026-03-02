@@ -69,7 +69,10 @@ public class Pipe : NetworkBehaviour
         }
         else
         {
-            rotateDir.Value = 0;
+            if(IsServer)
+            {
+                rotateDir.Value = 0;
+            }
             transform.localEulerAngles = new Vector3(0, 0, 0);
             s_isRotating = false;
         }

@@ -72,4 +72,32 @@ public class GameUIManager : NetworkBehaviour
 
         maxDrawLineText.GetComponentInChildren<TMP_Text>().text = "남은 획수 : " + maxLineCount;
     }
+
+    public void SetColorPaintingProgressText(float progress)
+    {
+        if (progress > 0)
+        {
+            maxDrawLineText.gameObject.SetActive(true);
+        }
+        else
+        {
+            maxDrawLineText.gameObject.SetActive(false);
+        }
+
+        maxDrawLineText.GetComponentInChildren<TMP_Text>().text = $"현재 진행도: {progress * 100:F1}%";
+    }
+
+    public void SetOpenText(int openedCount)
+    {
+        if (openedCount < 3)
+        {
+            maxDrawLineText.gameObject.SetActive(true);
+        }
+        else
+        {
+            maxDrawLineText.gameObject.SetActive(false);
+        }
+
+        maxDrawLineText.GetComponentInChildren<TMP_Text>().text = $"남은 뒤집기 수: {3 - openedCount}";
+    }
 }

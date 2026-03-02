@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -19,6 +17,24 @@ public class PuzzleMissionTrigger : NetworkBehaviour, IInteractable
     private NetworkType networkOwner;
 
     private PuzzleMissonListener readyPuzzle;
+
+    private void Start()
+    {
+        if(networkOwner == NetworkType.Host)
+        {
+            if(!IsServer)
+            {
+                GetComponent<Collider2D>().enabled = false;
+            }
+        }
+        else
+        {
+            if(IsServer)
+            {
+                GetComponent<Collider2D>().enabled = false;
+            }
+        }
+    }
 
     public void EndInteract()
     {

@@ -384,6 +384,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6951422867914223150, guid: 1676c87e05b01b54cb0f4006504cdc7d, type: 3}
+      propertyPath: NetworkConfig.PlayerPrefab
+      value: 
+      objectReference: {fileID: 3193259704189672409, guid: 895bbedce93bf964b9810ab1e50497c2, type: 3}
     - target: {fileID: 7067300177640128769, guid: 1676c87e05b01b54cb0f4006504cdc7d, type: 3}
       propertyPath: m_MaxPacketQueueSize
       value: 512

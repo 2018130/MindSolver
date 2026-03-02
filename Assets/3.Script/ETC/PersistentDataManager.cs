@@ -7,7 +7,8 @@ using UnityEngine;
 [Serializable]
 public class PlayerDataJson
 {
-    public string MaxClearStage = "";
+    public int MaxClearLevel = 0;
+    public int MaxClearStage = 0;
 }
 
 public class PersistentDataManager : SingletonBehaviour<PersistentDataManager>
@@ -21,6 +22,8 @@ public class PersistentDataManager : SingletonBehaviour<PersistentDataManager>
     private void Start()
     {
         dataPath = Application.persistentDataPath;
+        playerData = LoadFromJson();
+        Debug.Log(playerData + " is loaded");
     }
 
     public void SaveToJson(PlayerDataJson playerCharacterDataJson)
@@ -40,6 +43,10 @@ public class PersistentDataManager : SingletonBehaviour<PersistentDataManager>
             PlayerDataJson playerDataJson = JsonUtility.FromJson<PlayerDataJson>(jsonData);
 
             return playerDataJson;
+        }
+        else
+        {
+            SaveToJson(new PlayerDataJson() { MaxClearLevel = 0, MaxClearStage = 0 });
         }
 
         return null;

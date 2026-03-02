@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using System.Collections.Generic;
+using System.Collections;
+
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -60,8 +62,8 @@ public class FallingTilemapEffect : MonoBehaviour
     public float dropInterval = 0.05f;
 
     [Header("상태 확인 (수정 불필요)")]
-    [ReadOnly] [SerializeField] private bool isAnimating = false;
-    [ReadOnly] [SerializeField] private bool hasCapturedState = false;
+    [ReadOnly][SerializeField] private bool isAnimating = false;
+    [ReadOnly][SerializeField] private bool hasCapturedState = false;
 
     // 초기 상태 캐싱 데이터
     private Tilemap[] childTilemaps;
@@ -119,11 +121,6 @@ public class FallingTilemapEffect : MonoBehaviour
     [ContextMenu("1. 모든 레이어 전체 하강 시작")]
     public void StartLayerFall()
     {
-        if (Application.isPlaying)
-        {
-            Debug.LogWarning("이 기능은 에디터 테스트용입니다. 인게임 적용법은 스크립트 하단 주석을 참고하세요.");
-            return;
-        }
         if (isAnimating) return;
 
         CaptureInitialState();
@@ -159,11 +156,6 @@ public class FallingTilemapEffect : MonoBehaviour
     [ContextMenu("2. 모든 타일 개별 낙하 시작")]
     public void StartIndividualFall()
     {
-        if (Application.isPlaying)
-        {
-            Debug.LogWarning("이 기능은 에디터 테스트용입니다. 인게임 적용법은 스크립트 하단 주석을 참고하세요.");
-            return;
-        }
         if (isAnimating) return;
 
         CaptureInitialState();
@@ -174,6 +166,11 @@ public class FallingTilemapEffect : MonoBehaviour
         animationStartTime = (float)EditorApplication.timeSinceStartup;
         isAnimating = true;
         EditorApplication.update += UpdateIndividualAnimation;
+
+        foreach(var fallingEffect in GetComponentsInChildren<FallingEffect>())
+        {
+            fallingEffect.StartFalling();
+        }
     }
 
     private void AssignStaggeredDelays()
@@ -350,39 +347,32 @@ public class FallingTilemapEffect : MonoBehaviour
 
     2. 런타임용 코루틴 작성:
        에디터용 업데이트 함수 대신, 코루틴(IEnumerator)을 만들어 Time.deltaTime을 활용합니다.
-
-       public void PlayStageClearTransition(string nextSceneName)
-       {
-           CaptureInitialState();
-           AssignStaggeredDelays();
-           StartCoroutine(StageClearCoroutine(nextSceneName));
-       }
-
-       private IEnumerator StageClearCoroutine(string nextSceneName)
-       {
-           float elapsedTime = 0f;
-           bool isAnyTileStillFalling = true;
-
-           while (isAnyTileStillFalling)
-           {
-               elapsedTime += Time.deltaTime; // 인게임 프레임 시간에 맞춰 증가
-               isAnyTileStillFalling = false;
-
-               // ... (여기에 UpdateIndividualAnimation의 거리 및 투명도 계산 로직을 그대로 붙여넣습니다) ...
-               
-               yield return null; // 다음 프레임까지 대기
-           }
-
-           // 연출 종료 후 잠시 여운을 줌
-           yield return new WaitForSeconds(0.5f); 
-           
-           // 다음 씬 로드
-           SceneManager.LoadScene(nextSceneName); 
-       }
-
-    3. 실행: 
-       게임오버 매니저나 스테이지 클리어 매니저 스크립트에서 보스를 잡았을 때 
-       이 스크립트의 PlayStageClearTransition("다음 씬 이름") 함수를 호출하면 작동합니다.
     */
+
+    public void PlayStageClearTransition()
+    {
+        CaptureInitialState();
+        AssignStaggeredDelays();
+        StartCoroutine(StageClearCoroutine());
+    }
+
+    private IEnumerator StageClearCoroutine()
+    {
+        float elapsedTime = 0f;
+        bool isAnyTileStillFalling = true;
+
+        while (isAnyTileStillFalling)
+        {
+            elapsedTime += Time.deltaTime; // 인게임 프레임 시간에 맞춰 증가
+            isAnyTileStillFalling = false;
+
+            // ... (여기에 UpdateIndividualAnimation의 거리 및 투명도 계산 로직을 그대로 붙여넣습니다) ...
+
+            yield return null; // 다음 프레임까지 대기
+        }
+
+        // 연출 종료 후 잠시 여운을 줌
+        yield return new WaitForSeconds(0.5f);
+    }
 #endif
 }

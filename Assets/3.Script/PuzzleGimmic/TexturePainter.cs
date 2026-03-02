@@ -162,7 +162,7 @@ public class TexturePainter : MonoBehaviour
             yield return new WaitForSeconds(checkInterval);
 
             float progress = CalculateProgress();
-            Debug.Log($"현재 진행도: {progress * 100:F1}%");
+            GameUIManager.Singleton.SetColorPaintingProgressText(progress);
 
             if (!isErasing)
             {
@@ -171,6 +171,8 @@ public class TexturePainter : MonoBehaviour
                     Debug.Log("🎉 퍼즐 완성! 다음 스테이지로 이동!");
                     PuzzleMissonListener puzzleMissonListener = GetComponentInParent<PuzzleMissonListener>();
                     puzzleMissonListener.EndPuzzle(true);
+
+                    GameUIManager.Singleton.SetColorPaintingProgressText(0);
 
                     yield break;
                 }
@@ -182,6 +184,8 @@ public class TexturePainter : MonoBehaviour
                     Debug.Log("🎉 퍼즐 지우기 완료! 다음 스테이지로 이동!");
                     PuzzleMissonListener puzzleMissonListener = GetComponentInParent<PuzzleMissonListener>();
                     puzzleMissonListener.EndPuzzle(true);
+
+                    GameUIManager.Singleton.SetColorPaintingProgressText(0);
 
                     yield break;
                 }
