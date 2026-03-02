@@ -19,6 +19,7 @@ public enum SingleMissionType
     SequenceRemember,
     ConnectLine,
     Pipe,
+    TakePicture,
 }
 public enum MultiMissionType
 {

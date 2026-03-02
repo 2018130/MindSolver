@@ -100,4 +100,11 @@ public class GameUIManager : NetworkBehaviour
 
         maxDrawLineText.GetComponentInChildren<TMP_Text>().text = $"남은 뒤집기 수: {3 - openedCount}";
     }
+
+    public void SetPictureText(bool active)
+    {
+            maxDrawLineText.gameObject.SetActive(active);
+
+        maxDrawLineText.GetComponentInChildren<TMP_Text>().text = $"오른쪽 그림과 같은 위치를 찾아주세요. 마우스 클릭시 시작!!";
+    }
 }

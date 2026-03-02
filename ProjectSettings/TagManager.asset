@@ -16,7 +16,7 @@ TagManager:
   - CanMove
   - Ground
   - Obstacle
-  - 
+  - Picture
   - 
   - 
   - 
@@ -41,6 +41,9 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Picture
+    uniqueID: 777197079
     locked: 0
   m_RenderingLayers:
   - Default
