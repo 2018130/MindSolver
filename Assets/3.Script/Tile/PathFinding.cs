@@ -185,7 +185,8 @@ public class PathFinding : MonoBehaviour
 
         for(int i = 0; i < road.Count; i++)
         {
-            if(i > otherPathFinding.road.Count - 1)
+            // TODO : remove false
+            if(false && i > otherPathFinding.road.Count - 1)
             {
                 // 미션 실패
                 Debug.Log($"미션 실패!!! {gameObject}의 최소 거리 : {road.Count} {otherPathFinding}의 최소 거리 : {otherPathFinding.road.Count}");

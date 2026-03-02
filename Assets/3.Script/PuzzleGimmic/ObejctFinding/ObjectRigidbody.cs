@@ -67,7 +67,7 @@ public class ObjectRigidbody : MonoBehaviour, IInteractable
 
         if(isClover)
         {
-            Collider2D[] cols = Physics2D.OverlapPointAll(transform.position);
+            Collider2D[] cols = Physics2D.OverlapPointAll(transform.position, gameObject.layer);
             if(cols.Length < 2)
             {
                 missonListener.EndPuzzle(true);
