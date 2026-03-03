@@ -26,6 +26,7 @@ public class StageManager : NetworkBehaviour
 
     [SerializeField]
     private int remainRemoveObstacleCount = 0;
+    public int RemainRemoveObstacleCount => remainRemoveObstacleCount;
 
     private bool isOpened = false;
 

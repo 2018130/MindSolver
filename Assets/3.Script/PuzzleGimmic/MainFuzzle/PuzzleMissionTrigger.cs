@@ -22,14 +22,14 @@ public class PuzzleMissionTrigger : NetworkBehaviour, IInteractable
     {
         if(networkOwner == NetworkType.Host)
         {
-            if(!IsServer)
+            if(!NetworkPlayer.IsServerPlayer)
             {
                 GetComponent<Collider2D>().enabled = false;
             }
         }
         else
         {
-            if(IsServer)
+            if(NetworkPlayer.IsServerPlayer)
             {
                 GetComponent<Collider2D>().enabled = false;
             }
@@ -38,6 +38,9 @@ public class PuzzleMissionTrigger : NetworkBehaviour, IInteractable
 
     public void EndInteract()
     {
+        if (StageManager.SingletonManager.RemainRemoveObstacleCount <= 0)
+            return;
+
         if (!isInteracted && GameManager.Singleton.GameState != GameState.Puzzle)
         {
             isInteracted = true;
@@ -58,7 +61,7 @@ public class PuzzleMissionTrigger : NetworkBehaviour, IInteractable
         {
             Debug.Log($"Clear puzzle listened {readyPuzzle.gameObject}");
             StageManager.SingletonManager.ReduceRemainRemoveObstacleCount();
-            Destroy(gameObject);
+            Destroy_ServerRpc();
         }
         else
         {
@@ -68,5 +71,17 @@ public class PuzzleMissionTrigger : NetworkBehaviour, IInteractable
 
         GameManager.Singleton.ChangeState(GameState.Playing);
         StageManager.SingletonManager.ClosePuzzleQueue();
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void Destroy_ServerRpc()
+    {
+        Destroy_ClientRpc();
+    }
+
+    [ClientRpc]
+    private void Destroy_ClientRpc()
+    {
+        Destroy(gameObject);
     }
 }
