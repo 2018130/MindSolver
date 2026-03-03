@@ -8,10 +8,10 @@ public class PathFinding : MonoBehaviour
 {
     [SerializeField]
     private Transform origin;
-    public Transform Origin { get; set; }
+    public Transform Origin { get => origin; set => origin = value; }
     [SerializeField]
     private Transform destination;
-    public Transform Destination { get; set; }
+    public Transform Destination { get => destination; set => destination = value; }
 
     [SerializeField]
     private LayerMask moveLayer;

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameUIManager : NetworkBehaviour
 {
@@ -14,6 +15,9 @@ public class GameUIManager : NetworkBehaviour
 
     [SerializeField]
     private GameObject canMoveText;
+
+    [SerializeField]
+    private Button startPathFinding_Btn;
 
     [Header("Puzzle")]
     [SerializeField]
@@ -29,8 +33,14 @@ public class GameUIManager : NetworkBehaviour
         {
             Destroy(gameObject);
         }
+
     }
 
+    private void Start()
+    {
+        startPathFinding_Btn.onClick.AddListener(StageManager.SingletonManager.StartPathFinding);
+        startPathFinding_Btn.onClick.AddListener(() => SetPathFindingBtn(false));
+    }
     public void SetCanMoveText(int moveCount)
     {
         canMoveText.GetComponentInChildren<TMP_Text>().text = "이동가능 횟수\n" + moveCount;
@@ -106,5 +116,10 @@ public class GameUIManager : NetworkBehaviour
             maxDrawLineText.gameObject.SetActive(active);
 
         maxDrawLineText.GetComponentInChildren<TMP_Text>().text = $"오른쪽 그림과 같은 위치를 찾아주세요. 마우스 클릭시 시작!!";
+    }
+
+    public void SetPathFindingBtn(bool active)
+    {
+        startPathFinding_Btn.gameObject.SetActive(active);
     }
 }

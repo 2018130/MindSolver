@@ -146,16 +146,21 @@ public class StageManager : NetworkBehaviour
 
     private void CheckEndOfPuzzle()
     {
-        Debug.Log((remainRemoveObstacleCount == 0) + " " + isClientMoveEnded);
         if(IsServer)
         {
             if (remainRemoveObstacleCount == 0 && isClientMoveEnded)
             {
                 Debug.Log($"Start path finding");
-                redPathFinding.StartPathFinding();
-                bluePathFinding.StartPathFinding();
+
+                GameUIManager.Singleton.SetPathFindingBtn(true);
             }
         }
+    }
+
+    public void StartPathFinding()
+    {
+        redPathFinding.StartPathFinding();
+        bluePathFinding.StartPathFinding();
     }
 
     [ClientRpc]
