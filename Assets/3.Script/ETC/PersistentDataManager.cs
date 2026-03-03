@@ -37,18 +37,14 @@ public class PersistentDataManager : SingletonBehaviour<PersistentDataManager>
     {
         string path = Path.Combine(dataPath, playerCharacterDataFileName);
 
-        if (File.Exists(path))
-        {
-            string jsonData = File.ReadAllText(path);
-            PlayerDataJson playerDataJson = JsonUtility.FromJson<PlayerDataJson>(jsonData);
-
-            return playerDataJson;
-        }
-        else
-        {
+        if (!File.Exists(path))
+        { 
             SaveToJson(new PlayerDataJson() { MaxClearLevel = 0, MaxClearStage = 0 });
         }
 
-        return null;
+        string jsonData = File.ReadAllText(path);
+        PlayerDataJson playerDataJson = JsonUtility.FromJson<PlayerDataJson>(jsonData);
+
+        return playerDataJson;
     }
 }
