@@ -83,7 +83,7 @@ public class CatmullRomPath : NetworkBehaviour, IInteractable
 
     private IEnumerator StartGame_co()
     {
-        GameUIManager.Singleton.SetText($"아래를 터치해 주세요!!");
+        GameUIManager.Singleton.SetclearText($"아래를 터치해 주세요!!");
 
         CreateWaypoint(waypointCount);
 

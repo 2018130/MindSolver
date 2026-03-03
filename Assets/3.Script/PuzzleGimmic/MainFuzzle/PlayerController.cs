@@ -1,9 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.NetworkInformation;
+using Unity.Netcode;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : NetworkBehaviour
 {
     [SerializeField]
     private SpriteRenderer front;
@@ -13,6 +15,11 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField]
     private float moveDurationPerTile = 0.5f;
+
+    public override void OnDestroy()
+    {
+        StopAllCoroutines();
+    }
 
     public IEnumerator MoveTo(Vector3 destPosition)
     {
@@ -41,18 +48,12 @@ public class PlayerController : MonoBehaviour
             // 오른쪽 위
             if (moveDir.y > 0)
             {
-                front.gameObject.SetActive(false);
-                back.gameObject.SetActive(true);
-
-                back.flipX = true;
+                ViewFrontDir_ClientRpc(false, true);
             }
             //오른쪽 아래
             else
             {
-                front.gameObject.SetActive(true);
-                back.gameObject.SetActive(false);
-
-                front.flipX = false;
+                ViewFrontDir_ClientRpc(true, false);
             }
         }
         else
@@ -60,19 +61,29 @@ public class PlayerController : MonoBehaviour
             // 왼쪽 위
             if (moveDir.y > 0)
             {
-                front.gameObject.SetActive(false);
-                back.gameObject.SetActive(true);
-
-                back.flipX = false;
+                ViewFrontDir_ClientRpc(false, false);
             }
             // 왼쪽 아래
             else
             {
-                front.gameObject.SetActive(true);
-                back.gameObject.SetActive(false);
-
-                front.flipX = true;
+                ViewFrontDir_ClientRpc(true, true);
             }
+        }
+    }
+
+    [ClientRpc]
+    private void ViewFrontDir_ClientRpc(bool isFront, bool flip)
+    {
+        front.gameObject.SetActive(isFront);
+        back.gameObject.SetActive(!isFront);
+
+        if(isFront)
+        {
+            front.flipX = flip;
+        }
+        else
+        {
+            back.flipX = flip;
         }
     }
 }

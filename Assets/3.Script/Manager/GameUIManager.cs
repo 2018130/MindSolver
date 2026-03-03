@@ -10,7 +10,14 @@ public class GameUIManager : NetworkBehaviour
     public static GameUIManager Singleton;
 
     [SerializeField]
-    private TMP_Text text;
+    private TMP_Text clearText;
+
+    [SerializeField]
+    private GameObject canMoveText;
+
+    [Header("Puzzle")]
+    [SerializeField]
+    private GameObject maxDrawLineText;
 
     private void Awake()
     {
@@ -24,14 +31,80 @@ public class GameUIManager : NetworkBehaviour
         }
     }
 
-    public void SetText(string str)
+    public void SetCanMoveText(int moveCount)
     {
-        SetText_ClientRpc(str);
+        canMoveText.GetComponentInChildren<TMP_Text>().text = "이동가능 횟수\n" + moveCount;
+    }
+
+    public void SetclearText(string str, bool isNetwork = true)
+    {
+        if(isNetwork)
+        {
+            SetclearText_ClientRpc(str);
+        }
+        else
+        {
+            clearText.text = str;
+        }
+    }
+
+    public void SetActiveMainUI(bool active)
+    {
+        canMoveText.gameObject.SetActive(active);
     }
 
     [ClientRpc]
-    private void SetText_ClientRpc(string str)
+    private void SetclearText_ClientRpc(string str)
     {
-        text.text = str;
+        clearText.text = str;
+    }
+
+    public void SetMaxLineText(int maxLineCount)
+    {
+        if(maxLineCount > 0)
+        {
+            maxDrawLineText.gameObject.SetActive(true);
+        }
+        else
+        {
+            maxDrawLineText.gameObject.SetActive(false);
+        }
+
+        maxDrawLineText.GetComponentInChildren<TMP_Text>().text = "남은 획수 : " + maxLineCount;
+    }
+
+    public void SetColorPaintingProgressText(float progress)
+    {
+        if (progress > 0)
+        {
+            maxDrawLineText.gameObject.SetActive(true);
+        }
+        else
+        {
+            maxDrawLineText.gameObject.SetActive(false);
+        }
+
+        maxDrawLineText.GetComponentInChildren<TMP_Text>().text = $"현재 진행도: {progress * 100:F1}%";
+    }
+
+    public void SetOpenText(int openedCount)
+    {
+        if (openedCount < 3)
+        {
+            maxDrawLineText.gameObject.SetActive(true);
+        }
+        else
+        {
+            maxDrawLineText.gameObject.SetActive(false);
+        }
+
+        maxDrawLineText.GetComponentInChildren<TMP_Text>().text = $"남은 뒤집기 수: {3 - openedCount}";
+    }
+
+    public void SetPictureText(bool active)
+    {
+            maxDrawLineText.gameObject.SetActive(active);
+
+        maxDrawLineText.GetComponentInChildren<TMP_Text>().text = $"오른쪽 그림과 같은 위치를 찾아주세요. 마우스 클릭시 시작!!";
     }
 }

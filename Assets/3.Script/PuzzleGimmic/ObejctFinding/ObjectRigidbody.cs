@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class ObjectRigidbody : MonoBehaviour, IInteractable
 {
+    private Vector3 initPosition;
     [SerializeField]
     private float maxAccelerationAmount = 100f;
     [SerializeField]
@@ -18,9 +19,22 @@ public class ObjectRigidbody : MonoBehaviour, IInteractable
 
     private Collider2D col;
 
+    [SerializeField]
+    private bool isClover = false;
+
+    private PuzzleMissonListener missonListener;
     private void Awake()
     {
+        initPosition = transform.position;
         col = GetComponent<Collider2D>();
+
+        missonListener = GetComponentInParent<PuzzleMissonListener>();
+    }
+
+    private void OnEnable()
+    {
+        transform.position = initPosition;
+        acceleration = Vector3.zero;
     }
 
     private void FixedUpdate()
@@ -50,6 +64,15 @@ public class ObjectRigidbody : MonoBehaviour, IInteractable
 
         acceleration.x = forceX;
         acceleration.y = forceY;
+
+        if(isClover)
+        {
+            Collider2D[] cols = Physics2D.OverlapPointAll(transform.position, gameObject.layer);
+            if(cols.Length < 2)
+            {
+                missonListener.EndPuzzle(true);
+            }
+        }
     }
 
     public void EndInteract()

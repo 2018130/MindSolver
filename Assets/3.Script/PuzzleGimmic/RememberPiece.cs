@@ -39,6 +39,8 @@ public class RememberPiece : MonoBehaviour, IInteractable
         if(spriteRenderer.sprite == backPieceImage)
         {
             spriteRenderer.sprite = originImage;
+
+            GetComponentInParent<ShufflePiece>().IncreaseOpenPieceCount(this);
         }
     }
 }

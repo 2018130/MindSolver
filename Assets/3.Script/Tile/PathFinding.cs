@@ -1,14 +1,17 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.NetworkInformation;
 using UnityEngine;
 
 public class PathFinding : MonoBehaviour
 {
     [SerializeField]
     private Transform origin;
+    public Transform Origin { get; set; }
     [SerializeField]
     private Transform destination;
+    public Transform Destination { get; set; }
 
     [SerializeField]
     private LayerMask moveLayer;
@@ -22,10 +25,18 @@ public class PathFinding : MonoBehaviour
     [SerializeField]
     private PlayerController player;
 
+    [SerializeField]
+    private PathFinding otherPathFinding;
+
+    private List<Tile> road = new List<Tile>();
+
+    // 서로다른 길 찾기가 수행된 횟수 카운팅
+    private static int endRoadCount = 0;
+
     private void Start()
     {
         tileController = FindAnyObjectByType<TileController>();
-        StartCoroutine(PathFinding_co());
+        //StartCoroutine(PathFinding_co());
     }
 
     private void CreateTiles()
@@ -39,13 +50,16 @@ public class PathFinding : MonoBehaviour
             for(int j = 0; j < row; j++)
             {
                 Vector2 tilePos = tileController.GetTilePos(i, j);
-                Collider2D col = Physics2D.OverlapCircle(tilePos, 0.01f, moveLayer);
-                bool canMove = false;
+                Collider2D[] cols = Physics2D.OverlapCircleAll(tilePos, 0.01f, moveLayer);
+                bool canMove = true;
 
-                if(col != null && !col.CompareTag("Obstacle"))
+                foreach(var col in cols)
                 {
-                    //Debug.Log($"{i} {j} col count : {col.name}");
-                    canMove = true;
+                    if (col != null && col.CompareTag("Obstacle"))
+                    {
+                        //Debug.Log($"{i} {j} col count : {col.name}");
+                        canMove = false;
+                    }
                 }
 
                 tiles[i, j] = new Tile(new Vector2Int(j, i), canMove);
@@ -54,6 +68,11 @@ public class PathFinding : MonoBehaviour
         }
     }
 
+    public void StartPathFinding()
+    {
+        Debug.Log($"Start pathfinding {gameObject}");
+        StartCoroutine(PathFinding_co());
+    }
 
     private IEnumerator PathFinding_co()
     {
@@ -104,7 +123,7 @@ public class PathFinding : MonoBehaviour
             {
                 int newIdxX = curTile.index.x + dx[i];
                 int newIdxY = curTile.index.y + dy[i];
-                //Debug.Log($"check new idx : {newIdxY}, {newIdxX}");
+                Debug.Log($"check new idx : {newIdxY}, {newIdxX}");
 
                 // 맵 범위 체크
                 if (newIdxX < 0 || newIdxX >= tileController.Tiles.GetLength(1) ||
@@ -122,7 +141,7 @@ public class PathFinding : MonoBehaviour
                 int newH = (Mathf.Abs(destIndex.x - newIdxX) + Mathf.Abs(destIndex.y - newIdxY)) * weight;
                 int newF = newG + newH;
 
-                if (checkTile.g == 0 || true)
+                if (checkTile.g == 0 || newG < checkTile.g)
                 {
                     checkTile.g = newG;
                     checkTile.h = newH;
@@ -130,8 +149,9 @@ public class PathFinding : MonoBehaviour
                     checkTile.preTile = curTile;
 
                     queue.Enqueue(checkTile);
-
-                    tileController.SpawnTile(new Vector2Int(newIdxX, newIdxY));
+#if UNITY_EDITOR
+                    tileController.SpawnTile(new Vector2Int(newIdxX, newIdxY)); // 타일 생성
+#endif
                 }
             }
 
@@ -140,7 +160,7 @@ public class PathFinding : MonoBehaviour
         }
 
         // 경로 역추적
-        List<Tile> road = new List<Tile>();
+        road.Clear();
         Tile tempTile = endTile;
         while (tempTile != null)
         {
@@ -149,22 +169,46 @@ public class PathFinding : MonoBehaviour
         }
         road.Reverse();
 
-        if (road.Count > 0)
-            yield return MoveTo(road, 1f);
-        else
-            Debug.Log("Failed to find Path.");
+        endRoadCount++;
+
+        if(endRoadCount == 2)
+        {
+            StartCoroutine(MoveTo(road, 0.5f));
+            StartCoroutine(otherPathFinding.MoveTo(otherPathFinding.road, 0.5f));
+        }
     }
 
     private IEnumerator MoveTo(List<Tile> road, float duration)
     {
         if (road == null)
             yield break;
-        //
+
         for(int i = 0; i < road.Count; i++)
         {
+            // TODO : remove false
+            if(false && i > otherPathFinding.road.Count - 1)
+            {
+                // 미션 실패
+                Debug.Log($"미션 실패!!! {gameObject}의 최소 거리 : {road.Count} {otherPathFinding}의 최소 거리 : {otherPathFinding.road.Count}");
+                GameUIManager.Singleton.SetclearText("미션 실패 ㅠㅜ, 3초 뒤에 재시작합니다.");
+                
+                yield return new WaitForSeconds(3f);
+
+                SceneChangeManager.Singleton.ChangeSceneByNetwork("Stage");
+                endRoadCount = 0;
+                StopAllCoroutines();
+            }
+
             Vector3 dest = tileController.GetTilePos(road[i].index.y, road[i].index.x);
+            Debug.Log($"이동중 {dest}");
 
             yield return player.MoveTo(dest);
+        }
+
+        if(gameObject.name.Contains("Red"))
+        {
+            endRoadCount = 0;
+            StageManager.SingletonManager.ClearStage_ClientRpc();
         }
     }
 }

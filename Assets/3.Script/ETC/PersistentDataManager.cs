@@ -7,6 +7,7 @@ using UnityEngine;
 [Serializable]
 public class PlayerDataJson
 {
+    public int MaxClearLevel = 0;
     public int MaxClearStage = 0;
 }
 
@@ -21,6 +22,8 @@ public class PersistentDataManager : SingletonBehaviour<PersistentDataManager>
     private void Start()
     {
         dataPath = Application.persistentDataPath;
+        playerData = LoadFromJson();
+        Debug.Log(playerData + " is loaded");
     }
 
     public void SaveToJson(PlayerDataJson playerCharacterDataJson)
@@ -34,14 +37,14 @@ public class PersistentDataManager : SingletonBehaviour<PersistentDataManager>
     {
         string path = Path.Combine(dataPath, playerCharacterDataFileName);
 
-        if (File.Exists(path))
-        {
-            string jsonData = File.ReadAllText(path);
-            PlayerDataJson playerDataJson = JsonUtility.FromJson<PlayerDataJson>(jsonData);
-
-            return playerDataJson;
+        if (!File.Exists(path))
+        { 
+            SaveToJson(new PlayerDataJson() { MaxClearLevel = 0, MaxClearStage = 0 });
         }
 
-        return null;
+        string jsonData = File.ReadAllText(path);
+        PlayerDataJson playerDataJson = JsonUtility.FromJson<PlayerDataJson>(jsonData);
+
+        return playerDataJson;
     }
 }

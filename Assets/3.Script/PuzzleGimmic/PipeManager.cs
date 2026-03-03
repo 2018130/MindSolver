@@ -15,6 +15,8 @@ public class PipeManager : NetworkBehaviour
     private WaterSpawner waterSpawner_blue;
     [SerializeField]
     private Camera waterCamera;
+    [SerializeField]
+    private GameObject bg;
 
     Pipe[] pipes;
 
@@ -40,7 +42,10 @@ public class PipeManager : NetworkBehaviour
     {
         if(multiMissionType == MultiMissionType.Pipe)
         {
-            StartGame_ClientRpc();
+            if (GetComponentInParent<PuzzleMissonListener>().MissionType ==MissionType.Multi)
+            {
+                StartGame_ClientRpc();
+            }
             waterSpawner_red.OpenFauset_ServerRpc();
             waterSpawner_blue.OpenFauset_ServerRpc();
         }
@@ -49,7 +54,10 @@ public class PipeManager : NetworkBehaviour
     {
         if (multiMissionType == MultiMissionType.Pipe)
         {
-            EndGame_ClientRpc();
+            if (GetComponentInParent<PuzzleMissonListener>().MissionType == MissionType.Multi)
+            {
+                EndGame_ClientRpc();
+            }
             waterSpawner_red.CloseFauset_ServerRpc();
             waterSpawner_blue.CloseFauset_ServerRpc();
         }
@@ -62,6 +70,7 @@ public class PipeManager : NetworkBehaviour
             {
                 pipes[i].gameObject.SetActive(true);
         }
+        bg.SetActive(true);
         waterCamera.gameObject.SetActive(true);
     }
 
@@ -74,6 +83,7 @@ public class PipeManager : NetworkBehaviour
                 pipes[i].gameObject.SetActive(false);
         }
         waterCamera.gameObject.SetActive(false);
+        bg.SetActive(false);
     }
 
     public void RotateTargetPipe()

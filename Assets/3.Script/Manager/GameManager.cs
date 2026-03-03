@@ -7,6 +7,7 @@ using UnityEngine;
 public enum GameState
 {
     Playing,
+    Puzzle,
     UI,
 }
 
@@ -61,14 +62,14 @@ public class GameManager : SingletonBehaviour<GameManager>
         switch (gameState)
         {
             case GameState.Playing:
-                Cursor.lockState = CursorLockMode.Locked;
-                Cursor.visible = false;
                 Time.timeScale = 1;
+                GameUIManager.Singleton.SetActiveMainUI(true);
                 break;
             case GameState.UI:
-                Cursor.lockState = CursorLockMode.None;
-                Cursor.visible = true;
                 Time.timeScale = 0;
+                break;
+            case GameState.Puzzle:
+                GameUIManager.Singleton.SetActiveMainUI(false);
                 break;
         }
         Debug.Log($"{gameState}");

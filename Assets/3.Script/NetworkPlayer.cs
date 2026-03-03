@@ -77,7 +77,7 @@ public class NetworkPlayer : NetworkBehaviour
             // 1. 로비 삭제/숨김 (더 이상 검색 안 되게)
             networkRelayManager.StartGameAndCloseLobby();
 
-            SceneChangeManager.Singleton.ChangeSceneByNetwork("SongJunYeop");
+            SceneChangeManager.Singleton.ChangeSceneByNetwork("Stage");
         }
     }
 }

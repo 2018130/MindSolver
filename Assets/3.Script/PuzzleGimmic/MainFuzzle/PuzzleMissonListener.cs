@@ -10,6 +10,17 @@ public enum MissionType
     Multi,
 }
 
+public enum SingleMissionType
+{
+    Puzzle,
+    ColorPainting,
+    SpreadInk,
+    ObjectFinding,
+    SequenceRemember,
+    ConnectLine,
+    Pipe,
+    TakePicture,
+}
 public enum MultiMissionType
 {
     ThreadDrawer,
@@ -23,6 +34,10 @@ public class PuzzleMissonListener : MonoBehaviour
     [SerializeField]
     private MissionType missionType = MissionType.Single;
     public MissionType MissionType => missionType;
+
+    [SerializeField]
+    private SingleMissionType singleMissionType = SingleMissionType.Puzzle;
+    public SingleMissionType SingleMissionType => singleMissionType;
 
     [SerializeField]
     private MultiMissionType multiMissionType = MultiMissionType.ThreadDrawer;
@@ -39,8 +54,9 @@ public class PuzzleMissonListener : MonoBehaviour
     public void StartPuzzle(PuzzleMissionTrigger sender)
     {
         this.sender = sender;
-
-        if(missionType == MissionType.Multi)
+        GameManager.Singleton.ChangeState(GameState.Puzzle);
+        Debug.Log($"퍼즐 게임 시작");
+        if (missionType == MissionType.Multi)
         {
             OnStartPuzzle?.Invoke(multiMissionType);
         }
@@ -52,34 +68,38 @@ public class PuzzleMissonListener : MonoBehaviour
 
     public void EndPuzzle(bool isClear)
     {
-        if (missionType == MissionType.Multi)
-        {
-            StartCoroutine(EndPuzzle_co(isClear));
-
-        }
-        else
-        {
-            gameObject.SetActive(false);
-        }
+        StartCoroutine(EndPuzzle_co(isClear));
     }
 
     private IEnumerator EndPuzzle_co(bool isClear)
     {
+        bool isNetwork = missionType == MissionType.Multi;
+
         if (isClear)
         {
-            GameUIManager.Singleton.SetText("미션 성공!!!!");
+            GameUIManager.Singleton.SetclearText("미션 성공!!!!", isNetwork);
         }
         else
         {
-            GameUIManager.Singleton.SetText("미션 실패ㅠㅜ");
+            GameUIManager.Singleton.SetclearText("미션 실패ㅠㅜ", isNetwork);
         }
 
         yield return new WaitForSeconds(endDelayTime);
 
-        GameUIManager.Singleton.SetText("");
+        GameUIManager.Singleton.SetclearText("", isNetwork);
+
         if (sender != null)
         {
-            OnEndPuzzle?.Invoke(isClear, multiMissionType);
+            if (missionType == MissionType.Multi)
+            {
+                OnEndPuzzle?.Invoke(isClear, multiMissionType);
+            }
+            else
+            {
+                gameObject.SetActive(false);
+            }
+
+            sender.EndPuzzle(isClear);
         }
     }
 }
