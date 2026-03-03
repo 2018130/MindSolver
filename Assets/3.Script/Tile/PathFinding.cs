@@ -51,30 +51,19 @@ public class PathFinding : MonoBehaviour
             {
                 Vector2 tilePos = tileController.GetTilePos(i, j);
                 Collider2D[] cols = Physics2D.OverlapCircleAll(tilePos, 0.01f, moveLayer);
-                Debug.DrawLine(tilePos, tilePos + Vector2.up * 0.01f, Color.red, 1f);
-                Debug.DrawLine(tilePos, tilePos + Vector2.down * 0.01f, Color.red, 1f);
-                Debug.DrawLine(tilePos, tilePos + Vector2.left * 0.01f, Color.red, 1f);
-                Debug.DrawLine(tilePos, tilePos + Vector2.right * 0.01f, Color.red, 1f);
-                bool canMove = false;
-                bool isObstacle = false;
+                bool canMove = true;
 
                 foreach(var col in cols)
                 {
-                    if ((gameObject.name.Contains("Red") && col.CompareTag("HostRoad")) ||
-                        (gameObject.name.Contains("Blue") && col.CompareTag("ClientRoad")) ||
-                        col.CompareTag("Untagged"))
-                    {
-                        canMove = true;
-                    }
-
                     if (col != null && col.CompareTag("Obstacle"))
                     {
-                        isObstacle = true;
+                        //Debug.Log($"{i} {j} col count : {col.name}");
+                        canMove = false;
                     }
                 }
 
-
-                tiles[i, j] = new Tile(new Vector2Int(j, i), isObstacle ? false : (canMove ? true : false));
+                tiles[i, j] = new Tile(new Vector2Int(j, i), canMove);
+                //Debug.Log($"Create tile {i}, {j} canMove : {canMove}");
             }
         }
     }

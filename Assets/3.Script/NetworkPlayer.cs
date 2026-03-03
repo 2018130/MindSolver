@@ -13,7 +13,6 @@ public class NetworkPlayer : NetworkBehaviour
     private static ulong clientPlayerId = default;
     public static ulong ClientPlayerId => clientPlayerId;
 
-    public static bool IsServerPlayer { get; set; } = false;
 
     private void Start()
     {
@@ -26,7 +25,6 @@ public class NetworkPlayer : NetworkBehaviour
 
         if (IsServer)
         {
-            IsServerPlayer = true;
             NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
         }
 

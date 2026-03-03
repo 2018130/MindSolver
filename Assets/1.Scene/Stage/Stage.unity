@@ -7242,7 +7242,7 @@ TilemapRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_ChunkSize: {x: 32, y: 32, z: 32}
-  m_ChunkCullingBounds: {x: 0.011037469, y: 0.23197198, z: 0}
+  m_ChunkCullingBounds: {x: 0, y: 0.25, z: 0}
   m_MaxChunkCount: 16
   m_MaxFrameAge: 16
   m_SortOrder: 3
@@ -10233,8 +10233,8 @@ BoxCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: -3}
   m_SpriteTilingProperty:
-    border: {x: 1.11, y: 0.47, z: 1.1899999, w: 0.29}
-    pivot: {x: 0.4975474, y: 0.20952907}
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 12.8, y: 12.8}
     newSize: {x: 12.8, y: 12.8}
     adaptiveTilingThreshold: 0.5
@@ -11937,8 +11937,8 @@ BoxCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: -3}
   m_SpriteTilingProperty:
-    border: {x: 1.11, y: 0.47, z: 1.1899999, w: 0.29}
-    pivot: {x: 0.4975474, y: 0.20952907}
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 12.8, y: 12.8}
     newSize: {x: 12.8, y: 12.8}
     adaptiveTilingThreshold: 0.5
@@ -12204,8 +12204,8 @@ BoxCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: -2.5}
   m_SpriteTilingProperty:
-    border: {x: 1.11, y: 0.47, z: 1.1899999, w: 0.29}
-    pivot: {x: 0.4975474, y: 0.20952907}
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 12.8, y: 12.8}
     newSize: {x: 12.8, y: 12.8}
     adaptiveTilingThreshold: 0.5
@@ -12794,7 +12794,7 @@ TilemapRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
-  m_ChunkCullingBounds: {x: 0.011037469, y: 0.22461367, z: 0}
+  m_ChunkCullingBounds: {x: 0, y: 0.25, z: 0}
   m_MaxChunkCount: 16
   m_MaxFrameAge: 16
   m_SortOrder: 3
@@ -13453,8 +13453,8 @@ BoxCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: -3}
   m_SpriteTilingProperty:
-    border: {x: 1.11, y: 0.47, z: 1.1899999, w: 0.29}
-    pivot: {x: 0.4975474, y: 0.20952907}
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 12.8, y: 12.8}
     newSize: {x: 12.8, y: 12.8}
     adaptiveTilingThreshold: 0.5
@@ -13645,8 +13645,8 @@ BoxCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: -3}
   m_SpriteTilingProperty:
-    border: {x: 1.11, y: 0.47, z: 1.1899999, w: 0.29}
-    pivot: {x: 0.4975474, y: 0.20952907}
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 12.8, y: 12.8}
     newSize: {x: 12.8, y: 12.8}
     adaptiveTilingThreshold: 0.5
@@ -16336,8 +16336,8 @@ BoxCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: -2.5}
   m_SpriteTilingProperty:
-    border: {x: 1.11, y: 0.47, z: 1.1899999, w: 0.29}
-    pivot: {x: 0.4975474, y: 0.20952907}
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 12.8, y: 12.8}
     newSize: {x: 12.8, y: 12.8}
     adaptiveTilingThreshold: 0.5
@@ -17082,8 +17082,8 @@ BoxCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: -3}
   m_SpriteTilingProperty:
-    border: {x: 1.11, y: 0.47, z: 1.1899999, w: 0.29}
-    pivot: {x: 0.4975474, y: 0.20952907}
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 12.8, y: 12.8}
     newSize: {x: 12.8, y: 12.8}
     adaptiveTilingThreshold: 0.5
@@ -18094,8 +18094,8 @@ BoxCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: -3}
   m_SpriteTilingProperty:
-    border: {x: 1.11, y: 0.47, z: 1.1899999, w: 0.29}
-    pivot: {x: 0.4975474, y: 0.20952907}
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 12.8, y: 12.8}
     newSize: {x: 12.8, y: 12.8}
     adaptiveTilingThreshold: 0.5
@@ -18286,8 +18286,8 @@ BoxCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: -3}
   m_SpriteTilingProperty:
-    border: {x: 1.11, y: 0.47, z: 1.1899999, w: 0.29}
-    pivot: {x: 0.4975474, y: 0.20952907}
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 12.8, y: 12.8}
     newSize: {x: 12.8, y: 12.8}
     adaptiveTilingThreshold: 0.5
@@ -18671,8 +18671,8 @@ BoxCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: -3}
   m_SpriteTilingProperty:
-    border: {x: 1.11, y: 0.47, z: 1.1899999, w: 0.29}
-    pivot: {x: 0.4975474, y: 0.20952907}
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 12.8, y: 12.8}
     newSize: {x: 12.8, y: 12.8}
     adaptiveTilingThreshold: 0.5
@@ -18776,7 +18776,7 @@ TilemapRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 2
   m_ChunkSize: {x: 32, y: 32, z: 32}
-  m_ChunkCullingBounds: {x: 0.014716625, y: 0.24423593, z: 0}
+  m_ChunkCullingBounds: {x: 0, y: 0.25, z: 0}
   m_MaxChunkCount: 16
   m_MaxFrameAge: 16
   m_SortOrder: 3
@@ -23582,8 +23582,8 @@ BoxCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: -2.5}
   m_SpriteTilingProperty:
-    border: {x: 1.11, y: 0.47, z: 1.1899999, w: 0.29}
-    pivot: {x: 0.4975474, y: 0.20952907}
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 12.8, y: 12.8}
     newSize: {x: 12.8, y: 12.8}
     adaptiveTilingThreshold: 0.5
@@ -24500,7 +24500,7 @@ TilemapRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_ChunkSize: {x: 32, y: 32, z: 32}
-  m_ChunkCullingBounds: {x: 0.0036792755, y: 0.21970809, z: 0}
+  m_ChunkCullingBounds: {x: 0, y: 0.25, z: 0}
   m_MaxChunkCount: 16
   m_MaxFrameAge: 16
   m_SortOrder: 3
@@ -25233,8 +25233,8 @@ BoxCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: -3}
   m_SpriteTilingProperty:
-    border: {x: 1.11, y: 0.47, z: 1.1899999, w: 0.29}
-    pivot: {x: 0.4975474, y: 0.20952907}
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 12.8, y: 12.8}
     newSize: {x: 12.8, y: 12.8}
     adaptiveTilingThreshold: 0.5
@@ -27762,8 +27762,8 @@ BoxCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: -3}
   m_SpriteTilingProperty:
-    border: {x: 1.11, y: 0.47, z: 1.1899999, w: 0.29}
-    pivot: {x: 0.4975474, y: 0.20952907}
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 12.8, y: 12.8}
     newSize: {x: 12.8, y: 12.8}
     adaptiveTilingThreshold: 0.5
@@ -30678,8 +30678,8 @@ BoxCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: -3}
   m_SpriteTilingProperty:
-    border: {x: 1.11, y: 0.47, z: 1.1899999, w: 0.29}
-    pivot: {x: 0.4975474, y: 0.20952907}
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 12.8, y: 12.8}
     newSize: {x: 12.8, y: 12.8}
     adaptiveTilingThreshold: 0.5
@@ -33391,8 +33391,8 @@ BoxCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: -3}
   m_SpriteTilingProperty:
-    border: {x: 1.11, y: 0.47, z: 1.1899999, w: 0.29}
-    pivot: {x: 0.4975474, y: 0.20952907}
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 12.8, y: 12.8}
     newSize: {x: 12.8, y: 12.8}
     adaptiveTilingThreshold: 0.5
@@ -35054,8 +35054,8 @@ BoxCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: -3}
   m_SpriteTilingProperty:
-    border: {x: 1.11, y: 0.47, z: 1.1899999, w: 0.29}
-    pivot: {x: 0.4975474, y: 0.20952907}
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 12.8, y: 12.8}
     newSize: {x: 12.8, y: 12.8}
     adaptiveTilingThreshold: 0.5
@@ -50023,8 +50023,8 @@ BoxCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: -2.5}
   m_SpriteTilingProperty:
-    border: {x: 1.11, y: 0.47, z: 1.1899999, w: 0.29}
-    pivot: {x: 0.4975474, y: 0.20952907}
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 12.8, y: 12.8}
     newSize: {x: 12.8, y: 12.8}
     adaptiveTilingThreshold: 0.5
@@ -50358,8 +50358,8 @@ BoxCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: -3}
   m_SpriteTilingProperty:
-    border: {x: 1.11, y: 0.47, z: 1.1899999, w: 0.29}
-    pivot: {x: 0.4975474, y: 0.20952907}
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 12.8, y: 12.8}
     newSize: {x: 12.8, y: 12.8}
     adaptiveTilingThreshold: 0.5
@@ -50920,8 +50920,8 @@ BoxCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: -3}
   m_SpriteTilingProperty:
-    border: {x: 1.11, y: 0.47, z: 1.1899999, w: 0.29}
-    pivot: {x: 0.4975474, y: 0.20952907}
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 12.8, y: 12.8}
     newSize: {x: 12.8, y: 12.8}
     adaptiveTilingThreshold: 0.5
@@ -52203,7 +52203,7 @@ TilemapRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
-  m_ChunkCullingBounds: {x: 0.011037469, y: 0.24300951, z: 0}
+  m_ChunkCullingBounds: {x: 0, y: 0.25, z: 0}
   m_MaxChunkCount: 16
   m_MaxFrameAge: 16
   m_SortOrder: 3
@@ -56947,7 +56947,7 @@ TilemapRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
-  m_ChunkCullingBounds: {x: 0.011037469, y: 0.22461367, z: 0}
+  m_ChunkCullingBounds: {x: 0, y: 0.25, z: 0}
   m_MaxChunkCount: 16
   m_MaxFrameAge: 16
   m_SortOrder: 3
@@ -57651,8 +57651,8 @@ BoxCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: -3}
   m_SpriteTilingProperty:
-    border: {x: 1.11, y: 0.47, z: 1.1899999, w: 0.29}
-    pivot: {x: 0.4975474, y: 0.20952907}
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 12.8, y: 12.8}
     newSize: {x: 12.8, y: 12.8}
     adaptiveTilingThreshold: 0.5
@@ -58347,8 +58347,8 @@ BoxCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: -3}
   m_SpriteTilingProperty:
-    border: {x: 1.11, y: 0.47, z: 1.1899999, w: 0.29}
-    pivot: {x: 0.4975474, y: 0.20952907}
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 12.8, y: 12.8}
     newSize: {x: 12.8, y: 12.8}
     adaptiveTilingThreshold: 0.5
@@ -58655,7 +58655,7 @@ TilemapRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_ChunkSize: {x: 32, y: 32, z: 32}
-  m_ChunkCullingBounds: {x: 0.007358253, y: 0.22584003, z: 0}
+  m_ChunkCullingBounds: {x: 0, y: 0.25, z: 0}
   m_MaxChunkCount: 16
   m_MaxFrameAge: 16
   m_SortOrder: 3
@@ -59360,8 +59360,8 @@ BoxCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: -3}
   m_SpriteTilingProperty:
-    border: {x: 1.11, y: 0.47, z: 1.1899999, w: 0.29}
-    pivot: {x: 0.4975474, y: 0.20952907}
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 12.8, y: 12.8}
     newSize: {x: 12.8, y: 12.8}
     adaptiveTilingThreshold: 0.5
@@ -60671,8 +60671,8 @@ BoxCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: -2.5}
   m_SpriteTilingProperty:
-    border: {x: 1.11, y: 0.47, z: 1.1899999, w: 0.29}
-    pivot: {x: 0.4975474, y: 0.20952907}
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 12.8, y: 12.8}
     newSize: {x: 12.8, y: 12.8}
     adaptiveTilingThreshold: 0.5
@@ -61276,8 +61276,8 @@ BoxCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: -3}
   m_SpriteTilingProperty:
-    border: {x: 1.11, y: 0.47, z: 1.1899999, w: 0.29}
-    pivot: {x: 0.4975474, y: 0.20952907}
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 12.8, y: 12.8}
     newSize: {x: 12.8, y: 12.8}
     adaptiveTilingThreshold: 0.5
@@ -62145,8 +62145,8 @@ BoxCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: -3}
   m_SpriteTilingProperty:
-    border: {x: 1.11, y: 0.47, z: 1.1899999, w: 0.29}
-    pivot: {x: 0.4975474, y: 0.20952907}
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 12.8, y: 12.8}
     newSize: {x: 12.8, y: 12.8}
     adaptiveTilingThreshold: 0.5
@@ -63438,7 +63438,7 @@ TilemapRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_ChunkSize: {x: 32, y: 32, z: 32}
-  m_ChunkCullingBounds: {x: 0.014716625, y: 0.23197198, z: 0}
+  m_ChunkCullingBounds: {x: 0, y: 0.25, z: 0}
   m_MaxChunkCount: 16
   m_MaxFrameAge: 16
   m_SortOrder: 3
@@ -68377,8 +68377,8 @@ BoxCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: -2.5}
   m_SpriteTilingProperty:
-    border: {x: 1.11, y: 0.47, z: 1.1899999, w: 0.29}
-    pivot: {x: 0.4975474, y: 0.20952907}
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 12.8, y: 12.8}
     newSize: {x: 12.8, y: 12.8}
     adaptiveTilingThreshold: 0.5
@@ -68639,8 +68639,8 @@ BoxCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: -3}
   m_SpriteTilingProperty:
-    border: {x: 1.11, y: 0.47, z: 1.1899999, w: 0.29}
-    pivot: {x: 0.4975474, y: 0.20952907}
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 12.8, y: 12.8}
     newSize: {x: 12.8, y: 12.8}
     adaptiveTilingThreshold: 0.5
@@ -68767,7 +68767,7 @@ TilemapRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
-  m_ChunkCullingBounds: {x: 0.011037469, y: 0.22461367, z: 0}
+  m_ChunkCullingBounds: {x: 0, y: 0.25, z: 0}
   m_MaxChunkCount: 16
   m_MaxFrameAge: 16
   m_SortOrder: 3
@@ -70603,8 +70603,8 @@ BoxCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: -2.5}
   m_SpriteTilingProperty:
-    border: {x: 1.11, y: 0.47, z: 1.1899999, w: 0.29}
-    pivot: {x: 0.4975474, y: 0.20952907}
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 12.8, y: 12.8}
     newSize: {x: 12.8, y: 12.8}
     adaptiveTilingThreshold: 0.5
@@ -72266,8 +72266,8 @@ BoxCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: -2.5}
   m_SpriteTilingProperty:
-    border: {x: 1.11, y: 0.47, z: 1.1899999, w: 0.29}
-    pivot: {x: 0.4975474, y: 0.20952907}
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 12.8, y: 12.8}
     newSize: {x: 12.8, y: 12.8}
     adaptiveTilingThreshold: 0.5
@@ -74491,8 +74491,8 @@ BoxCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: -2.5}
   m_SpriteTilingProperty:
-    border: {x: 1.11, y: 0.47, z: 1.1899999, w: 0.29}
-    pivot: {x: 0.4975474, y: 0.20952907}
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 12.8, y: 12.8}
     newSize: {x: 12.8, y: 12.8}
     adaptiveTilingThreshold: 0.5
@@ -74668,8 +74668,8 @@ BoxCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: -2.5}
   m_SpriteTilingProperty:
-    border: {x: 1.11, y: 0.47, z: 1.1899999, w: 0.29}
-    pivot: {x: 0.4975474, y: 0.20952907}
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 12.8, y: 12.8}
     newSize: {x: 12.8, y: 12.8}
     adaptiveTilingThreshold: 0.5
@@ -74953,8 +74953,8 @@ BoxCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: -3}
   m_SpriteTilingProperty:
-    border: {x: 1.11, y: 0.47, z: 1.1899999, w: 0.29}
-    pivot: {x: 0.4975474, y: 0.20952907}
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 12.8, y: 12.8}
     newSize: {x: 12.8, y: 12.8}
     adaptiveTilingThreshold: 0.5
@@ -75518,7 +75518,7 @@ TilemapRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
-  m_ChunkCullingBounds: {x: 0.007358253, y: 0.22584003, z: 0}
+  m_ChunkCullingBounds: {x: 0, y: 0.25, z: 0}
   m_MaxChunkCount: 16
   m_MaxFrameAge: 16
   m_SortOrder: 3
@@ -76737,8 +76737,8 @@ BoxCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: -3}
   m_SpriteTilingProperty:
-    border: {x: 1.11, y: 0.47, z: 1.1899999, w: 0.29}
-    pivot: {x: 0.4975474, y: 0.20952907}
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 12.8, y: 12.8}
     newSize: {x: 12.8, y: 12.8}
     adaptiveTilingThreshold: 0.5
@@ -77143,8 +77143,8 @@ BoxCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: -3}
   m_SpriteTilingProperty:
-    border: {x: 1.11, y: 0.47, z: 1.1899999, w: 0.29}
-    pivot: {x: 0.4975474, y: 0.20952907}
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 12.8, y: 12.8}
     newSize: {x: 12.8, y: 12.8}
     adaptiveTilingThreshold: 0.5
@@ -77324,7 +77324,7 @@ TilemapRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 3
   m_ChunkSize: {x: 32, y: 32, z: 32}
-  m_ChunkCullingBounds: {x: 0.0045990944, y: 0.0034952164, z: 0}
+  m_ChunkCullingBounds: {x: 0, y: 0.002499938, z: 0}
   m_MaxChunkCount: 16
   m_MaxFrameAge: 16
   m_SortOrder: 3
@@ -78024,8 +78024,8 @@ BoxCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: -2.5}
   m_SpriteTilingProperty:
-    border: {x: 1.11, y: 0.47, z: 1.1899999, w: 0.29}
-    pivot: {x: 0.4975474, y: 0.20952907}
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 12.8, y: 12.8}
     newSize: {x: 12.8, y: 12.8}
     adaptiveTilingThreshold: 0.5
@@ -78555,8 +78555,8 @@ BoxCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: -3}
   m_SpriteTilingProperty:
-    border: {x: 1.11, y: 0.47, z: 1.1899999, w: 0.29}
-    pivot: {x: 0.4975474, y: 0.20952907}
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 12.8, y: 12.8}
     newSize: {x: 12.8, y: 12.8}
     adaptiveTilingThreshold: 0.5
@@ -82491,8 +82491,8 @@ BoxCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: -2.5}
   m_SpriteTilingProperty:
-    border: {x: 1.11, y: 0.47, z: 1.1899999, w: 0.29}
-    pivot: {x: 0.4975474, y: 0.20952907}
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 12.8, y: 12.8}
     newSize: {x: 12.8, y: 12.8}
     adaptiveTilingThreshold: 0.5
@@ -82994,8 +82994,8 @@ BoxCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: -3}
   m_SpriteTilingProperty:
-    border: {x: 1.11, y: 0.47, z: 1.1899999, w: 0.29}
-    pivot: {x: 0.4975474, y: 0.20952907}
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 12.8, y: 12.8}
     newSize: {x: 12.8, y: 12.8}
     adaptiveTilingThreshold: 0.5
@@ -83713,8 +83713,8 @@ BoxCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: -2.5}
   m_SpriteTilingProperty:
-    border: {x: 1.11, y: 0.47, z: 1.1899999, w: 0.29}
-    pivot: {x: 0.4975474, y: 0.20952907}
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 12.8, y: 12.8}
     newSize: {x: 12.8, y: 12.8}
     adaptiveTilingThreshold: 0.5
@@ -83817,7 +83817,7 @@ TilemapRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 2
   m_ChunkSize: {x: 32, y: 32, z: 32}
-  m_ChunkCullingBounds: {x: 0.014716625, y: 0.22706646, z: 0}
+  m_ChunkCullingBounds: {x: 0, y: 0.25, z: 0}
   m_MaxChunkCount: 16
   m_MaxFrameAge: 16
   m_SortOrder: 3
@@ -84722,8 +84722,8 @@ BoxCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: -3}
   m_SpriteTilingProperty:
-    border: {x: 1.11, y: 0.47, z: 1.1899999, w: 0.29}
-    pivot: {x: 0.4975474, y: 0.20952907}
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 12.8, y: 12.8}
     newSize: {x: 12.8, y: 12.8}
     adaptiveTilingThreshold: 0.5
@@ -85516,8 +85516,8 @@ BoxCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: -2.5}
   m_SpriteTilingProperty:
-    border: {x: 1.11, y: 0.47, z: 1.1899999, w: 0.29}
-    pivot: {x: 0.4975474, y: 0.20952907}
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 12.8, y: 12.8}
     newSize: {x: 12.8, y: 12.8}
     adaptiveTilingThreshold: 0.5
@@ -88344,7 +88344,7 @@ TilemapRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 3
   m_ChunkSize: {x: 32, y: 32, z: 32}
-  m_ChunkCullingBounds: {x: 0.0045990944, y: 0.0034952164, z: 0}
+  m_ChunkCullingBounds: {x: 0, y: 0.002499938, z: 0}
   m_MaxChunkCount: 16
   m_MaxFrameAge: 16
   m_SortOrder: 3
@@ -90847,8 +90847,8 @@ BoxCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: -2.5}
   m_SpriteTilingProperty:
-    border: {x: 1.11, y: 0.47, z: 1.1899999, w: 0.29}
-    pivot: {x: 0.4975474, y: 0.20952907}
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 12.8, y: 12.8}
     newSize: {x: 12.8, y: 12.8}
     adaptiveTilingThreshold: 0.5
@@ -91299,8 +91299,8 @@ BoxCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: -3}
   m_SpriteTilingProperty:
-    border: {x: 1.11, y: 0.47, z: 1.1899999, w: 0.29}
-    pivot: {x: 0.4975474, y: 0.20952907}
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 12.8, y: 12.8}
     newSize: {x: 12.8, y: 12.8}
     adaptiveTilingThreshold: 0.5
