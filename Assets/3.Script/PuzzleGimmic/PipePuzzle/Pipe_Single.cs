@@ -20,7 +20,14 @@ public class Pipe_Single : MonoBehaviour
     private List<Direction> defaultDirections = new List<Direction>();
 
     [SerializeField]
-    private bool isStartTile = false;
+    public bool IsStartTile { get; set; } = false;
+    [SerializeField]
+    public bool IsEndTile { get; set; } = false;
+
+    private SpriteRenderer spriteRenderer;
+    private Sprite originImg;
+    [SerializeField]
+    private Sprite bucketImg;
 
     // 아래 collider의 isTrigger여부로 물길이 열려있는지 판단, true : 열림, false : 닫힘
     private Collider2D _pipeCollider;
@@ -36,8 +43,10 @@ public class Pipe_Single : MonoBehaviour
     private void Awake()
     {
         _pipeCollider = GetComponent<Collider2D>();
-        
-        for(int i = 0; i < holeDirections.Count; i++)
+        spriteRenderer = transform.Find("Pipe").GetComponent<SpriteRenderer>();
+        originImg = spriteRenderer.sprite;
+
+        for (int i = 0; i < holeDirections.Count; i++)
         {
             defaultDirections.Add(holeDirections[i]);
         }
@@ -52,7 +61,7 @@ public class Pipe_Single : MonoBehaviour
 
     private void OnEnable()
     {
-        if (isStartTile)
+        if (IsStartTile)
         {
             SetFlowEnabled(true);
 
@@ -65,15 +74,32 @@ public class Pipe_Single : MonoBehaviour
         else
         {
             rotateDir = 0;
+
             for(int i = 0; i < defaultDirections.Count; i++)
             {
                 holeDirections[i] = defaultDirections[i];
             }
+
             transform.localEulerAngles = new Vector3(0, 0, 0);
             s_isRotating = false;
         }
+
+        if(IsEndTile)
+        {
+            SetFlowEnabled(true);
+            spriteRenderer.sprite = bucketImg;
+        }
+        else
+        {
+            spriteRenderer.sprite = originImg;
+        }
     }
 
+    private void OnDisable()
+    {
+        IsEndTile = false;
+        IsStartTile = false;
+    }
 
     /// <summary>
     /// 파이프를 시계방향으로 90도 회전시킴

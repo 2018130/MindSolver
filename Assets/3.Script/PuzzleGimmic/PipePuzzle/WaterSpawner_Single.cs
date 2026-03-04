@@ -28,11 +28,11 @@ public class WaterSpawner_Single : MonoBehaviour
     [SerializeField]
     private int maxWaterSpawnableCount = 10;
 
-    [SerializeField]
     private ColorType colorType;
 
     private void Start()
     {
+        colorType = NetworkPlayer.IsServerPlayer ? ColorType.Red : ColorType.Blue;
         CreatePool();
     }
 

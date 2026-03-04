@@ -20,7 +20,7 @@ public class LayerController : MonoBehaviour
     {
         Collider2D[] cols = Physics2D.OverlapAreaAll(transform.position, transform.position + Vector3.down * rayDistance, 1 << LayerMask.NameToLayer("Ground"));
         Debug.DrawLine(transform.position, transform.position + Vector3.down * rayDistance, Color.red, 1f);
-        Debug.Log(cols.Length);
+        
         for (int i = 0; i < cols.Length; i++)
         {
             Renderer obstacleRenderer = cols[i].GetComponentInParent<Renderer>();
@@ -28,7 +28,6 @@ public class LayerController : MonoBehaviour
             if (cols[i].CompareTag("Obstacle") &&
                 obstacleRenderer != null)
             {
-                Debug.Log($"other : {obstacleRenderer.gameObject}");
                 mySpriteRenderer.sortingOrder = obstacleRenderer.sortingOrder - 1;
                 return;
             }

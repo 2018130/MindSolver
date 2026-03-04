@@ -44,7 +44,7 @@ public class PuzzleMissionTrigger : NetworkBehaviour, IInteractable
         if (!isInteracted && GameManager.Singleton.GameState != GameState.Puzzle)
         {
             isInteracted = true;
-
+            Debug.Log("111");
             readyPuzzle = StageManager.SingletonManager.GetNextPuzzle();
             readyPuzzle?.StartPuzzle(this);
         }
