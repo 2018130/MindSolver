@@ -33,6 +33,8 @@ public class DialogueManager : MonoBehaviour, ISceneContextBuilt
     private Image backgroundImg;
     [SerializeField]
     private GameObject dialogue;
+    [SerializeField]
+    private string dataFileName;
 
     [Space(10f)]
 
@@ -50,6 +52,7 @@ public class DialogueManager : MonoBehaviour, ISceneContextBuilt
     // 다이얼로그 데이터 값
     private Queue<DialogueData> dialogueQueue = new Queue<DialogueData>();
     private bool isPrintAnyDialogue = false;
+    public bool IsDialogueEnded { get; set; } = true;
 
     public event Action<int> OnDialogueStarted;
     [SerializeField]
@@ -60,14 +63,10 @@ public class DialogueManager : MonoBehaviour, ISceneContextBuilt
 
     private void Awake()
     {
-        dialogueDatas = CsvReader.LoadCsvData();
-    }
-    private void Start()
-    {
-
+        dialogueDatas = CsvReader.LoadCsvData(dataFileName);
     }
 
-    public void PrintDialogue(DialogueData dialogueData)
+    private void PrintDialogue(DialogueData dialogueData)
     {
         if (dialogueData != null)
         {
@@ -79,12 +78,19 @@ public class DialogueManager : MonoBehaviour, ISceneContextBuilt
             StartCoroutine(PrintDialogue_co());
         }
     }
-    public void PrintDialogue(int id)
+
+    public void PrintDialogue(int id = -1)
     {
+        if(id == -1)
+        {
+            id = nextPrintDialogueID;
+        }
+
         DialogueData data = dialogueDatas.Find(x => x.ID == id);
 
         if (!isPrintAnyDialogue)
         {
+            IsDialogueEnded = false;
             PrintDialogue(data);
         }
     }
@@ -128,7 +134,7 @@ public class DialogueManager : MonoBehaviour, ISceneContextBuilt
             {
                 Sprite loadedSprite = Resources.Load<Sprite>(currentDialogue.ImagePath);
 
-                if (loadedSprite != null)
+                if (loadedSprite != null && backgroundImg != null)
                 {
                     backgroundImg.sprite = loadedSprite;
                     backgroundImg.gameObject.SetActive(true);
@@ -176,10 +182,13 @@ public class DialogueManager : MonoBehaviour, ISceneContextBuilt
                 nextPrintDialogueID++;
             }
 
-            if (currentDialogue.Name == "EOF")
+            if (currentDialogue.Name == "EOF" || currentDialogue.AcceptID == -1)
             {
                 yield return new WaitForSeconds(endDelay);
-                // TODO : start game
+
+                Debug.Log($"한 다이얼로그 사이클이 끝났습니다!");
+                IsDialogueEnded = true;
+                SetDialogueActive(false);
 
                 yield break;
             }
@@ -232,7 +241,10 @@ public class DialogueManager : MonoBehaviour, ISceneContextBuilt
     private void SetDialogueActive(bool active)
     {
         dialogue.SetActive(active);
-        backgroundImg.gameObject.SetActive(active);
+        if(backgroundImg != null)
+        {
+            backgroundImg.gameObject.SetActive(active);
+        }
     }
 
     public void OnSceneContextBuilt()

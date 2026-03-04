@@ -50,7 +50,8 @@ public class GameUIManager : NetworkBehaviour
     {
         if(isNetwork)
         {
-            SetclearText_ClientRpc(str);
+            if(IsSpawned)
+                SetclearText_ClientRpc(str);
         }
         else
         {

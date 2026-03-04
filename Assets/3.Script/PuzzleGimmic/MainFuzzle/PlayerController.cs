@@ -48,25 +48,65 @@ public class PlayerController : NetworkBehaviour
             // 오른쪽 위
             if (moveDir.y > 0)
             {
-                ViewFrontDir_ClientRpc(false, true);
+                if(IsSpawned)
+                {
+                    ViewFrontDir_ClientRpc(false, true);
+                }
+                else
+                {
+                    front.gameObject.SetActive(false);
+                    back.gameObject.SetActive(true);
+
+                    front.flipX = true;
+                }
             }
             //오른쪽 아래
             else
             {
-                ViewFrontDir_ClientRpc(true, false);
+                if (IsSpawned)
+                {
+                    ViewFrontDir_ClientRpc(true, false);
+                }
+                else
+                {
+                    front.gameObject.SetActive(true);
+                    back.gameObject.SetActive(false);
+
+                    front.flipX = true;
+                }
             }
         }
         else
         {
             // 왼쪽 위
             if (moveDir.y > 0)
-            {
-                ViewFrontDir_ClientRpc(false, false);
+                {
+                    if (IsSpawned)
+                    {
+                        ViewFrontDir_ClientRpc(false, false);
+                    }
+                else
+                {
+                    front.gameObject.SetActive(false);
+                    back.gameObject.SetActive(true);
+
+                    front.flipX = false;
+                }
             }
             // 왼쪽 아래
             else
-            {
-                ViewFrontDir_ClientRpc(true, true);
+                    {
+                        if (IsSpawned)
+                        {
+                            ViewFrontDir_ClientRpc(true, true);
+                        }
+                else
+                {
+                    front.gameObject.SetActive(true);
+                    back.gameObject.SetActive(false);
+
+                    front.flipX = true;
+                }
             }
         }
     }
