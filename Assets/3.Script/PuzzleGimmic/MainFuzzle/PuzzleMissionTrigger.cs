@@ -61,7 +61,11 @@ public class PuzzleMissionTrigger : NetworkBehaviour, IInteractable
         {
             Debug.Log($"Clear puzzle listened {readyPuzzle.gameObject}");
             StageManager.SingletonManager.ReduceRemainRemoveObstacleCount();
-            Destroy_ServerRpc();
+
+            if(IsSpawned)
+            {
+                Destroy_ServerRpc();
+            }
         }
         else
         {

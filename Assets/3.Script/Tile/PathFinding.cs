@@ -134,7 +134,6 @@ public class PathFinding : MonoBehaviour
             {
                 int newIdxX = curTile.index.x + dx[i];
                 int newIdxY = curTile.index.y + dy[i];
-                Debug.Log($"check new idx : {newIdxY}, {newIdxX}");
 
                 // 맵 범위 체크
                 if (newIdxX < 0 || newIdxX >= tileController.Tiles.GetLength(1) ||
@@ -211,7 +210,6 @@ public class PathFinding : MonoBehaviour
             }
 
             Vector3 dest = tileController.GetTilePos(road[i].index.y, road[i].index.x);
-            Debug.Log($"이동중 {dest}");
 
             yield return player.MoveTo(dest);
         }

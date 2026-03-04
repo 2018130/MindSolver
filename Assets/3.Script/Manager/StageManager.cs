@@ -172,7 +172,7 @@ public class StageManager : NetworkBehaviour
         FallingTilemapEffect fallingTilemapEffect = stages[stage].GetComponent<FallingTilemapEffect>();
 
         stage++;
-        if (stage > 3)
+        if (stage > 4)
         {
             level++;
             stage = 0;
