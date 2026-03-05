@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameUIManager : NetworkBehaviour
@@ -38,7 +39,15 @@ public class GameUIManager : NetworkBehaviour
 
     private void Start()
     {
-        startPathFinding_Btn.onClick.AddListener(StageManager.SingletonManager.StartPathFinding);
+        if(SceneManager.GetActiveScene().name == "Stage")
+        {
+            startPathFinding_Btn.onClick.AddListener(StageManager.SingletonManager.StartPathFinding);
+        }
+        else if(SceneManager.GetActiveScene().name == "Tutorial")
+        {
+            startPathFinding_Btn.onClick.AddListener(TutorialSceneManager.singleton.StartPathfinding);
+        }
+
         startPathFinding_Btn.onClick.AddListener(() => SetPathFindingBtn(false));
     }
     public void SetCanMoveText(int moveCount)

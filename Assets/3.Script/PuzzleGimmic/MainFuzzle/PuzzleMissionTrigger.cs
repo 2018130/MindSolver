@@ -9,6 +9,7 @@ public class PuzzleMissionTrigger : NetworkBehaviour, IInteractable
         Host,
         Client
     }
+    private Collider2D col;
 
     [SerializeField]
     private bool isInteracted = false;
@@ -16,36 +17,52 @@ public class PuzzleMissionTrigger : NetworkBehaviour, IInteractable
     [SerializeField]
     private NetworkType networkOwner;
 
+    [SerializeField]
     private PuzzleMissonListener readyPuzzle;
 
     private void Start()
     {
-        if(networkOwner == NetworkType.Host)
+        col = GetComponent<Collider2D>();
+
+        if (IsSpawned)
         {
-            if(!NetworkPlayer.IsServerPlayer)
+            if (networkOwner == NetworkType.Host)
             {
-                GetComponent<Collider2D>().enabled = false;
+                if (!NetworkPlayer.IsServerPlayer)
+                {
+                    SetTouchable(false);
+                }
+            }
+            else
+            {
+                if (NetworkPlayer.IsServerPlayer)
+                {
+                    SetTouchable(false);
+                }
             }
         }
         else
         {
-            if(NetworkPlayer.IsServerPlayer)
-            {
-                GetComponent<Collider2D>().enabled = false;
-            }
+            SetTouchable(false);
         }
     }
 
     public void EndInteract()
     {
-        if (StageManager.SingletonManager.RemainRemoveObstacleCount <= 0)
-            return;
-
-        if (!isInteracted && GameManager.Singleton.GameState != GameState.Puzzle)
+        if (IsSpawned)
         {
-            isInteracted = true;
-            Debug.Log("111");
-            readyPuzzle = StageManager.SingletonManager.GetNextPuzzle();
+            if (StageManager.SingletonManager.RemainRemoveObstacleCount <= 0)
+                return;
+
+            if (!isInteracted && GameManager.Singleton.GameState != GameState.Puzzle)
+            {
+                isInteracted = true;
+                readyPuzzle = StageManager.SingletonManager.GetNextPuzzle();
+                readyPuzzle?.StartPuzzle(this);
+            }
+        }
+        else
+        {
             readyPuzzle?.StartPuzzle(this);
         }
     }
@@ -54,27 +71,43 @@ public class PuzzleMissionTrigger : NetworkBehaviour, IInteractable
     {
     }
 
+    public void SetTouchable(bool active)
+    {
+        if(col == null)
+        {
+            col = GetComponent<Collider2D>();
+        }
+        col.enabled = active;
+    }
 
     public void EndPuzzle(bool isClear)
     {
-        if(isClear)
+        if (IsSpawned)
         {
-            Debug.Log($"Clear puzzle listened {readyPuzzle.gameObject}");
-            StageManager.SingletonManager.ReduceRemainRemoveObstacleCount();
-
-            if(IsSpawned)
+            if (isClear)
             {
-                Destroy_ServerRpc();
+                Debug.Log($"Clear puzzle listened {readyPuzzle.gameObject}");
+                StageManager.SingletonManager.ReduceRemainRemoveObstacleCount();
+
+                if (IsSpawned)
+                {
+                    Destroy_ServerRpc();
+                }
             }
+            else
+            {
+                isInteracted = false;
+                StageManager.SingletonManager.InsertPuzzle(readyPuzzle);
+            }
+
+            GameManager.Singleton.ChangeState(GameState.Playing);
+            StageManager.SingletonManager.ClosePuzzleQueue();
         }
         else
         {
-            isInteracted = false;
-            StageManager.SingletonManager.InsertPuzzle(readyPuzzle);
+            TutorialSceneManager.singleton.EndOfMission();
+            gameObject.SetActive(false);
         }
-
-        GameManager.Singleton.ChangeState(GameState.Playing);
-        StageManager.SingletonManager.ClosePuzzleQueue();
     }
 
     [ServerRpc(RequireOwnership = false)]

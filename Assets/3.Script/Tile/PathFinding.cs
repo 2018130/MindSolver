@@ -174,6 +174,7 @@ public class PathFinding : MonoBehaviour
         Tile tempTile = endTile;
         while (tempTile != null)
         {
+            Debug.Log($"{player.gameObject} move to {tempTile.index}");
             road.Add(tempTile);
             tempTile = tempTile.preTile;
         }
@@ -193,10 +194,9 @@ public class PathFinding : MonoBehaviour
         if (road == null)
             yield break;
 
-        for(int i = 0; i < road.Count; i++)
+        for (int i = 0; i < road.Count; i++)
         {
-            // TODO : remove false
-            if(false && i > otherPathFinding.road.Count - 1)
+            if(i > otherPathFinding.road.Count - 1)
             {
                 // 미션 실패
                 Debug.Log($"미션 실패!!! {gameObject}의 최소 거리 : {road.Count} {otherPathFinding}의 최소 거리 : {otherPathFinding.road.Count}");
@@ -204,20 +204,31 @@ public class PathFinding : MonoBehaviour
                 
                 yield return new WaitForSeconds(3f);
 
-                SceneChangeManager.Singleton.ChangeSceneByNetwork("Stage");
+                if(TutorialSceneManager.singleton != null)
+                {
+                    TutorialSceneManager.singleton.EndOfPathfinding(false);
+                }
+                else
+                {
+                    SceneChangeManager.Singleton.ChangeSceneByNetwork("Stage");
+                }
                 endRoadCount = 0;
                 StopAllCoroutines();
+
+                yield break;
             }
 
             Vector3 dest = tileController.GetTilePos(road[i].index.y, road[i].index.x);
-
             yield return player.MoveTo(dest);
         }
 
         if(gameObject.name.Contains("Red"))
         {
+            StageManager.SingletonManager?.ClearStage_ClientRpc();
+
             endRoadCount = 0;
-            StageManager.SingletonManager.ClearStage_ClientRpc();
         }
+
+        TutorialSceneManager.singleton?.EndOfPathfinding(true);
     }
 }

@@ -27,7 +27,7 @@ public class PlayerController : NetworkBehaviour
         Vector3 originPosition = transform.position;
 
         Vector2 moveDir = new Vector2(destPosition.x - originPosition.x, destPosition.y - originPosition.y);
-
+        Debug.Log($"{gameObject}이동중 위치 : {destPosition}");
         SetMoveDirEffect(moveDir);
 
         while (timer < moveDurationPerTile)
@@ -57,7 +57,7 @@ public class PlayerController : NetworkBehaviour
                     front.gameObject.SetActive(false);
                     back.gameObject.SetActive(true);
 
-                    front.flipX = true;
+                    back.flipX = true;
                 }
             }
             //오른쪽 아래
@@ -72,7 +72,7 @@ public class PlayerController : NetworkBehaviour
                     front.gameObject.SetActive(true);
                     back.gameObject.SetActive(false);
 
-                    front.flipX = true;
+                    front.flipX = false;
                 }
             }
         }
@@ -90,7 +90,7 @@ public class PlayerController : NetworkBehaviour
                     front.gameObject.SetActive(false);
                     back.gameObject.SetActive(true);
 
-                    front.flipX = false;
+                    back.flipX = false;
                 }
             }
             // 왼쪽 아래
@@ -125,5 +125,14 @@ public class PlayerController : NetworkBehaviour
         {
             back.flipX = flip;
         }
+    }
+
+    public void SetAlpha(float value)
+    {
+        SpriteRenderer spriteRenderer = front.gameObject.activeSelf ? front : back;
+        Color color = spriteRenderer.color;
+        color.a = value;
+
+        spriteRenderer.color = color;
     }
 }
