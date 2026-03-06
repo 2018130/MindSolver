@@ -12,6 +12,16 @@ public class PuzzleController : MonoBehaviour, IInteractable
 
     public static int s_puzzleCount;
 
+    [SerializeField]
+    private List<Sprite> puzzleList = new List<Sprite>();
+
+    [SerializeField]
+    private SpriteRenderer imageSpriteRenderer;
+
+    private static int puzzleIdx = -1;
+
+    private static PuzzleController clickedPuzzleOwner;
+
     private void Awake()
     {
         puzzleParentTransform = transform.parent;
@@ -20,7 +30,7 @@ public class PuzzleController : MonoBehaviour, IInteractable
     private void Start()
     {
         childColliders = transform.GetComponentsInChildren<Collider2D>();
-        if(s_puzzleCount == 0)
+        if (s_puzzleCount == 0)
         {
             s_puzzleCount = FindObjectsByType<PuzzleController>(FindObjectsSortMode.None).Length;
             Debug.Log("puzzleCount : " + s_puzzleCount);
@@ -29,16 +39,25 @@ public class PuzzleController : MonoBehaviour, IInteractable
 
     private void OnEnable()
     {
+        if (puzzleIdx == -1)
+            puzzleIdx = UnityEngine.Random.Range(0, puzzleList.Count);
+        imageSpriteRenderer.sprite = puzzleList[puzzleIdx];
+
         transform.SetParent(puzzleParentTransform);
         transform.position = initPos;
         SetPuzzleCollider(true);
     }
 
+    private void OnDisable()
+    {
+        puzzleIdx = -1;
+    }
+
     private void SetPuzzleCollider(bool active)
     {
-        foreach(var childCol in childColliders)
+        foreach (var childCol in childColliders)
         {
-            if(childCol.TryGetComponent(out PuzzleCollider puzzleCollider))
+            if (childCol.TryGetComponent(out PuzzleCollider puzzleCollider))
             {
                 childCol.enabled = active;
             }
@@ -47,29 +66,29 @@ public class PuzzleController : MonoBehaviour, IInteractable
 
     public void Interact(Vector2 worldPosFromMousePosition)
     {
-        SetPuzzleCollider(false);
-        Collider2D[] pieces = Physics2D.OverlapPointAll(worldPosFromMousePosition);
-
-        foreach (var piece in pieces)
+        if(clickedPuzzleOwner == null ||
+            clickedPuzzleOwner == this)
         {
-            Transform prePiece = null;
-            Transform curPiece = piece.transform;
+            clickedPuzzleOwner = this;
+            SetPuzzleCollider(false);
 
-            while (curPiece.TryGetComponent(out PuzzleController puzzleController))
+            Transform parent = transform.parent;
+            Transform curPiece = transform;
+
+            while(parent.name != "Puzzle")
             {
-                prePiece = curPiece;
-                curPiece = curPiece.transform.parent;
+                curPiece = parent;
+                parent = parent.parent;
             }
 
-            if (prePiece != null)
-            {
-                prePiece.position = worldPosFromMousePosition;
-            }
+            curPiece.position = worldPosFromMousePosition;
         }
     }
 
     public void EndInteract()
     {
         SetPuzzleCollider(true);
+
+        clickedPuzzleOwner = null;
     }
 }

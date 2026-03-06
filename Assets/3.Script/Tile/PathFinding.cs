@@ -184,12 +184,14 @@ public class PathFinding : MonoBehaviour
 
         if(endRoadCount == 2)
         {
-            StartCoroutine(MoveTo(road, 0.5f));
-            StartCoroutine(otherPathFinding.MoveTo(otherPathFinding.road, 0.5f));
+            bool isClear = road.Count == otherPathFinding.road.Count;
+
+            StartCoroutine(MoveTo(road, 0.5f, isClear));
+            StartCoroutine(otherPathFinding.MoveTo(otherPathFinding.road, 0.5f, isClear));
         }
     }
 
-    private IEnumerator MoveTo(List<Tile> road, float duration)
+    private IEnumerator MoveTo(List<Tile> road, float duration, bool isClear)
     {
         if (road == null)
             yield break;
@@ -212,6 +214,7 @@ public class PathFinding : MonoBehaviour
                 {
                     SceneChangeManager.Singleton.ChangeSceneByNetwork("Stage");
                 }
+
                 endRoadCount = 0;
                 StopAllCoroutines();
 
@@ -224,7 +227,14 @@ public class PathFinding : MonoBehaviour
 
         if(gameObject.name.Contains("Red"))
         {
-            StageManager.SingletonManager?.ClearStage_ClientRpc();
+            if(isClear)
+            {
+                StageManager.SingletonManager?.ClearStage_ClientRpc();
+            }
+            else
+            {
+                SceneChangeManager.Singleton.ChangeSceneByNetwork("Stage");
+            }
 
             endRoadCount = 0;
         }

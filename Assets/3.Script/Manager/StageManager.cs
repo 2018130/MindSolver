@@ -46,7 +46,10 @@ public class StageManager : NetworkBehaviour
     private PlayerController redPlayer;
     [SerializeField]
     private PlayerController bluePlayer;
-    
+
+    [SerializeField]
+    private DialogueManager dialogueManager;
+
     private void Awake()
     {
         if(SingletonManager == null)
@@ -79,14 +82,39 @@ public class StageManager : NetworkBehaviour
     private void Start()
     {
         ResetStage();
+
+        if(!PersistentDataManager.Singleton.IsReplayed)
+        {
+            int clearStage = PersistentDataManager.Singleton.PlayerData.MaxClearStage;
+            dialogueManager.PrintDialogue(dialogueManager.GetIDFromClearStage(clearStage));
+        }
+
+        PersistentDataManager.Singleton.IsReplayed = true;
     }
 
     private void ResetStage()
     {
+        int currentStage = PersistentDataManager.Singleton.PlayerData.MaxClearStage;
+        redPathFinding.Origin = redStagePoint[currentStage].first;
+        redPathFinding.Destination = redStagePoint[currentStage].second;
+        redPlayer.transform.position = redPathFinding.Origin.position;
+
+        bluePathFinding.Origin = blueStagePoint[currentStage].first;
+        bluePathFinding.Destination = blueStagePoint[currentStage].second;
+        bluePlayer.transform.position = bluePathFinding.Origin.position;
+
         remainRemoveObstacleCount = canRemoveObstacleCount;
         GameUIManager.Singleton.SetCanMoveText(remainRemoveObstacleCount);
 
-        for(int i = 0; i < stages.Count; i++)
+        if(!PersistentDataManager.Singleton.IsReplayed)
+        {
+            for (int i = 0; i < currentStage * 3; i++)
+            {
+                puzzleList.RemoveAt(0);
+            }
+        }
+
+        for (int i = 0; i < stages.Count; i++)
         {
             if(i == PersistentDataManager.Singleton.PlayerData.MaxClearStage)
             {
@@ -187,26 +215,23 @@ public class StageManager : NetworkBehaviour
             PersistentDataManager.Singleton.PlayerData.MaxClearLevel = level;
             PersistentDataManager.Singleton.PlayerData.MaxClearStage = stage;
 
-            fallingTilemapEffect.StartIndividualFall();
-            Debug.Log(PersistentDataManager.Singleton.PlayerData.MaxClearStage);
-            StartCoroutine(ChangeStage_co(fallingTilemapEffect, stage));
+            StartCoroutine(ChangeStage_co(fallingTilemapEffect));
         }
 
     }
 
-    private IEnumerator ChangeStage_co(FallingTilemapEffect fallingTilemapEffect, int nextStage)
+    private IEnumerator ChangeStage_co(FallingTilemapEffect fallingTilemapEffect)
     {
+        int clearStage = PersistentDataManager.Singleton.PlayerData.MaxClearStage;
+        dialogueManager.PrintDialogue(dialogueManager.GetIDFromClearStage(clearStage));
+
+        WaitUntil waitUntil = new WaitUntil(() => dialogueManager.IsDialogueEnded);
+
+        yield return waitUntil;
+
         fallingTilemapEffect.StartIndividualFall();
 
         yield return new WaitForSeconds(5f);
-
-        redPathFinding.Origin = redStagePoint[nextStage].first;
-        redPathFinding.Destination = redStagePoint[nextStage].second;
-        redPlayer.transform.position = redPathFinding.Origin.position;
-
-        bluePathFinding.Origin = blueStagePoint[nextStage].first;
-        bluePathFinding.Destination = blueStagePoint[nextStage].second;
-        bluePlayer.transform.position = bluePathFinding.Origin.position;
 
         ResetStage();
     }

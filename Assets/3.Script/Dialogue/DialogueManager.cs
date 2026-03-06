@@ -81,6 +81,9 @@ public class DialogueManager : MonoBehaviour, ISceneContextBuilt
 
     public void PrintDialogue(int id = -1)
     {
+        if (id == -2)
+            return;
+
         if(id == -1)
         {
             id = nextPrintDialogueID;
@@ -250,5 +253,30 @@ public class DialogueManager : MonoBehaviour, ISceneContextBuilt
     public void OnSceneContextBuilt()
     {
         PrintDialogue(nextPrintDialogueID);
+    }
+
+    public int GetIDFromClearStage(int clearStage)
+    {
+        if (clearStage == 0 && !PersistentDataManager.Singleton.IsReplayed)
+            return -1;
+
+        int idx = 0;
+        int stage = 0;
+        while(idx < dialogueDatas.Count)
+        {
+            if(dialogueDatas[idx].AcceptID == -1)
+            {
+                stage++;
+            }
+
+            if(clearStage == stage)
+            {
+                return dialogueDatas[idx].ID + 1;
+            }
+
+            idx++;
+        }
+
+        return -1;
     }
 }

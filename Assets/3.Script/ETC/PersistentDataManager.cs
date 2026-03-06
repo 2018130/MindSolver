@@ -13,9 +13,12 @@ public class PlayerDataJson
 
 public class PersistentDataManager : SingletonBehaviour<PersistentDataManager>
 {
+    public bool IsReplayed { get; set; } = false;
+
     private string dataPath;
 
     private string playerCharacterDataFileName = "playerCharacter.json";
+    [SerializeField]
     private PlayerDataJson playerData = new PlayerDataJson();
     public PlayerDataJson PlayerData => playerData;
 
@@ -23,7 +26,6 @@ public class PersistentDataManager : SingletonBehaviour<PersistentDataManager>
     {
         dataPath = Application.persistentDataPath;
         playerData = LoadFromJson();
-        Debug.Log(playerData + " is loaded");
     }
 
     public void SaveToJson(PlayerDataJson playerCharacterDataJson)

@@ -23,16 +23,36 @@ public class ObjectRigidbody : MonoBehaviour, IInteractable
     private bool isClover = false;
 
     private PuzzleMissonListener missonListener;
+
+    private SpriteRenderer spriteRenderer;
+    [SerializeField]
+    private Sprite redPlayerObject;
+    [SerializeField]
+    private Sprite bluePlayerObject;
+
     private void Awake()
     {
         initPosition = transform.position;
         col = GetComponent<Collider2D>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
 
         missonListener = GetComponentInParent<PuzzleMissonListener>();
     }
 
     private void OnEnable()
     {
+        if(!isClover)
+        {
+            if (NetworkPlayer.IsServerPlayer)
+            {
+                spriteRenderer.sprite = redPlayerObject;
+            }
+            else
+            {
+                spriteRenderer.sprite = bluePlayerObject;
+            }
+        }
+
         transform.position = initPosition;
         acceleration = Vector3.zero;
     }
