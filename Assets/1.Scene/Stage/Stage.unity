@@ -11726,7 +11726,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &564460056
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11822,6 +11822,10 @@ PrefabInstance:
     - target: {fileID: 3307437545799570008, guid: c9e7a9afac7eb8841bb89c0afcd8e54e, type: 3}
       propertyPath: m_Name
       value: BluePlayer
+      objectReference: {fileID: 0}
+    - target: {fileID: 3307437545799570008, guid: c9e7a9afac7eb8841bb89c0afcd8e54e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5468304241754746730, guid: c9e7a9afac7eb8841bb89c0afcd8e54e, type: 3}
       propertyPath: m_SortingOrder
@@ -19677,7 +19681,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!156049354 &665545698
 Grid:
   m_ObjectHideFlags: 0
@@ -24146,7 +24150,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!156049354 &811870035
 Grid:
   m_ObjectHideFlags: 0
@@ -27006,6 +27010,10 @@ PrefabInstance:
     - target: {fileID: 4312579431332577059, guid: 67c946317778ea74ead7123ae4e5b8b1, type: 3}
       propertyPath: m_Name
       value: PaperAnimation
+      objectReference: {fileID: 0}
+    - target: {fileID: 4312579431332577059, guid: 67c946317778ea74ead7123ae4e5b8b1, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4448568323758322321, guid: 67c946317778ea74ead7123ae4e5b8b1, type: 3}
       propertyPath: paperAnimator
@@ -42147,6 +42155,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: RedPlayer
       objectReference: {fileID: 0}
+    - target: {fileID: 5722124812816574039, guid: bd0f40263c9c8e34ebe8e1e627037b52, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6920182633132631267, guid: bd0f40263c9c8e34ebe8e1e627037b52, type: 3}
       propertyPath: m_LocalPosition.x
       value: -5.01
@@ -56522,7 +56534,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1418078458
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -64677,7 +64689,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1561972223
 Transform:
   m_ObjectHideFlags: 0
@@ -64864,7 +64876,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!156049354 &1577899085
 Grid:
   m_ObjectHideFlags: 0
@@ -77580,7 +77592,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!156049354 &2050477083
 Grid:
   m_ObjectHideFlags: 0
@@ -81337,7 +81349,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!61 &606474994183034423
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -82066,7 +82078,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1483038276750201316
 GameObject:
   m_ObjectHideFlags: 0
@@ -82459,6 +82471,10 @@ PrefabInstance:
     - target: {fileID: 938211361264793655, guid: df4a5f4ded6e9284697676327ad944f0, type: 3}
       propertyPath: m_Name
       value: ConnectLine
+      objectReference: {fileID: 0}
+    - target: {fileID: 938211361264793655, guid: df4a5f4ded6e9284697676327ad944f0, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5410180693928742859, guid: df4a5f4ded6e9284697676327ad944f0, type: 3}
       propertyPath: m_LocalPosition.x
@@ -85382,6 +85398,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ColorPainting
       objectReference: {fileID: 0}
+    - target: {fileID: 1218906951224474092, guid: 431ee6d454814a74094d8f5ca940e92e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1856817696576816470, guid: 431ee6d454814a74094d8f5ca940e92e, type: 3}
       propertyPath: paperManager
       value: 
@@ -86783,6 +86803,10 @@ PrefabInstance:
     - target: {fileID: 1430854291660850108, guid: c21d252887f3a2d4db7d804fe72216bc, type: 3}
       propertyPath: m_Name
       value: Pathfinding
+      objectReference: {fileID: 0}
+    - target: {fileID: 1430854291660850108, guid: c21d252887f3a2d4db7d804fe72216bc, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2297278011703262252, guid: c21d252887f3a2d4db7d804fe72216bc, type: 3}
       propertyPath: m_LocalPosition.x

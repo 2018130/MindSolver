@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Audio;
+using UnityEngine.EventSystems;
 
 public class SettingsUIManager : MonoBehaviour
 {
@@ -50,6 +51,35 @@ public class SettingsUIManager : MonoBehaviour
         // 비활성화
         Settingspanel.gameObject.SetActive(false);
         ResetPanel.gameObject.SetActive(false);
+
+        AddSliderPointerUpEvent(sfxSlider);
+    }
+
+    /**
+     * @brief 슬라이더 조작이 끝났을 때(PointerUp) 이벤트를 추가합니다.
+     * @param slider 이벤트를 추가할 UI 슬라이더
+     */
+    private void AddSliderPointerUpEvent(Slider slider)
+    {
+        EventTrigger trigger = slider.gameObject.GetComponent<EventTrigger>();
+        if (trigger == null) trigger = slider.gameObject.AddComponent<EventTrigger>();
+
+        EventTrigger.Entry entry = new EventTrigger.Entry();
+        entry.eventID = EventTriggerType.PointerUp; // 손가락을 뗐을 때! 
+        entry.callback.AddListener((data) => { PlaySFXPreview(); });
+        trigger.triggers.Add(entry);
+    }
+
+    /**
+     * @brief 효과음 볼륨 확인을 위해 미리보기 소리를 재생합니다.
+     */
+    public void PlaySFXPreview()
+    {
+        // 아까 만든 사운드 매니저의 터치 소리를 한 번 빵! 터뜨려줘 
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.PlayTouchSound();
+        }
     }
 
     // BGM 조절
