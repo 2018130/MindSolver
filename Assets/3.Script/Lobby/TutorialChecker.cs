@@ -10,7 +10,7 @@ public class TutorialChecker: MonoBehaviour
         if (hasPlayedTutorial)
         {
             Debug.Log("∆©≈‰∏ÆæÛ ∞«≥ ∂Ÿ±‚");
-            SceneChangeManager.Singleton.ChangeScene(SceneType.GameScene);
+            SceneChangeManager.Singleton.ChangeScene(SceneType.NetworkRelayScene);
         }
         else
         {
@@ -26,6 +26,6 @@ public class TutorialChecker: MonoBehaviour
         PlayerPrefs.Save(); 
 
         // ∞‘¿” æ¿¿∏∑Œ ¿Ãµø
-        SceneChangeManager.Singleton.ChangeScene(SceneType.GameScene);
+        SceneChangeManager.Singleton.ChangeScene(SceneType.NetworkRelayScene);
     }
 }
