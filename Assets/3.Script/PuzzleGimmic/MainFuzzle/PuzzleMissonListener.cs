@@ -53,9 +53,10 @@ public class PuzzleMissonListener : MonoBehaviour
 
     public void StartPuzzle(PuzzleMissionTrigger sender)
     {
-        this.sender = sender;
         GameManager.Singleton.ChangeState(GameState.Puzzle);
         Debug.Log($"퍼즐 게임 시작");
+        this.sender = sender;
+
         if (missionType == MissionType.Multi)
         {
             OnStartPuzzle?.Invoke(multiMissionType);

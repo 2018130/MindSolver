@@ -8,10 +8,10 @@ public class PathFinding : MonoBehaviour
 {
     [SerializeField]
     private Transform origin;
-    public Transform Origin { get; set; }
+    public Transform Origin { get => origin; set => origin = value; }
     [SerializeField]
     private Transform destination;
-    public Transform Destination { get; set; }
+    public Transform Destination { get => destination; set => destination = value; }
 
     [SerializeField]
     private LayerMask moveLayer;
@@ -51,19 +51,30 @@ public class PathFinding : MonoBehaviour
             {
                 Vector2 tilePos = tileController.GetTilePos(i, j);
                 Collider2D[] cols = Physics2D.OverlapCircleAll(tilePos, 0.01f, moveLayer);
-                bool canMove = true;
+                Debug.DrawLine(tilePos, tilePos + Vector2.up * 0.01f, Color.red, 1f);
+                Debug.DrawLine(tilePos, tilePos + Vector2.down * 0.01f, Color.red, 1f);
+                Debug.DrawLine(tilePos, tilePos + Vector2.left * 0.01f, Color.red, 1f);
+                Debug.DrawLine(tilePos, tilePos + Vector2.right * 0.01f, Color.red, 1f);
+                bool canMove = false;
+                bool isObstacle = false;
 
                 foreach(var col in cols)
                 {
+                    if ((gameObject.name.Contains("Red") && col.CompareTag("HostRoad")) ||
+                        (gameObject.name.Contains("Blue") && col.CompareTag("ClientRoad")) ||
+                        col.CompareTag("Untagged"))
+                    {
+                        canMove = true;
+                    }
+
                     if (col != null && col.CompareTag("Obstacle"))
                     {
-                        //Debug.Log($"{i} {j} col count : {col.name}");
-                        canMove = false;
+                        isObstacle = true;
                     }
                 }
 
-                tiles[i, j] = new Tile(new Vector2Int(j, i), canMove);
-                //Debug.Log($"Create tile {i}, {j} canMove : {canMove}");
+
+                tiles[i, j] = new Tile(new Vector2Int(j, i), isObstacle ? false : (canMove ? true : false));
             }
         }
     }
@@ -123,7 +134,6 @@ public class PathFinding : MonoBehaviour
             {
                 int newIdxX = curTile.index.x + dx[i];
                 int newIdxY = curTile.index.y + dy[i];
-                Debug.Log($"check new idx : {newIdxY}, {newIdxX}");
 
                 // 맵 범위 체크
                 if (newIdxX < 0 || newIdxX >= tileController.Tiles.GetLength(1) ||
@@ -164,6 +174,7 @@ public class PathFinding : MonoBehaviour
         Tile tempTile = endTile;
         while (tempTile != null)
         {
+            Debug.Log($"{player.gameObject} move to {tempTile.index}");
             road.Add(tempTile);
             tempTile = tempTile.preTile;
         }
@@ -183,10 +194,9 @@ public class PathFinding : MonoBehaviour
         if (road == null)
             yield break;
 
-        for(int i = 0; i < road.Count; i++)
+        for (int i = 0; i < road.Count; i++)
         {
-            // TODO : remove false
-            if(false && i > otherPathFinding.road.Count - 1)
+            if(i > otherPathFinding.road.Count - 1)
             {
                 // 미션 실패
                 Debug.Log($"미션 실패!!! {gameObject}의 최소 거리 : {road.Count} {otherPathFinding}의 최소 거리 : {otherPathFinding.road.Count}");
@@ -194,21 +204,31 @@ public class PathFinding : MonoBehaviour
                 
                 yield return new WaitForSeconds(3f);
 
-                SceneChangeManager.Singleton.ChangeSceneByNetwork("Stage");
+                if(TutorialSceneManager.singleton != null)
+                {
+                    TutorialSceneManager.singleton.EndOfPathfinding(false);
+                }
+                else
+                {
+                    SceneChangeManager.Singleton.ChangeSceneByNetwork("Stage");
+                }
                 endRoadCount = 0;
                 StopAllCoroutines();
+
+                yield break;
             }
 
             Vector3 dest = tileController.GetTilePos(road[i].index.y, road[i].index.x);
-            Debug.Log($"이동중 {dest}");
-
             yield return player.MoveTo(dest);
         }
 
         if(gameObject.name.Contains("Red"))
         {
+            StageManager.SingletonManager?.ClearStage_ClientRpc();
+
             endRoadCount = 0;
-            StageManager.SingletonManager.ClearStage_ClientRpc();
         }
+
+        TutorialSceneManager.singleton?.EndOfPathfinding(true);
     }
 }

@@ -13,7 +13,6 @@ public class TexturePainter : MonoBehaviour
     private RenderTexture maskRT;
 
     [Header("Progress Settings")]
-
     [SerializeField]
     private bool checkPercent = true;
     [SerializeField]
@@ -26,11 +25,22 @@ public class TexturePainter : MonoBehaviour
     private RenderTexture smallRT;
 
     [SerializeField]
-    private Material paintMaterial;
+    private Material paintMaterial; // 원본 머티리얼
+    private Material paintMaterialInstance; // 런타임에 사용할 복사본 머티리얼 (추가됨)
+
     [SerializeField]
     private bool isErasing = false;
     [SerializeField]
     private int initSplatCount = 5;
+
+    private void Awake()
+    {
+        // 원본 머티리얼의 복사본을 생성합니다.
+        if (paintMaterial != null)
+        {
+            paintMaterialInstance = new Material(paintMaterial);
+        }
+    }
 
     private void OnEnable()
     {
@@ -51,6 +61,18 @@ public class TexturePainter : MonoBehaviour
         }
     }
 
+    private void OnDestroy()
+    {
+        // 복사한 머티리얼을 메모리에서 해제하여 메모리 릭을 방지합니다.
+        if (paintMaterialInstance != null)
+        {
+            Destroy(paintMaterialInstance);
+        }
+
+        if (smallRT != null) smallRT.Release();
+        if (checkTexture != null) Destroy(checkTexture);
+    }
+
     private void Update()
     {
         if (InputManager.Singleton.LeftButtonClicked)
@@ -63,7 +85,7 @@ public class TexturePainter : MonoBehaviour
                 if (hit.transform == transform)
                 {
                     Vector3 localPos = hit.transform.InverseTransformPoint(hit.point);
-                    //
+
                     float u = localPos.x + 0.5f;
                     float v = 0.5f - localPos.y;
 
@@ -86,27 +108,28 @@ public class TexturePainter : MonoBehaviour
 
         Color targetColor = isErasing ? Color.black : Color.white;
 
-        // 쉐이더가 _BaseColor 프로퍼티를 가지고 있는지 확인하고 값 설정
-        if (paintMaterial.HasProperty("_BaseColor"))
+        // 원본 대신 '복사본 머티리얼'의 색상을 변경합니다.
+        if (paintMaterialInstance.HasProperty("_BaseColor"))
         {
-            paintMaterial.SetColor("_BaseColor", targetColor);
+            paintMaterialInstance.SetColor("_BaseColor", targetColor);
         }
-        else if (paintMaterial.HasProperty("_Color")) // 혹시 2D Sprite 쉐이더일 경우 대비
+        else if (paintMaterialInstance.HasProperty("_Color"))
         {
-            paintMaterial.SetColor("_Color", targetColor);
+            paintMaterialInstance.SetColor("_Color", targetColor);
         }
 
         Graphics.DrawTexture(
             new Rect(x - size / 2, y - size / 2, size, size),
             brushTexture,
-            paintMaterial);
+            paintMaterialInstance); // 복사본을 전달
 
         GL.PopMatrix();
         RenderTexture.active = null;
     }
+
     private void DrawRandomSplats()
     {
-        if (maskRT == null || brushTexture == null) return;
+        if (maskRT == null || brushTexture == null || paintMaterialInstance == null) return;
 
         RenderTexture.active = maskRT;
 
@@ -115,33 +138,31 @@ public class TexturePainter : MonoBehaviour
 
         Color targetColor = isErasing ? Color.white : Color.black;
 
-        if (paintMaterial.HasProperty("_BaseColor"))
+        // 원본 대신 '복사본 머티리얼'의 색상을 변경합니다.
+        if (paintMaterialInstance.HasProperty("_BaseColor"))
         {
-            paintMaterial.SetColor("_BaseColor", targetColor);
+            paintMaterialInstance.SetColor("_BaseColor", targetColor);
         }
-        else if (paintMaterial.HasProperty("_Color"))
+        else if (paintMaterialInstance.HasProperty("_Color"))
         {
-            paintMaterial.SetColor("_Color", targetColor);
+            paintMaterialInstance.SetColor("_Color", targetColor);
         }
 
-        // 지정된 개수만큼 무작위 위치에 브러시를 찍습니다.
         for (int i = 0; i < initSplatCount; i++)
         {
-            // 0 ~ 1 사이의 무작위 UV 좌표 생성
             float randomU = UnityEngine.Random.value;
             float randomV = UnityEngine.Random.value;
 
             float x = randomU * maskRT.width;
             float y = randomV * maskRT.height;
 
-            // 브러시 크기도 조금씩 다르게 하여 자연스러운 효과 부여
             float randomScale = UnityEngine.Random.Range(1f, 2f);
             float size = brushSize * maskRT.height * randomScale;
 
             Graphics.DrawTexture(
                 new Rect(x - size / 2, y - size / 2, size, size),
                 brushTexture,
-                paintMaterial);
+                paintMaterialInstance); // 복사본을 전달
         }
 
         GL.PopMatrix();

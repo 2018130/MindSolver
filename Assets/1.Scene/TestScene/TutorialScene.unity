@@ -1749,6 +1749,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dd8f094d926626458cf47566da251e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
+  ShowTopMostFoldoutHeaderGroup: 1
   front: {fileID: 265736022}
   back: {fileID: 1912799247}
   moveDurationPerTile: 0.5
@@ -4008,55 +4009,6 @@ TilemapCollider2D:
   m_MaximumTileChangeCount: 1000
   m_ExtrusionFactor: 0
   m_UseDelaunayMesh: 0
---- !u!1 &1464148284
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1464148286}
-  - component: {fileID: 1464148285}
-  m_Layer: 0
-  m_Name: Global Volume
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1464148285
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1464148284}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.RenderPipelines.Core.Runtime::UnityEngine.Rendering.Volume
-  m_IsGlobal: 1
-  priority: 0
-  blendDistance: 0
-  weight: 1
-  sharedProfile: {fileID: 11400000, guid: 3f9215ea0144899419cfbc0957140d3f, type: 2}
---- !u!4 &1464148286
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1464148284}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.43285698, y: 0.95079273, z: -1.0057061}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1504242225
 GameObject:
   m_ObjectHideFlags: 0
@@ -4733,6 +4685,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   player: {fileID: 727861589}
+  otherPathFinding: {fileID: 0}
 --- !u!4 &1934526167
 Transform:
   m_ObjectHideFlags: 0
@@ -4796,6 +4749,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dd8f094d926626458cf47566da251e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
+  ShowTopMostFoldoutHeaderGroup: 1
   front: {fileID: 356703880}
   back: {fileID: 1926413093}
   moveDurationPerTile: 0.5
@@ -4912,6 +4866,63 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1001 &5174199717826509442
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2256093019560137828, guid: 05396570847337343a5701c7d7b5c940, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.43285698
+      objectReference: {fileID: 0}
+    - target: {fileID: 2256093019560137828, guid: 05396570847337343a5701c7d7b5c940, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.95079273
+      objectReference: {fileID: 0}
+    - target: {fileID: 2256093019560137828, guid: 05396570847337343a5701c7d7b5c940, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -1.0057061
+      objectReference: {fileID: 0}
+    - target: {fileID: 2256093019560137828, guid: 05396570847337343a5701c7d7b5c940, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2256093019560137828, guid: 05396570847337343a5701c7d7b5c940, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2256093019560137828, guid: 05396570847337343a5701c7d7b5c940, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2256093019560137828, guid: 05396570847337343a5701c7d7b5c940, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2256093019560137828, guid: 05396570847337343a5701c7d7b5c940, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2256093019560137828, guid: 05396570847337343a5701c7d7b5c940, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2256093019560137828, guid: 05396570847337343a5701c7d7b5c940, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5743821400316879193, guid: 05396570847337343a5701c7d7b5c940, type: 3}
+      propertyPath: m_Name
+      value: Global Volume
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 05396570847337343a5701c7d7b5c940, type: 3}
 --- !u!114 &5483478455978203334
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4930,6 +4941,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   player: {fileID: 2021438299}
+  otherPathFinding: {fileID: 0}
 --- !u!4 &5821334893920202702
 Transform:
   m_ObjectHideFlags: 0
@@ -4978,4 +4990,4 @@ SceneRoots:
   - {fileID: 1934526167}
   - {fileID: 2021438298}
   - {fileID: 727861588}
-  - {fileID: 1464148286}
+  - {fileID: 5174199717826509442}

@@ -27,7 +27,6 @@ public class WaterSpawner : NetworkBehaviour
     private int waterSpawnableCount = 0;
     private int maxWaterSpawnableCount = 10;
 
-    [SerializeField]
     private ColorType colorType;
 
     private void Start()

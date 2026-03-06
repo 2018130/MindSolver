@@ -6,10 +6,7 @@ using System.Text.RegularExpressions; // 정규표현식 사용을 위해 추가
 
 public class CsvReader
 {
-    // 파일명 (확장자 .csv 제외)
-    public static string csvFileName = "dialogue_data";
-
-    public static List<DialogueData> LoadCsvData()
+    public static List<DialogueData> LoadCsvData(string csvFileName)
     {
         List<DialogueData> dialogueDatas = new List<DialogueData>();
 
