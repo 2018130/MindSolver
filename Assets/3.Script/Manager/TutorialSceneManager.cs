@@ -53,6 +53,10 @@ public class TutorialSceneManager : MonoBehaviour
     private Light2D light2d;
     [SerializeField]
     private float bloomSpeed = 3f;
+    [SerializeField]
+    private float maxStep05Scale = 0.5f;
+
+    private Vector3 step05DefaultPos;
 
     private void Awake()
     {
@@ -64,6 +68,7 @@ public class TutorialSceneManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        step05DefaultPos = tiles[4].transform.position;
     }
 
     private void Start()
@@ -73,19 +78,6 @@ public class TutorialSceneManager : MonoBehaviour
 
     private IEnumerator Step01_co()
     {
-        // Ä³¸¯ÅÍ ¹à¾ÆÁü
-        float timer = 0;
-        float bloomTime = 3;
-
-        while (timer <= bloomTime)
-        {
-            timer += Time.deltaTime;
-
-            yield return null;
-
-            redPlayer.SetAlpha(Mathf.Lerp(0, 1, timer / bloomTime));
-            bluePlayer.SetAlpha(Mathf.Lerp(0, 1, timer / bloomTime));
-        }
         Debug.Log($"step 01 ½ÃÀÛ");
         dialogueManager.PrintDialogue();
 
@@ -97,8 +89,13 @@ public class TutorialSceneManager : MonoBehaviour
         yield return new WaitWhile(() => pathFidingCount != 2);
 
         // Ä³¸¯ÅÍ Èå·ÁÁü
-        timer = 0;
-        bloomTime = 3;
+        float  timer = 0;
+        float bloomTime = 3;
+        float t = 1 / 4;
+        Vector3 destPos = t * Vector3.zero + (1 - t) * step05DefaultPos;
+        Vector3 startPos = tiles[4].transform.position;
+        Vector3 destScale = new Vector3(maxStep05Scale / 4, maxStep05Scale / 4, 1);
+        Vector3 startScale = new Vector3(tiles[4].transform.localScale.x, tiles[4].transform.localScale.y, 1);
 
         while (timer <= bloomTime)
         {
@@ -108,11 +105,14 @@ public class TutorialSceneManager : MonoBehaviour
 
             redPlayer.SetAlpha(Mathf.Lerp(1, 0, timer / bloomTime));
             bluePlayer.SetAlpha(Mathf.Lerp(1, 0, timer / bloomTime));
+
+            tiles[4].transform.position = Vector3.Lerp(startPos, destPos, timer / bloomTime);
+            tiles[4].transform.localScale = Vector3.Lerp(startScale, destScale, timer / bloomTime);
         }
         footholds[0].SetActive(false);
         tiles[0].StartIndividualFall();
 
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(2f);
 
         tiles[0].gameObject.SetActive(false);
 
@@ -127,7 +127,7 @@ public class TutorialSceneManager : MonoBehaviour
         redPlayer.transform.position = redPathfindingPoint[0].first.position;
         bluePlayer.transform.position = bluePathfindingPoint[0].first.position;
 
-        // Ä³¸¯ÅÍ ¹à¾ÆÁü
+        // Ä³¸¯ÅÍ ¹à¾ÆÁü, step 05°¡±î¿öÁü
         float timer = 0;
         float bloomTime = 3;
 
@@ -168,6 +168,11 @@ public class TutorialSceneManager : MonoBehaviour
         // Ä³¸¯ÅÍ Èå·ÁÁü
         timer = 0;
         bloomTime = 3;
+        float t = 1 / 2;
+        Vector3 destPos = t * Vector3.zero + (1 - t) * step05DefaultPos;
+        Vector3 startPos = tiles[4].transform.position;
+        Vector3 destScale = new Vector3(maxStep05Scale / 2, maxStep05Scale / 2, 1);
+        Vector3 startScale = new Vector3(tiles[4].transform.localScale.x, tiles[4].transform.localScale.y, 1);
 
         while (timer <= bloomTime)
         {
@@ -177,6 +182,9 @@ public class TutorialSceneManager : MonoBehaviour
 
             redPlayer.SetAlpha(Mathf.Lerp(1, 0, timer / bloomTime));
             bluePlayer.SetAlpha(Mathf.Lerp(1, 0, timer / bloomTime));
+
+            tiles[4].transform.position = Vector3.Lerp(startPos, destPos, timer / bloomTime);
+            tiles[4].transform.localScale = Vector3.Lerp(startScale, destScale, timer / bloomTime);
         }
         // ¸Ê Á¦°Å
         footholds[1].SetActive(false);
@@ -230,7 +238,6 @@ public class TutorialSceneManager : MonoBehaviour
             isPlayMission = true;
             for (int i = 0; i < missionTriggers_step03.Count; i++)
             {
-                Debug.Log(missionTriggers_step03[i].gameObject);
                 missionTriggers_step03[i].gameObject.SetActive(true);
                 missionTriggers_step03[i].SetTouchable(true);
             }
@@ -250,6 +257,12 @@ public class TutorialSceneManager : MonoBehaviour
         timer = 0;
         bloomTime = 3;
 
+        float t = 3 / 4;
+        Vector3 destPos = t * Vector3.zero + (1 - t) * step05DefaultPos;
+        Vector3 startPos = tiles[4].transform.position;
+        Vector3 destScale = new Vector3(maxStep05Scale * 3 / 4, maxStep05Scale * 3/ 4, 1);
+        Vector3 startScale = new Vector3(tiles[4].transform.localScale.x, tiles[4].transform.localScale.y, 1);
+
         while (timer <= bloomTime)
         {
             timer += Time.deltaTime;
@@ -258,7 +271,11 @@ public class TutorialSceneManager : MonoBehaviour
 
             redPlayer.SetAlpha(Mathf.Lerp(1, 0, timer / bloomTime));
             bluePlayer.SetAlpha(Mathf.Lerp(1, 0, timer / bloomTime));
+
+            tiles[4].transform.position = Vector3.Lerp(startPos, destPos, timer / bloomTime);
+            tiles[4].transform.localScale = Vector3.Lerp(startScale, destScale, timer / bloomTime);
         }
+
         foreach (var missonBox in missionTriggers_step03)
         {
             if(missonBox.gameObject.activeSelf)
@@ -286,7 +303,6 @@ public class TutorialSceneManager : MonoBehaviour
         // Ä³¸¯ÅÍ ¹à¾ÆÁü
         float timer = 0;
         float bloomTime = 3;
-
 
         while (timer <= bloomTime)
         {
@@ -344,6 +360,11 @@ public class TutorialSceneManager : MonoBehaviour
         // Ä³¸¯ÅÍ Èå·ÁÁü
         timer = 0;
         bloomTime = 3;
+        float t = 3 / 4;
+        Vector3 destPos = t * Vector3.zero + (1 - t) * step05DefaultPos;
+        Vector3 startPos = tiles[4].transform.position;
+        Vector3 destScale = new Vector3(maxStep05Scale, maxStep05Scale, 1);
+        Vector3 startScale = new Vector3(tiles[4].transform.localScale.x, tiles[4].transform.localScale.y, 1);
 
         while (timer <= bloomTime)
         {
@@ -353,6 +374,9 @@ public class TutorialSceneManager : MonoBehaviour
 
             redPlayer.SetAlpha(Mathf.Lerp(1, 0, timer / bloomTime));
             bluePlayer.SetAlpha(Mathf.Lerp(1, 0, timer / bloomTime));
+
+            tiles[4].transform.position = Vector3.Lerp(startPos, destPos, timer / bloomTime);
+            tiles[4].transform.localScale = Vector3.Lerp(startScale, destScale, timer / bloomTime);
         }
 
         footholds[3].SetActive(false);
@@ -375,8 +399,10 @@ public class TutorialSceneManager : MonoBehaviour
         float timer = 0;
         float bloomTime = 3;
 
-        redPlayer.transform.position = redPathfindingPoint[3].first.position;
-        bluePlayer.transform.position = bluePathfindingPoint[3].first.position;
+        Vector3 destPos = Vector3.zero;
+        Vector3 startPos = tiles[4].transform.position;
+        Vector3 startScale = new Vector3(tiles[4].transform.localScale.x, tiles[4].transform.localScale.y, 1);
+        Vector3 destScale = Vector3.one;
 
         while (timer <= bloomTime)
         {
@@ -386,6 +412,12 @@ public class TutorialSceneManager : MonoBehaviour
 
             redPlayer.SetAlpha(Mathf.Lerp(0, 1, timer / bloomTime));
             bluePlayer.SetAlpha(Mathf.Lerp(0, 1, timer / bloomTime));
+
+            tiles[4].transform.position = Vector3.Lerp(startPos, destPos, timer / bloomTime);
+            tiles[4].transform.localScale = Vector3.Lerp(startScale, destScale, timer / bloomTime);
+
+            redPlayer.transform.position = redPathfindingPoint[3].first.position;
+            bluePlayer.transform.position = bluePathfindingPoint[3].first.position;
         }
 
         dialogueManager.PrintDialogue();
@@ -432,7 +464,8 @@ public class TutorialSceneManager : MonoBehaviour
     {
         pathFidingCount++;
         PathCount = isClear ? PathCount + 1 : PathCount;
-    }
+    }//
+
     public void EndOfMission()
     {
         isPlayMission = false;

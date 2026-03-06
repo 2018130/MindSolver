@@ -1620,6 +1620,17 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 4036384754042705117, guid: 0bc35f26cd704c645b4cc827b4f9b990, type: 3}
   m_PrefabInstance: {fileID: 1901102475}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &553713901 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3072285867939935620, guid: 158726a2e94ec0448bc49ef1ad5f7c01, type: 3}
+  m_PrefabInstance: {fileID: 1638020776}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d161fb2cacb96db40b506e6d3cef6bad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PuzzleMissonListener
 --- !u!1 &565822150
 GameObject:
   m_ObjectHideFlags: 0
@@ -1984,6 +1995,7 @@ MonoBehaviour:
   dialogueManager: {fileID: 1901102477}
   light2d: {fileID: 325154487}
   bloomSpeed: 2
+  maxStep05Scale: 0.5
 --- !u!4 &586784073
 Transform:
   m_ObjectHideFlags: 0
@@ -2389,7 +2401,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   isInteracted: 0
   networkOwner: 0
-  readyPuzzle: {fileID: 0}
+  readyPuzzle: {fileID: 553713901}
 --- !u!114 &773778575
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2567,7 +2579,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   isInteracted: 0
   networkOwner: 0
-  readyPuzzle: {fileID: 0}
+  readyPuzzle: {fileID: 553713901}
 --- !u!61 &861707865
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3569,7 +3581,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   isInteracted: 0
   networkOwner: 0
-  readyPuzzle: {fileID: 0}
+  readyPuzzle: {fileID: 553713901}
 --- !u!114 &1105535422
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4275,6 +4287,7 @@ GameObject:
   - component: {fileID: 1262587358}
   - component: {fileID: 1262587359}
   - component: {fileID: 1262587360}
+  - component: {fileID: 1262587361}
   m_Layer: 0
   m_Name: MainPuzzle
   m_TagString: Untagged
@@ -4429,6 +4442,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c99fb4a340bfb694cb6ce4e2f9c37938, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FallingEffect
+--- !u!114 &1262587361
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1262587355}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
+  GlobalObjectIdHash: 1747955613
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  DeferredDespawnTick: 0
+  Ownership: 1
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
 --- !u!1 &1389823325
 GameObject:
   m_ObjectHideFlags: 0
@@ -4802,7 +4840,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1484611355
 Transform:
   m_ObjectHideFlags: 0
@@ -4812,8 +4850,8 @@ Transform:
   m_GameObject: {fileID: 1484611354}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 1.56, y: 3.07, z: 0}
+  m_LocalScale: {x: 0.1, y: 0.1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 873426823}
@@ -11521,7 +11559,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   isInteracted: 0
   networkOwner: 0
-  readyPuzzle: {fileID: 0}
+  readyPuzzle: {fileID: 553713901}
 --- !u!61 &1704500916
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -11787,6 +11825,7 @@ GameObject:
   - component: {fileID: 1723525879}
   - component: {fileID: 1723525880}
   - component: {fileID: 1723525881}
+  - component: {fileID: 1723525882}
   m_Layer: 8
   m_Name: MainPuzzle (7)
   m_TagString: Obstacle
@@ -11928,7 +11967,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   isInteracted: 0
   networkOwner: 0
-  readyPuzzle: {fileID: 0}
+  readyPuzzle: {fileID: 553713901}
 --- !u!114 &1723525881
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11941,6 +11980,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c99fb4a340bfb694cb6ce4e2f9c37938, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FallingEffect
+--- !u!114 &1723525882
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1723525876}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
+  GlobalObjectIdHash: 3497827758
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  DeferredDespawnTick: 0
+  Ownership: 1
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
 --- !u!1 &1750031944
 GameObject:
   m_ObjectHideFlags: 0

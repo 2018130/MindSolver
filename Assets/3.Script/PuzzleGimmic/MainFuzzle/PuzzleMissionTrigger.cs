@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -19,6 +20,8 @@ public class PuzzleMissionTrigger : NetworkBehaviour, IInteractable
 
     [SerializeField]
     private PuzzleMissonListener readyPuzzle;
+
+    Coroutine CallingPuzzleMission;
 
     private void Start()
     {
@@ -49,10 +52,27 @@ public class PuzzleMissionTrigger : NetworkBehaviour, IInteractable
 
     public void EndInteract()
     {
+        if(CallingPuzzleMission == null)
+        {
+            CallingPuzzleMission = StartCoroutine(CallListener());
+        }
+    }
+
+    private IEnumerator CallListener()
+    {
+        PaperManager.singleton.StartPaperUnfoldAnimation();
+
+        WaitWhile waitWhile = new WaitWhile(() => PaperManager.singleton.IsPaperOpening);
+
+        yield return waitWhile;
+
         if (IsSpawned)
         {
             if (StageManager.SingletonManager.RemainRemoveObstacleCount <= 0)
-                return;
+            {
+                CallingPuzzleMission = null;
+                yield break;
+            }
 
             if (!isInteracted && GameManager.Singleton.GameState != GameState.Puzzle)
             {
@@ -65,6 +85,7 @@ public class PuzzleMissionTrigger : NetworkBehaviour, IInteractable
         {
             readyPuzzle?.StartPuzzle(this);
         }
+        CallingPuzzleMission = null;
     }
 
     public void Interact(Vector2 worldPosFromMousePosition)

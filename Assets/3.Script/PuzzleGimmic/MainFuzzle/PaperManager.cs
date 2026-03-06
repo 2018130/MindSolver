@@ -6,6 +6,8 @@ using System.Collections;
 /// </summary>
 public class PaperManager : MonoBehaviour
 {
+    public static PaperManager singleton;
+
     [Header("Paper Settings")]
     [Tooltip("애니메이션 컴포넌트가 포함된 9단계 종이 오브젝트")]
     public GameObject animatedPaper;
@@ -16,12 +18,31 @@ public class PaperManager : MonoBehaviour
     [Tooltip("애니메이션 종료 후 표시될 완전히 펼쳐진 상태의 배경 종이 오브젝트")]
     public GameObject staticBackground;
 
+    public bool IsPaperOpening => spriteRenderer.enabled;
+
     [Header("Dissolve Settings")]
     [Tooltip("디졸브 쉐이더(Material)가 적용된 배경 종이의 SpriteRenderer")]
     public SpriteRenderer backgroundRenderer;
 
     [Tooltip("잉크 디졸브 연출 속도 (값이 작을수록 천천히 사라짐)")]
     public float dissolveSpeed = 0.5f;
+
+    private SpriteRenderer spriteRenderer;
+
+    private void Awake()
+    {
+        if(singleton == null)
+        {
+            singleton = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+
+        spriteRenderer = animatedPaper.GetComponent<SpriteRenderer>();
+        spriteRenderer.enabled = false;
+    }
 
     // =========================================================
     // 1. 애니메이션 시작 및 연출 전환 메서드
@@ -34,13 +55,18 @@ public class PaperManager : MonoBehaviour
     {
         // 배경은 숨기고 애니메이션 오브젝트를 활성화
         if (staticBackground != null) staticBackground.SetActive(false);
-        if (animatedPaper != null) animatedPaper.SetActive(true);
+        if (animatedPaper != null)
+        {
+            animatedPaper.SetActive(true);
+            spriteRenderer.enabled = true;
+        }
 
         // 애니메이터가 존재한다면 상태를 초기화하여 처음부터 재생되도록 처리
         if (paperAnimator != null)
         {
-            paperAnimator.Rebind();
-            paperAnimator.Update(0f);
+            paperAnimator.SetTrigger("StartPaper");
+            //paperAnimator.Rebind();
+            //paperAnimator.Update(0f);
         }
     }
 
@@ -53,8 +79,7 @@ public class PaperManager : MonoBehaviour
         // 코루틴 실행을 위해 GameObject 자체를 끄지 않고 SpriteRenderer 컴포넌트만 비활성화
         if (animatedPaper != null)
         {
-            SpriteRenderer sr = animatedPaper.GetComponent<SpriteRenderer>();
-            if (sr != null) sr.enabled = false;
+            spriteRenderer.enabled = false;
         }
 
         // 고정된 배경 종이 활성화
