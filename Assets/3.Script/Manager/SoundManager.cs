@@ -1,35 +1,45 @@
 using UnityEngine;
 using UnityEngine.Audio;
-using UnityEngine.UI; 
-using UnityEngine.SceneManagement; 
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+using System.Collections.Generic;
+
+/**
+ * @brief 효과음 데이터를 저장하는 직렬화 클래스입니다.
+ */
+[System.Serializable]
+public class SFXData
+{
+    public string name;      // 소리의 이름 (예: "Win", "Lose")
+    public AudioClip clip;   // 실제 소리 파일
+}
 
 /**
  * @brief 전역 사운드 재생을 관리하는 싱글톤 매니저 클래스입니다.
- * * 씬 전환 시에도 파괴되지 않으며, 배경음 및 효과음 재생을 담당합니다.
  */
 public class SoundManager : MonoBehaviour
 {
-    /** @brief 싱글톤 인스턴스 */
     public static SoundManager Instance { get; private set; }
 
-    /** @brief 오디오 믹서 참조 */
+    [Header("Audio Mixer & Source")]
     [SerializeField] private AudioMixer audioMixer;
-
-    /** @brief 효과음 전용 오디오 소스 */
     [SerializeField] private AudioSource sfxSource;
-   
-    /** @brief 터치 효과음으로 사용할 오디오 클립 */
-    [SerializeField] private AudioClip touchClip;
 
-    /**
-     * @brief 인스턴스를 초기화하고 중복 생성을 방지합니다.
-     */
+    [Header("Default Touch Sound")]
+    [SerializeField] private AudioClip touchClip; // 항상 유지되는 터치음!
+
+    [Header("SFX Library")]
+    [SerializeField] private List<SFXData> sfxLibrary = new List<SFXData>(); // 필요할 때 꺼내 쓸 추가 효과음들!
+
+    private Dictionary<string, AudioClip> sfxDictionary = new Dictionary<string, AudioClip>();
+
     private void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            InitSFXDictionary(); // 시작할 때 효과음 목록 정리하기!
         }
         else
         {
@@ -38,52 +48,66 @@ public class SoundManager : MonoBehaviour
     }
 
     /**
-     * @brief 효과음을 재생합니다.
-     * @param clip 재생할 오디오 클립
+     * @brief 리스트에 있는 데이터를 이름으로 찾기 쉽게 사전으로 옮깁니다.
      */
-    public void PlaySFX(AudioClip clip)
+    private void InitSFXDictionary()
     {
-        if (clip != null)
+        foreach (var data in sfxLibrary)
         {
-            sfxSource.PlayOneShot(clip);
-        }
-    }
-    /**
-     * @brief 설정된 터치 효과음을 즉시 재생합니다.
-     */
-    public void PlayTouchSound()
-    {
-        if (touchClip != null)
-        {
-            // 소리의 높낮이를 0.95에서 1.05 사이로 랜덤하게 설정! 
-            sfxSource.pitch = Random.Range(0.95f, 1.05f);
-            sfxSource.PlayOneShot(touchClip);
+            if (!sfxDictionary.ContainsKey(data.name))
+            {
+                sfxDictionary.Add(data.name, data.clip);
+            }
         }
     }
 
     private void OnEnable()
     {
-        // 씬이 로드될 때마다 'OnSceneLoaded' 함수를 실행해줘! 라고 예약하는 거야 
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     private void OnDisable()
     {
-        // 오브젝트가 사라질 땐 예약을 취소하는 매너! 
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        // 새로운 씬이 열리면 그 씬에 있는 모든 버튼을 다 찾아버리자! 
+        // 씬이 열릴 때마다 모든 버튼에 터치음을 몰래 추가하기!
         Button[] allButtons = Resources.FindObjectsOfTypeAll<Button>();
-
         foreach (Button btn in allButtons)
         {
-            // 버튼을 눌렀을 때 우리 터치 소리가 나도록 몰래 추가해두기! 
             btn.onClick.AddListener(PlayTouchSound);
         }
-
     }
 
+    /**
+     * @brief 고정된 터치 효과음을 약간의 피치 변동과 함께 즉시 재생합니다.
+     */
+    public void PlayTouchSound()
+    {
+        if (touchClip != null)
+        {
+            sfxSource.pitch = Random.Range(0.95f, 1.05f);
+            sfxSource.PlayOneShot(touchClip);
+        }
+    }
+
+    /**
+     * @brief 이름(string)을 입력받아 추가 등록된 효과음을 재생합니다.
+     * @param sfxName 등록된 효과음의 이름
+     */
+    public void PlaySFX(string sfxName)
+    {
+        if (sfxDictionary.TryGetValue(sfxName, out AudioClip clip))
+        {
+            // 다른 효과음은 피치 조절 없이 원래 소리로 재생!
+            sfxSource.pitch = 1f;
+            sfxSource.PlayOneShot(clip);
+        }
+        else
+        {
+            Debug.LogWarning($"'{sfxName}'이라는 이름의 소리는 등록되지 않았어! 확인해봐!");
+        }
+    }
 }
