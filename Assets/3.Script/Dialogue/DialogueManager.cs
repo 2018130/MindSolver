@@ -103,6 +103,7 @@ public class DialogueManager : MonoBehaviour, ISceneContextBuilt
         if (dialogueQueue.Count > 0)
         {
             isPrintAnyDialogue = true;
+            GameManager.Singleton.ChangeState(GameState.Dialogue);
 
             bool isClickedAnyKey = false;
             DialogueData currentDialogue = dialogueQueue.Dequeue();
@@ -247,6 +248,11 @@ public class DialogueManager : MonoBehaviour, ISceneContextBuilt
         if(backgroundImg != null)
         {
             backgroundImg.gameObject.SetActive(active);
+        }
+
+        if(!active)
+        {
+            GameManager.Singleton.ChangeState(GameState.Playing);
         }
     }
 

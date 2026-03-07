@@ -50,12 +50,15 @@ public class PuzzleMissionTrigger : NetworkBehaviour, IInteractable
 
     public void EndInteract()
     {
-        if (StageManager.SingletonManager.RemainRemoveObstacleCount <= 0)
+        if ((StageManager.SingletonManager != null && 
+            StageManager.SingletonManager.RemainRemoveObstacleCount <= 0) ||
+            (TutorialSceneManager.singleton != null && 
+            !TutorialSceneManager.singleton.isPlayMission))
         {
             return;
         }
 
-        if (!isInteracted && GameManager.Singleton.GameState != GameState.Puzzle)
+        if (!isInteracted && GameManager.Singleton.GameState == GameState.Playing)
         {
             isInteracted = true;
             StartCoroutine(CallListener());
@@ -120,8 +123,17 @@ public class PuzzleMissionTrigger : NetworkBehaviour, IInteractable
         }
         else
         {
-            TutorialSceneManager.singleton.EndOfMission();
-            gameObject.SetActive(false);
+            GameManager.Singleton.ChangeState(GameState.Playing);
+            if(isClear)
+            {
+                TutorialSceneManager.singleton.EndOfMission();
+                gameObject.SetActive(false);
+            }
+            else
+            {
+                GameUIManager.Singleton.SetCanMoveText(1);
+                isInteracted = false;
+            }
         }
     }
 

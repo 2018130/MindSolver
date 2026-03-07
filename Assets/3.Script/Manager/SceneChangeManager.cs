@@ -8,10 +8,10 @@ using UnityEngine.SceneManagement;
 
 public enum SceneType
 {
+    LobbyScene,
     TitleScene,
     LoadingScene,
     NetworkRelayScene,
-    LobbyScene,
     StageScene,
     TutorialScene
 }

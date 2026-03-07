@@ -872,10 +872,10 @@
                 {
                     "name": "",
                     "id": "e1394cbc-336e-44ce-9ea8-6007ed6193f7",
-                    "path": "<Pen>/position",
+                    "path": "<Touchscreen>/position",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Keyboard&Mouse",
+                    "groups": "Touch",
                     "action": "Point",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -905,7 +905,7 @@
                 {
                     "name": "",
                     "id": "8d66d5ba-88d7-48e6-b1cd-198bbfef7ace",
-                    "path": "<Pen>/tip",
+                    "path": "<Touchscreen>/Press",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",

@@ -29,10 +29,12 @@ public class Floating : MonoBehaviour
         startPos = transform.position;
         spriteRenderer = GetComponent<SpriteRenderer>();
         SetFloating(false);
+#if UNITY_EDITOR
         if (bounceCurve == null || bounceCurve.length == 0)
         {
-            SetupDefaultCurve();
+            //SetupDefaultCurve();
         }
+#endif
     }
 
     void Update()
@@ -63,7 +65,7 @@ public class Floating : MonoBehaviour
             timer = 0f;
         }
     }
-
+#if UNITY_EDITOR
     private void Reset()
     {
         SetupDefaultCurve();
@@ -87,4 +89,5 @@ public class Floating : MonoBehaviour
             }
         }
     }
+#endif
 }

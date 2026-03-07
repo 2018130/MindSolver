@@ -23,11 +23,27 @@
           }
         },
         {
+          "client_id": "243782562752-4jtm26827ua8sldppajp2uk6r41rl8of.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lovercompany.mindsolver",
+            "certificate_hash": "fa57496dccfe54b6b871a34f4bdc8236d8f5365e"
+          }
+        },
+        {
           "client_id": "243782562752-8eo3i5blmbskjdjgs9hc240jl9g4g7d4.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.lovercompany.mindsolver",
             "certificate_hash": "c37e4ab4bcd5c0bbd6c70751274f161b7ad289d3"
+          }
+        },
+        {
+          "client_id": "243782562752-mvi7g3j5jffutlp2vjtqqcfbimm19d2i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lovercompany.mindsolver",
+            "certificate_hash": "0f8aa902c6c35cf485690f71f9a19ca38cc332d8"
           }
         },
         {

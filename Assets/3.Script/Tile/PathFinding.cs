@@ -233,12 +233,15 @@ public class PathFinding : MonoBehaviour
             }
             else
             {
-                SceneChangeManager.Singleton.ChangeSceneByNetwork("Stage");
+                if(TutorialSceneManager.singleton == null)
+                {
+                    SceneChangeManager.Singleton.ChangeSceneByNetwork("Stage");
+                }
             }
 
             endRoadCount = 0;
         }
 
-        TutorialSceneManager.singleton?.EndOfPathfinding(true);
+        TutorialSceneManager.singleton?.EndOfPathfinding(isClear);
     }
 }

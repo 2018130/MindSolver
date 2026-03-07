@@ -28,7 +28,7 @@ public class TutorialSceneManager : MonoBehaviour
     //
     [Header("Mission")]
 
-    private bool isPlayMission = false;
+    public bool isPlayMission { get; set; }
 
     [Header("MissionTrigger")]
 
@@ -244,8 +244,6 @@ public class TutorialSceneManager : MonoBehaviour
 
             yield return new WaitWhile(() => isPlayMission);
 
-            GameUIManager.Singleton.SetCanMoveText(0);
-
             // 길 찾기
             pathFidingCount = 0;
             GameUIManager.Singleton.SetPathFindingBtn(true);
@@ -392,7 +390,7 @@ public class TutorialSceneManager : MonoBehaviour
     private IEnumerator Step05_co()
     {
 
-        Debug.Log($"step 05 시작");
+        GameUIManager.Singleton.SetCanMoveText(-1);
         tiles[4].gameObject.SetActive(true);
 
         // 캐릭터 밝아짐

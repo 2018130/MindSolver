@@ -49,7 +49,6 @@ public class IndividualTileData
 // -----------------------------------------------------------------------------
 // [메인 연출 스크립트]
 // -----------------------------------------------------------------------------
-[ExecuteAlways]
 public class FallingTilemapEffect : MonoBehaviour
 {
     [Header("공통 연출 설정")]
@@ -74,7 +73,6 @@ public class FallingTilemapEffect : MonoBehaviour
     // 애니메이션 시간 제어용
     private float animationStartTime;
 
-#if UNITY_EDITOR
 
     // =================================================================
     // 상태 수집 로직
@@ -118,7 +116,6 @@ public class FallingTilemapEffect : MonoBehaviour
     // =================================================================
     // 1. 레이어 전체 하강 연출
     // =================================================================
-    [ContextMenu("1. 모든 레이어 전체 하강 시작")]
     public void StartLayerFall()
     {
         if (isAnimating) return;
@@ -126,11 +123,10 @@ public class FallingTilemapEffect : MonoBehaviour
         CaptureInitialState();
         if (childTilemaps == null || childTilemaps.Length == 0) return;
 
-        animationStartTime = (float)EditorApplication.timeSinceStartup;
+        animationStartTime = Time.time;
         isAnimating = true;
-        EditorApplication.update += UpdateLayerAnimation;
     }
-
+    /*
     private void UpdateLayerAnimation()
     {
         float elapsed = (float)EditorApplication.timeSinceStartup - animationStartTime;
@@ -147,13 +143,12 @@ public class FallingTilemapEffect : MonoBehaviour
             childTilemaps[i].color = c;
         }
 
-        if (distance >= disappearDistance) StopAnimation(UpdateLayerAnimation);
-    }
+        if (distance >= disappearDistance) StopAnimation();
+    }*/
 
     // =================================================================
     // 2. 모든 타일 개별 낙하 연출
     // =================================================================
-    [ContextMenu("2. 모든 타일 개별 낙하 시작")]
     public void StartIndividualFall()
     {
         if (isAnimating) return;
@@ -163,9 +158,9 @@ public class FallingTilemapEffect : MonoBehaviour
 
         AssignStaggeredDelays();
 
-        animationStartTime = (float)EditorApplication.timeSinceStartup;
+        //animationStartTime = (float)EditorApplication.timeSinceStartup;
+        animationStartTime = Time.time;
         isAnimating = true;
-        EditorApplication.update += UpdateIndividualAnimation;
 
         foreach(var fallingEffect in GetComponentsInChildren<FallingEffect>())
         {
@@ -210,7 +205,7 @@ public class FallingTilemapEffect : MonoBehaviour
             foreach (var tile in individualTiles) tile.delay = (tile.position.x - minX) * dropInterval;
         }
     }
-
+#if UNITY_EDITOR    
     private void UpdateIndividualAnimation()
     {
         float currentTime = (float)EditorApplication.timeSinceStartup - animationStartTime;
@@ -247,17 +242,15 @@ public class FallingTilemapEffect : MonoBehaviour
             }
         }
 
-        if (!isAnyTileStillFalling) StopAnimation(UpdateIndividualAnimation);
+        if (!isAnyTileStillFalling) StopAnimation();
     }
+#endif
 
     // =================================================================
     // 3. 복구 로직
     // =================================================================
-    [ContextMenu("3. 원상복구 (모두 리셋)")]
     public void ResetEffect()
     {
-        StopAllAnimations();
-
         if (childTilemaps == null || initialLayerPositions == null || childTilemaps.Length != initialLayerPositions.Length)
         {
             Debug.LogWarning("타일맵 구조가 변경되어 강제 초기화를 진행합니다.");
@@ -286,11 +279,8 @@ public class FallingTilemapEffect : MonoBehaviour
         Debug.Log("원상복구 완료.");
     }
 
-    [ContextMenu("비상 복구 (모든 타일 강제 초기화)")]
     public void HardReset()
     {
-        StopAllAnimations();
-
         Tilemap[] allMaps = GetComponentsInChildren<Tilemap>();
         foreach (Tilemap map in allMaps)
         {
@@ -315,23 +305,12 @@ public class FallingTilemapEffect : MonoBehaviour
         Debug.Log("비상 복구 완료.");
     }
 
-    private void StopAnimation(EditorApplication.CallbackFunction method)
+    private void StopAnimation()
     {
         isAnimating = false;
-        EditorApplication.update -= method;
     }
 
-    private void StopAllAnimations()
-    {
-        isAnimating = false;
-        EditorApplication.update -= UpdateLayerAnimation;
-        EditorApplication.update -= UpdateIndividualAnimation;
-    }
 
-    private void OnDisable()
-    {
-        if (!Application.isPlaying) StopAllAnimations();
-    }
 
     // =================================================================
     // [개발자를 위한 가이드] 
@@ -374,5 +353,4 @@ public class FallingTilemapEffect : MonoBehaviour
         // 연출 종료 후 잠시 여운을 줌
         yield return new WaitForSeconds(0.5f);
     }
-#endif
 }

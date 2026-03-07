@@ -32,7 +32,10 @@ public class NetworkRelayManager : MonoBehaviour
         {
             await AuthenticationService.Instance.SignInAnonymouslyAsync();
             Debug.Log($"Signed in: {AuthenticationService.Instance.PlayerId}");
+
+            await QuickJoinGame(PersistentDataManager.Singleton.PlayerData.MaxClearStage);
         }
+
     }
 
     /// <summary>

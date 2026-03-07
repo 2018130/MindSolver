@@ -18,11 +18,5 @@ public class NetworkRelayUIManager : MonoBehaviour
     private void Start()
     {
         NetworkRelayManager = FindAnyObjectByType<NetworkRelayManager>();
-        quickJoin_btn.onClick.AddListener(QuickMatching);
-    }
-
-    public void QuickMatching()
-    {
-        _ = NetworkRelayManager.QuickJoinGame(maxStage);
     }
 }

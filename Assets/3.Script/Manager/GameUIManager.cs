@@ -50,9 +50,15 @@ public class GameUIManager : NetworkBehaviour
 
         startPathFinding_Btn.onClick.AddListener(() => SetPathFindingBtn(false));
     }
+
     public void SetCanMoveText(int moveCount)
     {
-        canMoveText.GetComponentInChildren<TMP_Text>().text = "이동가능 횟수\n" + moveCount;
+        string str = "";
+        if(moveCount != -1)
+        {
+            str = "이동가능 횟수\n" + moveCount;
+        }
+        canMoveText.GetComponentInChildren<TMP_Text>().text = str;
     }
 
     public void SetclearText(string str, bool isNetwork = true)

@@ -9,6 +9,7 @@ public enum GameState
     Playing,
     Puzzle,
     UI,
+    Dialogue
 }
 
 public class GameManager : SingletonBehaviour<GameManager>
@@ -53,7 +54,6 @@ public class GameManager : SingletonBehaviour<GameManager>
 
     public void ChangeState(GameState newState)
     {
-        Debug.Log($"{gameState}");
         if (gameState == newState)
             return;
 
