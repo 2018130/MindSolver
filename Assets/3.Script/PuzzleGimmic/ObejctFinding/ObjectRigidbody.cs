@@ -53,10 +53,15 @@ public class ObjectRigidbody : MonoBehaviour, IInteractable
             }
         }
 
+        GameUIManager.Singleton.SetObjectFindingText(true);
         transform.position = initPosition;
         acceleration = Vector3.zero;
     }
 
+    private void OnDisable()
+    {
+        GameUIManager.Singleton.SetObjectFindingText(false);
+    }
     private void FixedUpdate()
     {
         if(acceleration.sqrMagnitude > 0.01f)

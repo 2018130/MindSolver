@@ -3,14 +3,12 @@ using UnityEngine.Tilemaps;
 using System.Collections.Generic;
 using System.Collections;
 
-
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 
 // -----------------------------------------------------------------------------
 // [읽기 전용 커스텀 속성]
-// 인스펙터 창에서 변수의 상태를 눈으로 확인할 수만 있게 만듭니다.
 // -----------------------------------------------------------------------------
 public class ReadOnlyAttribute : PropertyAttribute { }
 
@@ -72,6 +70,7 @@ public class FallingTilemapEffect : MonoBehaviour
 
     // 애니메이션 시간 제어용
     private float animationStartTime;
+    private Coroutine activeCoroutine; // 런타임 애니메이션 실행을 위한 코루틴 캐싱
 
 
     // =================================================================
@@ -125,11 +124,24 @@ public class FallingTilemapEffect : MonoBehaviour
 
         animationStartTime = Time.time;
         isAnimating = true;
+
+        if (activeCoroutine != null) StopCoroutine(activeCoroutine);
+        activeCoroutine = StartCoroutine(LayerAnimationRoutine());
     }
-    /*
+
+    // 기존 주석 처리되어 있던 코드를 런타임 코루틴으로 실행하도록 연결
+    private IEnumerator LayerAnimationRoutine()
+    {
+        while (isAnimating)
+        {
+            UpdateLayerAnimation();
+            yield return null;
+        }
+    }
+
     private void UpdateLayerAnimation()
     {
-        float elapsed = (float)EditorApplication.timeSinceStartup - animationStartTime;
+        float elapsed = Time.time - animationStartTime; // EditorApplication.timeSinceStartup 대체
         float distance = elapsed * fallSpeed;
         float alphaRatio = Mathf.Clamp01(1.0f - (distance / disappearDistance));
 
@@ -144,7 +156,7 @@ public class FallingTilemapEffect : MonoBehaviour
         }
 
         if (distance >= disappearDistance) StopAnimation();
-    }*/
+    }
 
     // =================================================================
     // 2. 모든 타일 개별 낙하 연출
@@ -158,14 +170,20 @@ public class FallingTilemapEffect : MonoBehaviour
 
         AssignStaggeredDelays();
 
-        //animationStartTime = (float)EditorApplication.timeSinceStartup;
-        animationStartTime = Time.time;
+        animationStartTime = Time.time; // 빌드 호환을 위해 Time.time 사용
         isAnimating = true;
 
-        foreach(var fallingEffect in GetComponentsInChildren<FallingEffect>())
+        // 리플렉션 오류 방지 (빌드 시 FallingEffect를 안전하게 호출)
+        foreach (var fallingEffect in GetComponentsInChildren<MonoBehaviour>())
         {
-            fallingEffect.StartFalling();
+            if (fallingEffect.GetType().Name == "FallingEffect")
+            {
+                fallingEffect.SendMessage("StartFalling", SendMessageOptions.DontRequireReceiver);
+            }
         }
+
+        if (activeCoroutine != null) StopCoroutine(activeCoroutine);
+        activeCoroutine = StartCoroutine(IndividualAnimationRoutine());
     }
 
     private void AssignStaggeredDelays()
@@ -205,10 +223,21 @@ public class FallingTilemapEffect : MonoBehaviour
             foreach (var tile in individualTiles) tile.delay = (tile.position.x - minX) * dropInterval;
         }
     }
-#if UNITY_EDITOR    
+
+    // 에디터 밖에서도 실행되도록 Update 로직을 코루틴에 연결
+    private IEnumerator IndividualAnimationRoutine()
+    {
+        while (isAnimating)
+        {
+            UpdateIndividualAnimation();
+            yield return null;
+        }
+    }
+
+    // #if UNITY_EDITOR 삭제: 빌드 환경에서도 정상 호출 가능하도록 변경
     private void UpdateIndividualAnimation()
     {
-        float currentTime = (float)EditorApplication.timeSinceStartup - animationStartTime;
+        float currentTime = Time.time - animationStartTime; // EditorApplication.timeSinceStartup 대체
         bool isAnyTileStillFalling = false;
 
         foreach (var tile in individualTiles)
@@ -244,7 +273,6 @@ public class FallingTilemapEffect : MonoBehaviour
 
         if (!isAnyTileStillFalling) StopAnimation();
     }
-#endif
 
     // =================================================================
     // 3. 복구 로직
@@ -276,6 +304,7 @@ public class FallingTilemapEffect : MonoBehaviour
         }
 
         hasCapturedState = false;
+        StopAnimation();
         Debug.Log("원상복구 완료.");
     }
 
@@ -302,54 +331,75 @@ public class FallingTilemapEffect : MonoBehaviour
         }
         hasCapturedState = false;
         individualTiles.Clear();
+        StopAnimation();
         Debug.Log("비상 복구 완료.");
     }
 
     private void StopAnimation()
     {
         isAnimating = false;
+        if (activeCoroutine != null) StopCoroutine(activeCoroutine);
     }
-
-
 
     // =================================================================
     // [개발자를 위한 가이드] 
     // 나중에 실제 게임의 스테이지 클리어 연출로 전환하는 방법
     // =================================================================
-    /*
-    이 스크립트는 에디터 테스트(EditorApplication.update) 기반으로 작성되었습니다.
-    실제 게임(런타임)에서 스테이지 클리어 시 작동하게 하려면 다음 과정을 거쳐야 합니다.
-
-    1. 네임스페이스 추가: 스크립트 맨 위에 아래 두 줄을 추가합니다.
-       using System.Collections;
-       using UnityEngine.SceneManagement;
-
-    2. 런타임용 코루틴 작성:
-       에디터용 업데이트 함수 대신, 코루틴(IEnumerator)을 만들어 Time.deltaTime을 활용합니다.
-    */
-
     public void PlayStageClearTransition()
     {
         CaptureInitialState();
         AssignStaggeredDelays();
-        StartCoroutine(StageClearCoroutine());
+
+        if (activeCoroutine != null) StopCoroutine(activeCoroutine);
+        activeCoroutine = StartCoroutine(StageClearCoroutine());
     }
 
     private IEnumerator StageClearCoroutine()
     {
         float elapsedTime = 0f;
         bool isAnyTileStillFalling = true;
+        isAnimating = true;
 
         while (isAnyTileStillFalling)
         {
             elapsedTime += Time.deltaTime; // 인게임 프레임 시간에 맞춰 증가
             isAnyTileStillFalling = false;
 
-            // ... (여기에 UpdateIndividualAnimation의 거리 및 투명도 계산 로직을 그대로 붙여넣습니다) ...
+            foreach (var tile in individualTiles)
+            {
+                if (elapsedTime < tile.delay)
+                {
+                    isAnyTileStillFalling = true;
+                    continue;
+                }
+
+                float fallTime = elapsedTime - tile.delay;
+                float distance = fallTime * fallSpeed;
+
+                if (distance < disappearDistance)
+                {
+                    isAnyTileStillFalling = true;
+
+                    Matrix4x4 matrix = Matrix4x4.TRS(new Vector3(0, -distance, 0), Quaternion.identity, Vector3.one);
+                    tile.tilemap.SetTransformMatrix(tile.position, matrix);
+
+                    float alphaRatio = Mathf.Clamp01(1.0f - (distance / disappearDistance));
+                    Color newColor = tile.initialColor;
+                    newColor.a = tile.initialColor.a * alphaRatio;
+                    tile.tilemap.SetColor(tile.position, newColor);
+                }
+                else
+                {
+                    Color hiddenColor = tile.initialColor;
+                    hiddenColor.a = 0f;
+                    tile.tilemap.SetColor(tile.position, hiddenColor);
+                }
+            }
 
             yield return null; // 다음 프레임까지 대기
         }
 
+        StopAnimation();
         // 연출 종료 후 잠시 여운을 줌
         yield return new WaitForSeconds(0.5f);
     }

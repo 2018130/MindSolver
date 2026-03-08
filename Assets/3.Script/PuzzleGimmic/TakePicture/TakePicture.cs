@@ -27,6 +27,7 @@ public class TakePicture : MonoBehaviour, IInteractable
                 return;
             }
         }
+        SoundManager.Instance.PlaySFX("Shutter");
         GameUIManager.Singleton.SetPictureText(false);
         puzzleMissonListener.EndPuzzle(false);
         isFirstInteract = false;

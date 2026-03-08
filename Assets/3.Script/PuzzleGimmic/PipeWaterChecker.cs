@@ -18,6 +18,7 @@ public class PipeWaterChecker : MonoBehaviour
         colorType = NetworkPlayer.IsServerPlayer ? ColorType.Red : ColorType.Blue;
     }
 
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         Debug.Log($"Object triggered layer : {collision.gameObject.layer} {waterLayer.value}");

@@ -64,6 +64,7 @@ public class PaperManager : MonoBehaviour
         // 애니메이터가 존재한다면 상태를 초기화하여 처음부터 재생되도록 처리
         if (paperAnimator != null)
         {
+            SoundManager.Instance.PlaySFX("paper");
             paperAnimator.SetBool("StartUnfolding", true);
             //paperAnimator.Rebind();
             //paperAnimator.Update(0f);

@@ -13,7 +13,8 @@ public enum SceneType
     LoadingScene,
     NetworkRelayScene,
     StageScene,
-    TutorialScene
+    TutorialScene,
+    EndingScene,
 }
 
 public class SceneChangeManager : SingletonBehaviour<SceneChangeManager>
@@ -63,15 +64,12 @@ public class SceneChangeManager : SingletonBehaviour<SceneChangeManager>
 
     private IEnumerator ChangeSceneByNetwork_co(string sceneName, float minLoadingTime)
     {
+        yield return new WaitForSeconds(minLoadingTime);
+
         float timer = 0f;
         float progressValue = 0f;
         NetworkManager.Singleton.SceneManager.LoadScene(sceneName, LoadSceneMode.Single);
 
-        yield return null;
-
-        LoadingSceneUIManager loadingSceneUIManager = FindAnyObjectByType<LoadingSceneUIManager>();
-
-        NetworkManager.Singleton.SceneManager.LoadScene(sceneName, LoadSceneMode.Single);
         /*
         GameManager.Singleton.IsInitialized = false;
 
@@ -91,6 +89,7 @@ public class SceneChangeManager : SingletonBehaviour<SceneChangeManager>
             timer += Time.deltaTime;
         }
         */
+        StageManager.SingletonManager.SetIsReplayedToTrue_ClientRpc();
         GameManager.Singleton.Initialize();
     }
 }

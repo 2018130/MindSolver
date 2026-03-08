@@ -1,3 +1,4 @@
+using NUnit.Framework.Internal;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -50,6 +51,8 @@ public class DialogueManager : MonoBehaviour, ISceneContextBuilt
     [SerializeField]
     private List<DialogueData> dialogueDatas;
     // 다이얼로그 데이터 값
+    [SerializeField]
+    private List<DialogueData> test = new List<DialogueData>();
     private Queue<DialogueData> dialogueQueue = new Queue<DialogueData>();
     private bool isPrintAnyDialogue = false;
     public bool IsDialogueEnded { get; set; } = true;
@@ -71,6 +74,7 @@ public class DialogueManager : MonoBehaviour, ISceneContextBuilt
         if (dialogueData != null)
         {
             dialogueQueue.Enqueue(dialogueData);
+            test.Add(dialogueData);
         }
 
         if (!isPrintAnyDialogue)
@@ -88,7 +92,7 @@ public class DialogueManager : MonoBehaviour, ISceneContextBuilt
         {
             id = nextPrintDialogueID;
         }
-
+        nextPrintDialogueID = id;
         DialogueData data = dialogueDatas.Find(x => x.ID == id);
 
         if (!isPrintAnyDialogue)
@@ -97,7 +101,7 @@ public class DialogueManager : MonoBehaviour, ISceneContextBuilt
             PrintDialogue(data);
         }
     }
-
+    
     private IEnumerator PrintDialogue_co()
     {
         if (dialogueQueue.Count > 0)
@@ -107,6 +111,7 @@ public class DialogueManager : MonoBehaviour, ISceneContextBuilt
 
             bool isClickedAnyKey = false;
             DialogueData currentDialogue = dialogueQueue.Dequeue();
+            test.RemoveAt(0);
 
             // 초기 설정
             OnDialogueStarted?.Invoke(currentDialogue.ID);
@@ -258,7 +263,7 @@ public class DialogueManager : MonoBehaviour, ISceneContextBuilt
 
     public void OnSceneContextBuilt()
     {
-        PrintDialogue(nextPrintDialogueID);
+        //PrintDialogue(nextPrintDialogueID);
     }
 
     public int GetIDFromClearStage(int clearStage)
@@ -282,6 +287,7 @@ public class DialogueManager : MonoBehaviour, ISceneContextBuilt
 
             idx++;
         }
+        Debug.Log($"dialogue : {clearStage}");
 
         return -1;
     }

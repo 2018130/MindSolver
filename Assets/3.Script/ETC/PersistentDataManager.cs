@@ -1,3 +1,4 @@
+using Firebase.Database;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -13,8 +14,6 @@ public class PlayerDataJson
 
 public class PersistentDataManager : SingletonBehaviour<PersistentDataManager>
 {
-    public bool IsReplayed { get; set; } = false;
-
     private string dataPath;
 
     private string playerCharacterDataFileName = "playerCharacter.json";
@@ -22,10 +21,18 @@ public class PersistentDataManager : SingletonBehaviour<PersistentDataManager>
     private PlayerDataJson playerData = new PlayerDataJson();
     public PlayerDataJson PlayerData => playerData;
 
+    public bool IsReplayed = false;
+
+    public bool IsDefaultPlay = false;
+
+    protected override void Awake()
+    {
+        base.Awake();
+    }
     private void Start()
     {
         dataPath = Application.persistentDataPath;
-        playerData = LoadFromJson();
+        //playerData = LoadFromJson();
     }
 
     public void SaveToJson(PlayerDataJson playerCharacterDataJson)

@@ -7,7 +7,7 @@ ID,Name,Dialogue,HasChoice,AcceptDialogue,AcceptID,RejectDialogue,RejectID,Favor
 6,파랑이,...,FALSE,,7,,0,0,
 7,까망이,이런 젠장! 또야? 하여튼 인간이란...,FALSE,,8,,0,0,
 8,까망이,이봐! 지금 출동 인원 몇명이나 있나?,FALSE,,9,,0,0,
-9,,...,FALSE,,9,,0,0,
+9,,...,FALSE,,10,,0,0,
 10,까망이,응? 아무도 없다고? 그게 말이 되나?,FALSE,,10,,0,0,
 11,,...,FALSE,,11,,0,0,
 12,까망이,뭐? 인턴? 우리가 인턴이 어딨어? ... 내가 신청했다고? .... 당연히 기억하지! 그래 알았어.,FALSE,,12,,0,0,

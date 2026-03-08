@@ -50,6 +50,9 @@ public class StageManager : NetworkBehaviour
     [SerializeField]
     private DialogueManager dialogueManager;
 
+    [SerializeField]
+    private Pair<AudioClip> bgmPair;
+
     private void Awake()
     {
         if(SingletonManager == null)
@@ -81,17 +84,39 @@ public class StageManager : NetworkBehaviour
 
     private void Start()
     {
-        ResetStage();
+        SoundManager.Instance.PlayBGM(bgmPair.second);
 
-        if(!PersistentDataManager.Singleton.IsReplayed)
+        ResetStage();
+    }
+
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+
+        if (!PersistentDataManager.Singleton.IsReplayed)
         {
+            Debug.Log("111");
             int clearStage = PersistentDataManager.Singleton.PlayerData.MaxClearStage;
             dialogueManager.PrintDialogue(dialogueManager.GetIDFromClearStage(clearStage));
         }
 
-        PersistentDataManager.Singleton.IsReplayed = true;
+        if (PersistentDataManager.Singleton.IsReplayed)
+        {
+            for (int i = 0; i < PersistentDataManager.Singleton.PlayerData.MaxClearStage * 3; i++)
+            {
+                puzzleList.RemoveAt(0);
+            }
+
+            PersistentDataManager.Singleton.IsReplayed = false;
+        }
     }
 
+    [ClientRpc]
+    public void SetIsReplayedToTrue_ClientRpc()
+    {
+        Debug.Log($"is replayed : {PersistentDataManager.Singleton.IsReplayed}");
+        PersistentDataManager.Singleton.IsReplayed = true;
+    }
     private void ResetStage()
     {
         int currentStage = PersistentDataManager.Singleton.PlayerData.MaxClearStage;
@@ -105,14 +130,6 @@ public class StageManager : NetworkBehaviour
 
         remainRemoveObstacleCount = canRemoveObstacleCount;
         GameUIManager.Singleton.SetCanMoveText(remainRemoveObstacleCount);
-
-        if(!PersistentDataManager.Singleton.IsReplayed)
-        {
-            for (int i = 0; i < currentStage * 3; i++)
-            {
-                puzzleList.RemoveAt(0);
-            }
-        }
 
         for (int i = 0; i < stages.Count; i++)
         {
@@ -209,6 +226,7 @@ public class StageManager : NetworkBehaviour
             Debug.Log($"스테이지 종료 레벨 상승!!");
 
             // TODO : change level;
+            SceneChangeManager.Singleton.ChangeScene(SceneType.EndingScene);
         }
         else
         {
@@ -218,11 +236,15 @@ public class StageManager : NetworkBehaviour
             StartCoroutine(ChangeStage_co(fallingTilemapEffect));
         }
 
+        DatabaseManager.Singleton.SaveUserData(PersistentDataManager.Singleton.PlayerData.MaxClearStage);
     }
 
     private IEnumerator ChangeStage_co(FallingTilemapEffect fallingTilemapEffect)
     {
         int clearStage = PersistentDataManager.Singleton.PlayerData.MaxClearStage;
+        AudioClip clip = clearStage % 2 == 0 ? bgmPair.first : bgmPair.second;
+        SoundManager.Instance.PlayBGM(clip);
+
         dialogueManager.PrintDialogue(dialogueManager.GetIDFromClearStage(clearStage));
 
         WaitUntil waitUntil = new WaitUntil(() => dialogueManager.IsDialogueEnded);
@@ -231,8 +253,14 @@ public class StageManager : NetworkBehaviour
 
         fallingTilemapEffect.StartIndividualFall();
 
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(3f);
 
         ResetStage();
+
+        GameUIManager.Singleton.ViewCutscene(IsHost, clearStage);
+
+        yield return new WaitForSeconds(5f);
+
+        GameUIManager.Singleton.ViewCutscene(IsHost, -1);
     }
 }

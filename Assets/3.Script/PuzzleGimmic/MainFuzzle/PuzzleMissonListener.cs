@@ -79,6 +79,8 @@ public class PuzzleMissonListener : MonoBehaviour
         if (isClear)
         {
             GameUIManager.Singleton.SetclearText("미션 성공!!!!", isNetwork);
+            SoundManager.Instance.StopAllSFX();
+            SoundManager.Instance.PlaySFX("ClearPuzzle");
         }
         else
         {

@@ -174,7 +174,7 @@ public class PathFinding : MonoBehaviour
         Tile tempTile = endTile;
         while (tempTile != null)
         {
-            Debug.Log($"{player.gameObject} move to {tempTile.index}");
+            //Debug.Log($"{player.gameObject} move to {tempTile.index}");
             road.Add(tempTile);
             tempTile = tempTile.preTile;
         }
@@ -195,7 +195,6 @@ public class PathFinding : MonoBehaviour
     {
         if (road == null)
             yield break;
-
         for (int i = 0; i < road.Count; i++)
         {
             if(i > otherPathFinding.road.Count - 1)
@@ -212,7 +211,7 @@ public class PathFinding : MonoBehaviour
                 }
                 else
                 {
-                    SceneChangeManager.Singleton.ChangeSceneByNetwork("Stage");
+                    //SceneChangeManager.Singleton.ChangeSceneByNetwork("Stage", 5f);
                 }
 
                 endRoadCount = 0;
@@ -225,9 +224,10 @@ public class PathFinding : MonoBehaviour
             yield return player.MoveTo(dest);
         }
 
-        if(gameObject.name.Contains("Red"))
+        if(gameObject.name.Contains("Red") && endRoadCount != 0)
         {
-            if(isClear)
+            Debug.Log(gameObject);
+            if (isClear)
             {
                 StageManager.SingletonManager?.ClearStage_ClientRpc();
             }
@@ -235,7 +235,7 @@ public class PathFinding : MonoBehaviour
             {
                 if(TutorialSceneManager.singleton == null)
                 {
-                    SceneChangeManager.Singleton.ChangeSceneByNetwork("Stage");
+                    SceneChangeManager.Singleton.ChangeSceneByNetwork("Stage", 5f);
                 }
             }
 
