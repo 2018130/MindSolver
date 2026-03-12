@@ -22,8 +22,11 @@
 
 
 👥 Team: 마음을 잇는 사람들
+
 Scenario Designer (김남훈) : 갈등과 화해의 서사 집필 및 텍스트 가이드 작성
+
 System & Level Designer (변대한) : 퍼즐 레벨 설계 및 커뮤니케이션 시스템 기획
+
 Main Developer (송준엽) : 실시간 동기화 구현 및 전체 게임플레이 개발
 
 💡 기획 의도 한마디
