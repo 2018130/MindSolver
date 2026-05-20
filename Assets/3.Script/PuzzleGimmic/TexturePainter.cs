@@ -183,7 +183,7 @@ public class TexturePainter : MonoBehaviour
             yield return new WaitForSeconds(checkInterval);
 
             float progress = CalculateProgress();
-            GameUIManager.Singleton.SetColorPaintingProgressText(progress);
+            GameUIManager.Singleton?.SetColorPaintingProgressText(progress);
 
             if (!isErasing)
             {
@@ -193,7 +193,7 @@ public class TexturePainter : MonoBehaviour
                     PuzzleMissonListener puzzleMissonListener = GetComponentInParent<PuzzleMissonListener>();
                     puzzleMissonListener.EndPuzzle(true);
 
-                    GameUIManager.Singleton.SetColorPaintingProgressText(0);
+                    GameUIManager.Singleton?.SetColorPaintingProgressText(0);
 
                     yield break;
                 }
@@ -206,7 +206,7 @@ public class TexturePainter : MonoBehaviour
                     PuzzleMissonListener puzzleMissonListener = GetComponentInParent<PuzzleMissonListener>();
                     puzzleMissonListener.EndPuzzle(true);
 
-                    GameUIManager.Singleton.SetColorPaintingProgressText(0);
+                    GameUIManager.Singleton?.SetColorPaintingProgressText(0);
 
                     yield break;
                 }

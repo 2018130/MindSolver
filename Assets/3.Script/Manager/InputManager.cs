@@ -32,7 +32,7 @@ public class InputManager : SingletonBehaviour<InputManager>
     {
         if(callback.phase == InputActionPhase.Started)
         {
-            SoundManager.Instance.PlayTouchSound();
+            SoundManager.Instance?.PlayTouchSound();
             OnClickedLeftBtn?.Invoke();
             LeftButtonClicked = true;
         }
