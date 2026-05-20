@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.InputSystem.iOS;
 
 public class TakePicture : MonoBehaviour, IInteractable
 {
@@ -12,6 +11,9 @@ public class TakePicture : MonoBehaviour, IInteractable
     private Transform origin;
 
     private PuzzleMissonListener puzzleMissonListener;
+
+    private bool isFirstInteract = true;
+
     public void EndInteract()
     {
         Vector3 mouseToWorldPos = Camera.main.ScreenToWorldPoint(InputManager.Singleton.MousePosition);
@@ -25,15 +27,20 @@ public class TakePicture : MonoBehaviour, IInteractable
                 return;
             }
         }
+        SoundManager.Instance.PlaySFX("Shutter");
         GameUIManager.Singleton.SetPictureText(false);
         puzzleMissonListener.EndPuzzle(false);
+        isFirstInteract = false;
     }
 
     public void Interact(Vector2 worldPosFromMousePosition)
     {
-        Vector3 camPos = worldPosFromMousePosition;
-        camPos.z = -10;
-        previewCamera.transform.position = camPos;
+        if(isFirstInteract)
+        {
+            Vector3 camPos = worldPosFromMousePosition;
+            camPos.z = -10;
+            previewCamera.transform.position = camPos;
+        }
     }
 
     private void Awake()
@@ -52,6 +59,7 @@ public class TakePicture : MonoBehaviour, IInteractable
         origin.transform.position = worldPos;
         resultCamera.transform.position = worldPos;
         GameUIManager.Singleton.SetPictureText(true);
+        isFirstInteract = true;
     }
 
 }

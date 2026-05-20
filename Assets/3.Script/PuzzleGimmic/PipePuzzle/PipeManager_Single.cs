@@ -35,7 +35,7 @@ public class PipeManager_Single : MonoBehaviour
         isPlayingGame = false;
         waterCamera.gameObject.SetActive(false);
         waterSpawner.CloseFaucet();
-        Destroy(pipes[bucketIdx].GetComponent<PipeWaterChecker>());
+        //Destroy(pipes[bucketIdx].GetComponent<PipeWaterChecker>());
     }
 
     private void StartGame()
@@ -48,11 +48,15 @@ public class PipeManager_Single : MonoBehaviour
         waterSpawner.transform.position = pipes[randValue].transform.position;
         pipes[randValue].IsStartTile = true;
 
+        /*
         randValue = UnityEngine.Random.Range(0, 4);
         bucketIdx = pipes.Length - 1 - randValue;
-        pipes[bucketIdx].IsEndTile = true;
         pipes[bucketIdx].gameObject.AddComponent<PipeWaterChecker>();
-
+        for(int i = 0; i < pipes.Length; i++)
+        {
+            pipes[i].gameObject.SetActive(true);
+        }*/
+        SoundManager.Instance.PlaySFX("water");
         waterSpawner.OpenFaucet();
     }
 

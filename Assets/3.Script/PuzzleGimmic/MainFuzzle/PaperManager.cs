@@ -64,7 +64,8 @@ public class PaperManager : MonoBehaviour
         // 애니메이터가 존재한다면 상태를 초기화하여 처음부터 재생되도록 처리
         if (paperAnimator != null)
         {
-            paperAnimator.SetTrigger("StartPaper");
+            SoundManager.Instance.PlaySFX("paper");
+            paperAnimator.SetBool("StartUnfolding", true);
             //paperAnimator.Rebind();
             //paperAnimator.Update(0f);
         }
@@ -76,12 +77,6 @@ public class PaperManager : MonoBehaviour
     /// </summary>
     public void SwitchToBackground()
     {
-        // 코루틴 실행을 위해 GameObject 자체를 끄지 않고 SpriteRenderer 컴포넌트만 비활성화
-        if (animatedPaper != null)
-        {
-            spriteRenderer.enabled = false;
-        }
-
         // 고정된 배경 종이 활성화
         if (staticBackground != null)
         {
@@ -92,6 +87,12 @@ public class PaperManager : MonoBehaviour
         if (backgroundRenderer != null)
         {
             backgroundRenderer.material.SetFloat("_DissolveAmount", 0f);
+        }
+
+        // 코루틴 실행을 위해 GameObject 자체를 끄지 않고 SpriteRenderer 컴포넌트만 비활성화
+        if (animatedPaper != null)
+        {
+            spriteRenderer.enabled = false;
         }
     }
 
@@ -123,6 +124,9 @@ public class PaperManager : MonoBehaviour
             currentAmount += Time.deltaTime * dissolveSpeed;
             mat.SetFloat("_DissolveAmount", currentAmount);
             yield return null;
+
+            if (spriteRenderer.enabled)
+                yield break;
         }
 
         // 연출이 완전히 끝난 후 메모리/성능을 위해 오브젝트 비활성화

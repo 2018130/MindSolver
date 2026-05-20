@@ -11,7 +11,7 @@ using Unity.Services.Relay;
 using Unity.Services.Relay.Models;
 using UnityEngine;
 
-public class NetworkRelayManager : MonoBehaviour
+public class NetworkRelayManager : SingletonBehaviour<NetworkRelayManager>
 {
     public const int MaxConnections = 2;
 
@@ -32,7 +32,11 @@ public class NetworkRelayManager : MonoBehaviour
         {
             await AuthenticationService.Instance.SignInAnonymouslyAsync();
             Debug.Log($"Signed in: {AuthenticationService.Instance.PlayerId}");
+
+            DatabaseManager.Singleton.GetUserMaxStageDataInLocal(PersistentDataManager.Singleton.IsDefaultPlay);
+            
         }
+
     }
 
     /// <summary>

@@ -12,6 +12,16 @@ public class GameUIManager : NetworkBehaviour
     public static GameUIManager Singleton;
 
     [SerializeField]
+    private List<Sprite> redCutscene = new List<Sprite>();
+    [SerializeField]
+    private List<Sprite> blueCutscene = new List<Sprite>();
+
+    [SerializeField]
+    private Image cutsceneBG;
+    [SerializeField]
+    private Image cutsceneImg;
+
+    [SerializeField]
     private TMP_Text clearText;
 
     [SerializeField]
@@ -50,9 +60,15 @@ public class GameUIManager : NetworkBehaviour
 
         startPathFinding_Btn.onClick.AddListener(() => SetPathFindingBtn(false));
     }
+
     public void SetCanMoveText(int moveCount)
     {
-        canMoveText.GetComponentInChildren<TMP_Text>().text = "이동가능 횟수\n" + moveCount;
+        string str = "";
+        if(moveCount != -1)
+        {
+            str = "상자 제거 가능 횟수\n" + moveCount;
+        }
+        canMoveText.GetComponentInChildren<TMP_Text>().text = str;
     }
 
     public void SetclearText(string str, bool isNetwork = true)
@@ -127,9 +143,36 @@ public class GameUIManager : NetworkBehaviour
 
         maxDrawLineText.GetComponentInChildren<TMP_Text>().text = $"오른쪽 그림과 같은 위치를 찾아주세요. 마우스 클릭시 시작!!";
     }
+    public void SetObjectFindingText(bool active)
+    {
+        maxDrawLineText.gameObject.SetActive(active);
+
+        maxDrawLineText.GetComponentInChildren<TMP_Text>().text = $"물건들 사이에서 네잎클로버를 찾아주세요!!";
+    }
 
     public void SetPathFindingBtn(bool active)
     {
         startPathFinding_Btn.gameObject.SetActive(active);
+    }
+
+    public void ViewCutscene(bool isHost, int idx)
+    {
+        if(idx == -1)
+        {
+            cutsceneImg.enabled = false;
+            cutsceneBG.enabled = false;
+            return;
+        }
+        cutsceneBG.enabled = true;
+        cutsceneImg.enabled = true;
+
+        if (isHost)
+        {
+            cutsceneImg.sprite = redCutscene[idx];
+        }
+        else
+        {
+            cutsceneImg.sprite = blueCutscene[idx];
+        }
     }
 }

@@ -135,7 +135,6 @@ public class FirebaseAuthManager : SingletonBehaviour<FirebaseAuthManager>
             }
         });
 
-        // TODO : Save nickname in database
     }
     private void SignInFromGoogle(string authCode)
     {
@@ -168,6 +167,6 @@ public class FirebaseAuthManager : SingletonBehaviour<FirebaseAuthManager>
         {
             _user = null;
             _auth.SignOut();
-        }
+        }//
     }
 }

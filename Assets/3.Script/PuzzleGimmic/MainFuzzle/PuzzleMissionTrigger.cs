@@ -21,8 +21,6 @@ public class PuzzleMissionTrigger : NetworkBehaviour, IInteractable
     [SerializeField]
     private PuzzleMissonListener readyPuzzle;
 
-    Coroutine CallingPuzzleMission;
-
     private void Start()
     {
         col = GetComponent<Collider2D>();
@@ -52,9 +50,18 @@ public class PuzzleMissionTrigger : NetworkBehaviour, IInteractable
 
     public void EndInteract()
     {
-        if(CallingPuzzleMission == null)
+        if ((StageManager.SingletonManager != null && 
+            StageManager.SingletonManager.RemainRemoveObstacleCount <= 0) ||
+            (TutorialSceneManager.singleton != null && 
+            !TutorialSceneManager.singleton.isPlayMission))
         {
-            CallingPuzzleMission = StartCoroutine(CallListener());
+            return;
+        }
+
+        if (!isInteracted && GameManager.Singleton.GameState == GameState.Playing)
+        {
+            isInteracted = true;
+            StartCoroutine(CallListener());
         }
     }
 
@@ -68,24 +75,13 @@ public class PuzzleMissionTrigger : NetworkBehaviour, IInteractable
 
         if (IsSpawned)
         {
-            if (StageManager.SingletonManager.RemainRemoveObstacleCount <= 0)
-            {
-                CallingPuzzleMission = null;
-                yield break;
-            }
-
-            if (!isInteracted && GameManager.Singleton.GameState != GameState.Puzzle)
-            {
-                isInteracted = true;
-                readyPuzzle = StageManager.SingletonManager.GetNextPuzzle();
-                readyPuzzle?.StartPuzzle(this);
-            }
+            readyPuzzle = StageManager.SingletonManager.GetNextPuzzle();
+            readyPuzzle?.StartPuzzle(this);
         }
         else
         {
             readyPuzzle?.StartPuzzle(this);
         }
-        CallingPuzzleMission = null;
     }
 
     public void Interact(Vector2 worldPosFromMousePosition)
@@ -94,7 +90,7 @@ public class PuzzleMissionTrigger : NetworkBehaviour, IInteractable
 
     public void SetTouchable(bool active)
     {
-        if(col == null)
+        if (col == null)
         {
             col = GetComponent<Collider2D>();
         }
@@ -103,6 +99,7 @@ public class PuzzleMissionTrigger : NetworkBehaviour, IInteractable
 
     public void EndPuzzle(bool isClear)
     {
+        PaperManager.singleton.StartDissolveEffect();
         if (IsSpawned)
         {
             if (isClear)
@@ -126,8 +123,17 @@ public class PuzzleMissionTrigger : NetworkBehaviour, IInteractable
         }
         else
         {
-            TutorialSceneManager.singleton.EndOfMission();
-            gameObject.SetActive(false);
+            GameManager.Singleton.ChangeState(GameState.Playing);
+            if(isClear)
+            {
+                TutorialSceneManager.singleton.EndOfMission();
+                gameObject.SetActive(false);
+            }
+            else
+            {
+                GameUIManager.Singleton.SetCanMoveText(1);
+                isInteracted = false;
+            }
         }
     }
 

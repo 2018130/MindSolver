@@ -42,7 +42,7 @@ public class PuzzleCollider : MonoBehaviour
 
                     isPuzzleLinked = true;
                     linkedPuzzleCount++;
-                    Debug.Log($"linkedPuzzleCount : {linkedPuzzleCount}");
+
                     if(linkedPuzzleCount >= PuzzleController.s_puzzleCount - 1)
                     {
                         PuzzleMissonListener puzzleMissonListener = GetComponentInParent<PuzzleMissonListener>();

@@ -22,7 +22,7 @@ public class Pipe_Single : MonoBehaviour
     [SerializeField]
     public bool IsStartTile { get; set; } = false;
     [SerializeField]
-    public bool IsEndTile { get; set; } = false;
+    public bool IsEndTile;
 
     private SpriteRenderer spriteRenderer;
     private Sprite originImg;
@@ -43,7 +43,7 @@ public class Pipe_Single : MonoBehaviour
     private void Awake()
     {
         _pipeCollider = GetComponent<Collider2D>();
-        spriteRenderer = transform.Find("Pipe").GetComponent<SpriteRenderer>();
+        spriteRenderer = transform.GetChild(1).GetComponent<SpriteRenderer>();
         originImg = spriteRenderer.sprite;
 
         for (int i = 0; i < holeDirections.Count; i++)
@@ -97,7 +97,7 @@ public class Pipe_Single : MonoBehaviour
 
     private void OnDisable()
     {
-        IsEndTile = false;
+        //IsEndTile = false;
         IsStartTile = false;
     }
 
@@ -107,7 +107,7 @@ public class Pipe_Single : MonoBehaviour
     // ServerRpc 속성을 제거하고 일반 메서드로 변경했습니다.
     public void RotateCW()
     {
-        if (s_isRotating)
+        if (s_isRotating || IsStartTile)
             return;
 
         int oldValue = rotateDir;

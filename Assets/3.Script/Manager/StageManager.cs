@@ -46,7 +46,13 @@ public class StageManager : NetworkBehaviour
     private PlayerController redPlayer;
     [SerializeField]
     private PlayerController bluePlayer;
-    
+
+    [SerializeField]
+    private DialogueManager dialogueManager;
+
+    [SerializeField]
+    private Pair<AudioClip> bgmPair;
+
     private void Awake()
     {
         if(SingletonManager == null)
@@ -78,15 +84,53 @@ public class StageManager : NetworkBehaviour
 
     private void Start()
     {
+        SoundManager.Instance.PlayBGM(bgmPair.second);
+
         ResetStage();
     }
 
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+
+        if (!PersistentDataManager.Singleton.IsReplayed)
+        {
+            int clearStage = PersistentDataManager.Singleton.PlayerData.MaxClearStage;
+            dialogueManager.PrintDialogue(dialogueManager.GetIDFromClearStage(clearStage));
+        }
+
+        if (PersistentDataManager.Singleton.IsReplayed)
+        {
+            for (int i = 0; i < PersistentDataManager.Singleton.PlayerData.MaxClearStage * 3; i++)
+            {
+                puzzleList.RemoveAt(0);
+            }
+
+            PersistentDataManager.Singleton.IsReplayed = false;
+        }
+    }
+
+    [ClientRpc]
+    public void SetIsReplayedToTrue_ClientRpc()
+    {
+        Debug.Log($"is replayed : {PersistentDataManager.Singleton.IsReplayed}");
+        PersistentDataManager.Singleton.IsReplayed = true;
+    }
     private void ResetStage()
     {
+        int currentStage = PersistentDataManager.Singleton.PlayerData.MaxClearStage;
+        redPathFinding.Origin = redStagePoint[currentStage].first;
+        redPathFinding.Destination = redStagePoint[currentStage].second;
+        redPlayer.transform.position = redPathFinding.Origin.position;
+
+        bluePathFinding.Origin = blueStagePoint[currentStage].first;
+        bluePathFinding.Destination = blueStagePoint[currentStage].second;
+        bluePlayer.transform.position = bluePathFinding.Origin.position;
+
         remainRemoveObstacleCount = canRemoveObstacleCount;
         GameUIManager.Singleton.SetCanMoveText(remainRemoveObstacleCount);
 
-        for(int i = 0; i < stages.Count; i++)
+        for (int i = 0; i < stages.Count; i++)
         {
             if(i == PersistentDataManager.Singleton.PlayerData.MaxClearStage)
             {
@@ -180,34 +224,41 @@ public class StageManager : NetworkBehaviour
 
             Debug.Log($"스테이지 종료 레벨 상승!!");
 
-            // TODO : change level;
+            SceneChangeManager.Singleton.ChangeScene(SceneType.EndingScene);
         }
         else
         {
             PersistentDataManager.Singleton.PlayerData.MaxClearLevel = level;
             PersistentDataManager.Singleton.PlayerData.MaxClearStage = stage;
 
-            fallingTilemapEffect.StartIndividualFall();
-            Debug.Log(PersistentDataManager.Singleton.PlayerData.MaxClearStage);
-            StartCoroutine(ChangeStage_co(fallingTilemapEffect, stage));
+            StartCoroutine(ChangeStage_co(fallingTilemapEffect));
         }
 
+        DatabaseManager.Singleton.SaveUserData(PersistentDataManager.Singleton.PlayerData.MaxClearStage);
     }
 
-    private IEnumerator ChangeStage_co(FallingTilemapEffect fallingTilemapEffect, int nextStage)
+    private IEnumerator ChangeStage_co(FallingTilemapEffect fallingTilemapEffect)
     {
+        int clearStage = PersistentDataManager.Singleton.PlayerData.MaxClearStage;
+        AudioClip clip = clearStage % 2 == 0 ? bgmPair.first : bgmPair.second;
+        SoundManager.Instance.PlayBGM(clip);
+
+        dialogueManager.PrintDialogue(dialogueManager.GetIDFromClearStage(clearStage));
+
+        WaitUntil waitUntil = new WaitUntil(() => dialogueManager.IsDialogueEnded);
+
+        yield return waitUntil;
+
         fallingTilemapEffect.StartIndividualFall();
+
+        yield return new WaitForSeconds(3f);
+
+        ResetStage();
+
+        GameUIManager.Singleton.ViewCutscene(IsHost, clearStage);
 
         yield return new WaitForSeconds(5f);
 
-        redPathFinding.Origin = redStagePoint[nextStage].first;
-        redPathFinding.Destination = redStagePoint[nextStage].second;
-        redPlayer.transform.position = redPathFinding.Origin.position;
-
-        bluePathFinding.Origin = blueStagePoint[nextStage].first;
-        bluePathFinding.Destination = blueStagePoint[nextStage].second;
-        bluePlayer.transform.position = bluePathFinding.Origin.position;
-
-        ResetStage();
+        GameUIManager.Singleton.ViewCutscene(IsHost, -1);
     }
 }

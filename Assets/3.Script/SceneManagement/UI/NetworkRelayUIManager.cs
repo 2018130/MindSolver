@@ -15,14 +15,20 @@ public class NetworkRelayUIManager : MonoBehaviour
     [SerializeField]
     private int maxStage = 1;
 
+    [Header("tooltip")]
+    [SerializeField]
+    private TMP_Text tooltip_text;
+    [SerializeField]
+    private List<string> tooltipList = new List<string>();
+
     private void Start()
     {
         NetworkRelayManager = FindAnyObjectByType<NetworkRelayManager>();
-        quickJoin_btn.onClick.AddListener(QuickMatching);
+        SetRandomTooltip();
     }
 
-    public void QuickMatching()
+    private void SetRandomTooltip()
     {
-        _ = NetworkRelayManager.QuickJoinGame(maxStage);
+        tooltip_text.text = tooltipList[UnityEngine.Random.Range(0, tooltipList.Count)];
     }
 }

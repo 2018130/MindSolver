@@ -24,6 +24,7 @@ public class SoundManager : MonoBehaviour
     [Header("Audio Mixer & Source")]
     [SerializeField] private AudioMixer audioMixer;
     [SerializeField] private AudioSource sfxSource;
+    [SerializeField] private AudioSource bgmSource;
 
     [Header("Default Touch Sound")]
     [SerializeField] private AudioClip touchClip; // 항상 유지되는 터치음!
@@ -63,12 +64,12 @@ public class SoundManager : MonoBehaviour
 
     private void OnEnable()
     {
-        SceneManager.sceneLoaded += OnSceneLoaded;
+        //SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     private void OnDisable()
     {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
+        //SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -109,5 +110,15 @@ public class SoundManager : MonoBehaviour
         {
             Debug.LogWarning($"'{sfxName}'이라는 이름의 소리는 등록되지 않았어! 확인해봐!");
         }
+    }
+    public void StopAllSFX()
+    {
+        sfxSource.Stop();
+    }
+
+    public void PlayBGM(AudioClip clip)
+    {
+        bgmSource.clip = clip;
+        bgmSource.Play();
     }
 }

@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class LineChecker : NetworkBehaviour
 {
+    
     [SerializeField]
     private float outLineLength = 1f;
 
@@ -16,7 +17,8 @@ public class LineChecker : NetworkBehaviour
     private bool isChecked = false;
 
     // 유저간 허용거리
-    private static NetworkVariable<float> fastPosX = new NetworkVariable<float>(-100);
+    //private static NetworkVariable<float> fastPosX = new NetworkVariable<float>();
+    private NetworkVariable<float> fastPosX = new NetworkVariable<float>();
     [SerializeField]
     private float allowedLengthDelta = 1f;
     [SerializeField]

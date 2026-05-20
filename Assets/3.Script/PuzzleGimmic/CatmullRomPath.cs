@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
-public class CatmullRomPath : NetworkBehaviour, IInteractable
+public class CatmullRomPath : NetworkBehaviour
 {
     [SerializeField]
     private Vector2 widthRange;

@@ -27,11 +27,12 @@ public class InputManager : SingletonBehaviour<InputManager>
             MousePosition = callback.ReadValue<Vector2>();
         }
     }
-
+    
     public void OnClickedLeftBtnEvent(InputAction.CallbackContext callback)
     {
         if(callback.phase == InputActionPhase.Started)
         {
+            SoundManager.Instance?.PlayTouchSound();
             OnClickedLeftBtn?.Invoke();
             LeftButtonClicked = true;
         }
@@ -40,7 +41,7 @@ public class InputManager : SingletonBehaviour<InputManager>
             LeftButtonClicked = false;
         }
     }
-
+    
     public void OnPointEvent(InputAction.CallbackContext callback)
     {
         if(callback.phase == InputActionPhase.Started)

@@ -42,7 +42,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 6918154919c9206458616723778efb9b, type: 3}
+        m_Texture: {fileID: 2800000, guid: e51864c6c4151ef47a843b46822d3867, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NoiseTex:
@@ -80,7 +80,7 @@ Material:
     - _AlphaToMask: 0
     - _Blend: 0
     - _BlendOp: 0
-    - _BlurStrength: 0.02
+    - _BlurStrength: 0.3
     - _Cull: 2
     - _Cutoff: 0.5
     - _DstBlend: 0

@@ -1,3 +1,4 @@
+using NUnit.Framework.Internal;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -50,6 +51,8 @@ public class DialogueManager : MonoBehaviour, ISceneContextBuilt
     [SerializeField]
     private List<DialogueData> dialogueDatas;
     // 다이얼로그 데이터 값
+    [SerializeField]
+    private List<DialogueData> test = new List<DialogueData>();
     private Queue<DialogueData> dialogueQueue = new Queue<DialogueData>();
     private bool isPrintAnyDialogue = false;
     public bool IsDialogueEnded { get; set; } = true;
@@ -71,6 +74,7 @@ public class DialogueManager : MonoBehaviour, ISceneContextBuilt
         if (dialogueData != null)
         {
             dialogueQueue.Enqueue(dialogueData);
+            test.Add(dialogueData);
         }
 
         if (!isPrintAnyDialogue)
@@ -81,11 +85,14 @@ public class DialogueManager : MonoBehaviour, ISceneContextBuilt
 
     public void PrintDialogue(int id = -1)
     {
+        if (id == -2)
+            return;
+
         if(id == -1)
         {
             id = nextPrintDialogueID;
         }
-
+        nextPrintDialogueID = id;
         DialogueData data = dialogueDatas.Find(x => x.ID == id);
 
         if (!isPrintAnyDialogue)
@@ -94,15 +101,17 @@ public class DialogueManager : MonoBehaviour, ISceneContextBuilt
             PrintDialogue(data);
         }
     }
-
+    
     private IEnumerator PrintDialogue_co()
     {
         if (dialogueQueue.Count > 0)
         {
             isPrintAnyDialogue = true;
+            GameManager.Singleton.ChangeState(GameState.Dialogue);
 
             bool isClickedAnyKey = false;
             DialogueData currentDialogue = dialogueQueue.Dequeue();
+            test.RemoveAt(0);
 
             // 초기 설정
             OnDialogueStarted?.Invoke(currentDialogue.ID);
@@ -245,10 +254,41 @@ public class DialogueManager : MonoBehaviour, ISceneContextBuilt
         {
             backgroundImg.gameObject.SetActive(active);
         }
+
+        if(!active)
+        {
+            GameManager.Singleton.ChangeState(GameState.Playing);
+        }
     }
 
     public void OnSceneContextBuilt()
     {
-        PrintDialogue(nextPrintDialogueID);
+        //PrintDialogue(nextPrintDialogueID);
+    }
+
+    public int GetIDFromClearStage(int clearStage)
+    {
+        if (clearStage == 0 && !PersistentDataManager.Singleton.IsReplayed)
+            return -1;
+
+        int idx = 0;
+        int stage = 0;
+        while(idx < dialogueDatas.Count)
+        {
+            if(dialogueDatas[idx].AcceptID == -1)
+            {
+                stage++;
+            }
+
+            if(clearStage == stage)
+            {
+                return dialogueDatas[idx].ID + 1;
+            }
+
+            idx++;
+        }
+        Debug.Log($"dialogue : {clearStage}");
+
+        return -1;
     }
 }

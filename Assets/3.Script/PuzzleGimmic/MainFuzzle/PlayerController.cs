@@ -27,7 +27,7 @@ public class PlayerController : NetworkBehaviour
         Vector3 originPosition = transform.position;
 
         Vector2 moveDir = new Vector2(destPosition.x - originPosition.x, destPosition.y - originPosition.y);
-        Debug.Log($"{gameObject}이동중 위치 : {destPosition}");
+        //Debug.Log($"{gameObject}이동중 위치 : {destPosition}");
         SetMoveDirEffect(moveDir);
 
         while (timer < moveDurationPerTile)

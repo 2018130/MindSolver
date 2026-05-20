@@ -58,6 +58,7 @@ public class GridDrawer : MonoBehaviour, IInteractable
                 // 정답 검사
                 bool isClear = CheckLineToCorrect();
                 isGamePlaying = false;
+                Debug.Log($"Clear state : {isClear}");
                 GetComponentInParent<PuzzleMissonListener>().EndPuzzle(isClear);
 
             }
