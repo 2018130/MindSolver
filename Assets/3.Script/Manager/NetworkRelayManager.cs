@@ -34,7 +34,7 @@ public class NetworkRelayManager : SingletonBehaviour<NetworkRelayManager>
             Debug.Log($"Signed in: {AuthenticationService.Instance.PlayerId}");
 
             DatabaseManager.Singleton.GetUserMaxStageDataInLocal(PersistentDataManager.Singleton.IsDefaultPlay);
-
+            
         }
 
     }

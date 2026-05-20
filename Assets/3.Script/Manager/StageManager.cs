@@ -95,7 +95,6 @@ public class StageManager : NetworkBehaviour
 
         if (!PersistentDataManager.Singleton.IsReplayed)
         {
-            Debug.Log("111");
             int clearStage = PersistentDataManager.Singleton.PlayerData.MaxClearStage;
             dialogueManager.PrintDialogue(dialogueManager.GetIDFromClearStage(clearStage));
         }
@@ -225,7 +224,6 @@ public class StageManager : NetworkBehaviour
 
             Debug.Log($"스테이지 종료 레벨 상승!!");
 
-            // TODO : change level;
             SceneChangeManager.Singleton.ChangeScene(SceneType.EndingScene);
         }
         else

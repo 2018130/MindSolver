@@ -87,15 +87,10 @@ public class PathFinding : MonoBehaviour
 
     private IEnumerator PathFinding_co()
     {
-        // 초기화
         endTile = null;
-        CreateTiles(); // 주의: 이미 생성된 타일이 있다면 중복 생성될 수 있으므로 확인 필요
+        CreateTiles();
 
-        // Open List 역할을 하는 우선순위 큐
         PriorityQueue<Tile> queue = new PriorityQueue<Tile>();
-
-        // 방문 여부와 별개로, 현재 큐에 들어있는지 확인하기 위한 변수나 플래그가 있으면 좋습니다.
-        // 여기서는 간단히직접 타일의 상태로 판단한다고 가정합니다.
 
         int[] dx = new int[] { 0, 0, -1, 1 };
         int[] dy = new int[] { 1, -1, 0, 0 };
@@ -105,37 +100,31 @@ public class PathFinding : MonoBehaviour
 
         Tile startTile = tiles[startIndex.y, startIndex.x];
 
-        // 시작 타일 설정
         startTile.g = 0;
         startTile.h = (Mathf.Abs(destIndex.x - startIndex.x) + Mathf.Abs(destIndex.y - startIndex.y)) * 10;
         startTile.f = startTile.g + startTile.h;
 
-        queue.Enqueue(startTile); // 큐 구현에 따라 (item, priority) 형태일 수 있음
+        queue.Enqueue(startTile);
 
         while (queue.Count != 0)
         {
-            // 1. 가장 F값이 낮은 타일을 꺼냄
             Tile curTile = queue.Dequeue();
 
-            // 이미 방문한 곳이라면 스킵 (큐에 중복으로 들어갔을 경우 대비)
             if (curTile.closed) continue;
 
             curTile.closed = true;
 
-            // 2. 목적지 도착 확인
             if (curTile.index.x == destIndex.x && curTile.index.y == destIndex.y)
             {
                 endTile = curTile;
                 break;
             }
 
-            // 3. 이웃 타일 검사 (4방향)
             for (int i = 0; i < 4; i++)
             {
                 int newIdxX = curTile.index.x + dx[i];
                 int newIdxY = curTile.index.y + dy[i];
 
-                // 맵 범위 체크
                 if (newIdxX < 0 || newIdxX >= tileController.Tiles.GetLength(1) ||
                     newIdxY < 0 || newIdxY >= tileController.Tiles.GetLength(0))
                     continue;
@@ -149,24 +138,25 @@ public class PathFinding : MonoBehaviour
                 int weight = 10;
                 int newG = curTile.g + weight;
                 int newH = (Mathf.Abs(destIndex.x - newIdxX) + Mathf.Abs(destIndex.y - newIdxY)) * weight;
-                int newF = newG + newH;
-
+                int newF = -(newG + newH);
+                Debug.Log($"check node f : {curTile.f} new f : {newF}");
                 if (checkTile.g == 0 || newG < checkTile.g)
                 {
                     checkTile.g = newG;
                     checkTile.h = newH;
-                    checkTile.f = -newF;
+                    checkTile.f = newF;
                     checkTile.preTile = curTile;
 
                     queue.Enqueue(checkTile);
-#if UNITY_EDITOR
-                    tileController.SpawnTile(new Vector2Int(newIdxX, newIdxY)); // 타일 생성
-#endif
                 }
             }
 
-            // 시각화 딜레이는 여기서 주는 것이 퍼포먼스와 보기에도 좋습니다.
-            yield return new WaitForSeconds(0.05f);
+#if UNITY_EDITOR
+            tileController.SpawnTile(new Vector2Int(curTile.index.x, curTile.index.y));
+#endif
+
+            //yield return null;
+            yield return new WaitForSeconds(0.1f);
         }
 
         // 경로 역추적
@@ -199,7 +189,6 @@ public class PathFinding : MonoBehaviour
         {
             if(i > otherPathFinding.road.Count - 1)
             {
-                // 미션 실패
                 Debug.Log($"미션 실패!!! {gameObject}의 최소 거리 : {road.Count} {otherPathFinding}의 최소 거리 : {otherPathFinding.road.Count}");
                 GameUIManager.Singleton.SetclearText("미션 실패 ㅠㅜ, 3초 뒤에 재시작합니다.");
                 
